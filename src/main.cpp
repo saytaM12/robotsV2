@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
     loadData(&scene);
 
     QGraphicsView view(&scene);
+    view.setDragMode(QGraphicsView::RubberBandDrag);
     view.show();
 
     return app.exec();
@@ -41,6 +42,7 @@ void loadData(QGraphicsScene *scene) {
         player->setAngle(angle);
         player->setColor(Qt::green);
         scene->addItem(player);
+        QObject::connect(scene, &QGraphicsScene::selectionChanged, player, &Robot::selectionChanged);
     }
 
     for (int i = 0; i < data["robots"]["len"]; i++) {
@@ -53,6 +55,7 @@ void loadData(QGraphicsScene *scene) {
         robot->setAngle(angle);
         robot->setColor(Qt::blue);
         scene->addItem(robot);
+        QObject::connect(scene, &QGraphicsScene::selectionChanged, robot, &Robot::selectionChanged);
     }
 
     for (int i = 0; i < data["walls"]["len"]; i++) {
@@ -64,5 +67,6 @@ void loadData(QGraphicsScene *scene) {
         wall->setRect(rect);
         wall->setColor(Qt::white);
         scene->addItem(wall);
+        QObject::connect(scene, &QGraphicsScene::selectionChanged, wall, &Wall::selectionChanged);
     }
 }

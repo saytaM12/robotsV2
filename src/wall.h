@@ -2,12 +2,13 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsRectItem>
 #include <QPainter>
+#include <QObject>
 #include <QWidget>
 #include <Qt>
 
-#include <iostream>
+class Wall : public QObject, public QGraphicsRectItem{
 
-class Wall : public QGraphicsRectItem {
+    Q_OBJECT
 
     private:
         Qt::GlobalColor color;
@@ -26,7 +27,6 @@ class Wall : public QGraphicsRectItem {
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
-        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-
-        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    public slots:
+        void selectionChanged();
 };

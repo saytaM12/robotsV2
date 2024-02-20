@@ -2,6 +2,7 @@
 
 Wall::Wall(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
     setAcceptHoverEvents(true);
+    setAcceptDrops(true);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 }
@@ -22,19 +23,18 @@ void Wall::setSize(int size) {
     this->size = size;
 }
 
+void Wall::selectionChanged() {
+    if (this->isSelected()) {
+        this->color = Qt::gray;
+    } else {
+        this->color = Qt::white;
+    }
+    this->update();
+}
+
 void Wall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     painter->setBrush(this->color);
     painter->setPen(Qt::NoPen);
 
     painter->drawRect(option->rect);
-}
-
-void Wall::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-    this->color = Qt::gray;
-    this->update();
-}
-
-void Wall::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-    this->color = Qt::white;
-    this->update();
 }

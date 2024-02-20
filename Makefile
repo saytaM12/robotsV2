@@ -54,10 +54,13 @@ OBJECTS_DIR   = ./
 
 SOURCES       = src/main.cpp \
 		src/robot.cpp \
-		src/wall.cpp 
+		src/wall.cpp moc_robot.cpp \
+		moc_wall.cpp
 OBJECTS       = main.o \
 		robot.o \
-		wall.o
+		wall.o \
+		moc_robot.o \
+		moc_wall.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -781,8 +784,19 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_robot.cpp moc_wall.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_robot.cpp moc_wall.cpp
+moc_robot.cpp: src/robot.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/robot.h -o moc_robot.cpp
+
+moc_wall.cpp: src/wall.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/wall.h -o moc_wall.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
@@ -795,7 +809,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
 
 ####### Compile
 
@@ -809,6 +823,12 @@ robot.o: src/robot.cpp src/robot.h
 
 wall.o: src/wall.cpp src/wall.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wall.o src/wall.cpp
+
+moc_robot.o: moc_robot.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robot.o moc_robot.cpp
+
+moc_wall.o: moc_wall.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_wall.o moc_wall.cpp
 
 ####### Install
 

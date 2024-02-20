@@ -1,12 +1,15 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsEllipseItem>
 #include <QPainter>
+#include <QObject>
 #include <QWidget>
 #include <Qt>
 
 #define ROBOTSIZE 30
 
-class Robot : public QGraphicsEllipseItem {
+class Robot : public QObject, public QGraphicsEllipseItem {
+
+    Q_OBJECT
 
     private:
         Qt::GlobalColor color;
@@ -30,7 +33,6 @@ class Robot : public QGraphicsEllipseItem {
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
-        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-
-        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    public slots:
+        void selectionChanged();
 };
