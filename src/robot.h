@@ -1,5 +1,5 @@
-#include <QGraphicsEllipseItem>
 #include <QStyleOptionGraphicsItem>
+#include <QGraphicsEllipseItem>
 #include <QPainter>
 #include <QWidget>
 #include <Qt>
@@ -29,4 +29,8 @@ class Robot : public QGraphicsEllipseItem {
         void setMoving(bool moving);
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
+        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 };

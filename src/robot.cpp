@@ -1,6 +1,9 @@
 #include "robot.h"
 
 Robot::Robot(QGraphicsEllipseItem *parent) : QGraphicsEllipseItem(parent) {
+    setAcceptHoverEvents(true);
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 Qt::GlobalColor Robot::getColor() {
@@ -25,6 +28,28 @@ void Robot::setAngle(int angle) {
 
 void Robot::setMoving(bool moving) {
     this->moving = moving;
+}
+
+void Robot::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+    if (this->color == Qt::blue) {
+        this->color = Qt::darkBlue;
+    }
+    if (this->color == Qt::green) {
+        this->color = Qt::darkGreen;
+    }
+
+    this->update();
+}
+
+void Robot::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+    if (this->color == Qt::darkBlue) {
+        this->color = Qt::blue;
+    }
+    if (this->color == Qt::darkGreen) {
+        this->color = Qt::green;
+    }
+
+    this->update();
 }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {

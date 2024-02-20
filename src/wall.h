@@ -1,8 +1,11 @@
+#include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsRectItem>
 #include <QPainter>
 #include <QWidget>
 #include <Qt>
+
+#include <iostream>
 
 class Wall : public QGraphicsRectItem {
 
@@ -23,7 +26,7 @@ class Wall : public QGraphicsRectItem {
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
+        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 };

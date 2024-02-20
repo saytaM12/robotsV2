@@ -1,6 +1,9 @@
 #include "wall.h"
 
 Wall::Wall(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
+    setAcceptHoverEvents(true);
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 Qt::GlobalColor Wall::getColor() {
@@ -26,12 +29,12 @@ void Wall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawRect(option->rect);
 }
 
-void Wall::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void Wall::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     this->color = Qt::gray;
     this->update();
 }
 
-void Wall::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+void Wall::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     this->color = Qt::white;
     this->update();
 }
