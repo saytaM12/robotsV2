@@ -7,6 +7,7 @@
 
 #include "json.hpp"
 
+#include "editPanel.h"
 #include "robot.h"
 #include "wall.h"
 
@@ -20,6 +21,8 @@ int main(int argc, char **argv) {
 
     QGraphicsScene scene;
     loadData(&scene);
+    MenuIcon *menuIcon = new MenuIcon;
+    scene.addItem(menuIcon);
 
     QGraphicsView view(&scene);
     view.setDragMode(QGraphicsView::RubberBandDrag);
@@ -40,7 +43,7 @@ void loadData(QGraphicsScene *scene) {
         Robot *player = new Robot;
         player->setRect(rect);
         player->setAngle(angle);
-        player->setColor(Qt::green);
+        player->setPlayer(true);
         scene->addItem(player);
         QObject::connect(scene, &QGraphicsScene::selectionChanged, player, &Robot::selectionChanged);
     }
@@ -53,7 +56,7 @@ void loadData(QGraphicsScene *scene) {
         Robot *robot = new Robot;
         robot->setRect(rect);
         robot->setAngle(angle);
-        robot->setColor(Qt::blue);
+        robot->setPlayer(false);
         scene->addItem(robot);
         QObject::connect(scene, &QGraphicsScene::selectionChanged, robot, &Robot::selectionChanged);
     }
@@ -64,8 +67,8 @@ void loadData(QGraphicsScene *scene) {
         int size = data["walls"]["list"][i]["size"];
         QRectF rect(x, y, size, size);
         Wall *wall = new Wall;
+        wall->setSize(size);
         wall->setRect(rect);
-        wall->setColor(Qt::white);
         scene->addItem(wall);
         QObject::connect(scene, &QGraphicsScene::selectionChanged, wall, &Wall::selectionChanged);
     }

@@ -3,36 +3,47 @@
 #include <QPainter>
 #include <QObject>
 #include <QWidget>
-#include <Qt>
 
-#define ROBOTSIZE 30
+#define ROBOTSIZE 80
 
 class Robot : public QObject, public QGraphicsEllipseItem {
 
     Q_OBJECT
 
     private:
-        Qt::GlobalColor color;
         int angle;
+        bool player;
         bool moving;
+        bool selectedFromHover;
 
     public:
         Robot(QGraphicsEllipseItem *parent = nullptr);
 
-        Qt::GlobalColor getColor();
-
         int getAngle();
+
+        bool isPlayer();
 
         bool getMoving();
 
-        void setColor(Qt::GlobalColor color);
-
         void setAngle(int angle);
 
+        void setPlayer(bool player);
+        
         void setMoving(bool moving);
+
+        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+        //void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+        //void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     public slots:
         void selectionChanged();
 };
+
+//class AngleSlider : public QObject, public QGraphicskk
+

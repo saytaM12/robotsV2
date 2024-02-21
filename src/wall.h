@@ -1,29 +1,34 @@
-#include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsRectItem>
 #include <QPainter>
 #include <QObject>
 #include <QWidget>
-#include <Qt>
 
-class Wall : public QObject, public QGraphicsRectItem{
+#define CL 0.2      // Corner Length
+#define CW 0.03     // Corner Width
+
+class Wall : public QObject, public QGraphicsRectItem {
 
     Q_OBJECT
 
     private:
-        Qt::GlobalColor color;
         int size;
+        bool selectedFromHover;
 
     public:
         Wall(QGraphicsRectItem *parent = nullptr);
 
-        Qt::GlobalColor getColor();
-
         int getSize();
 
-        void setColor(Qt::GlobalColor color);
-
         void setSize(int size);
+
+        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+
+        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+        //void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+        //void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
