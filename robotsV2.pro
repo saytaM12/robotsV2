@@ -18,5 +18,5 @@ QT += widgets
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += src/json.hpp src/menu.h src/menuIcon.h src/robot.h src/wall.h src/savedData.h
-SOURCES += src/main.cpp src/menu.cpp src/menuIcon.cpp src/robot.cpp src/wall.cpp src/savedData.cpp
+HEADERS += src/json.hpp src/menu.h src/menuIcon.h src/robot.h src/wall.h src/savedData.h src/myButton.h src/myScene.h
+SOURCES += src/main.cpp src/menu.cpp src/menuIcon.cpp src/robot.cpp src/wall.cpp src/savedData.cpp src/myButton.cpp src/myScene.cpp

@@ -4,25 +4,31 @@ MenuIcon::MenuIcon(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
     setAcceptHoverEvents(true);
     setCursor(Qt::PointingHandCursor);
     int iconSize = 50;
-    int iconX = 90;
-    int iconY = 30;
+    int iconX = 40;
+    int iconY = 40;
     setRect(iconX, iconY, iconSize, iconSize);
+    setOpacity(0.5);
+    setZValue(2);
 }
 
-void MenuIcon::mousePressEvent(QGraphicsSceneMouseEvent *) {
-    this->clicked = true;
+void MenuIcon::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+        this->clicked = true;
+    }
 }
 
-void MenuIcon::mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
-    if (this->clicked) {
-        this->clicked = false;
-        emit menuToggled();
+void MenuIcon::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+        if (this->clicked) {
+            this->clicked = false;
+            emit menuToggled();
+        }
     }
 }
 
 void MenuIcon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
     painter->setPen(Qt::NoPen);
-    painter->setBrush(Qt::Dense4Pattern);
+    painter->setBrush(Qt::black);
     painter->drawRoundedRect(this->rect(), this->rect().width() / 5, this->rect().width() / 5);
 
     // math magic to make lineWidth even, whole and width / 10

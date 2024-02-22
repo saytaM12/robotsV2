@@ -21,6 +21,8 @@ class Wall : public QObject, public QGraphicsRectItem {
     public:
         Wall(QGraphicsRectItem *parent = nullptr);
 
+        Wall(QRectF rect, int size, QGraphicsRectItem *parent = nullptr);
+
         int getSize();
 
         void setSize(int size);

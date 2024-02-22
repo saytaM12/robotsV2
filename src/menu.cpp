@@ -1,7 +1,5 @@
 #include "menu.h"
 
-#include <iostream>
-
 Menu::Menu(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
 
     int menuWidth = windowSize.width() / 4.0;
@@ -11,33 +9,34 @@ Menu::Menu(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
     int sampleSize = menuWidth * SCALER;
 
     setRect(POS, 0, menuWidth, menuHeight);
+    setZValue(1);
 
-    saveButton = new QPushButton(QString("save"), this);
+    saveButton = new MyButton("Save", this);
     int saveButtonX = POS + menuWidth / 9.0;
     int saveButtonY = menuHeight - buttonHeight - 30;
-    saveButton->setGeometry(saveButtonX, saveButtonY, buttonWidth, buttonHeight);
+    saveButton->setRect(saveButtonX, saveButtonY, buttonWidth, buttonHeight);
+    QObject::connect(saveButton, &MyButton::pressed, this, &Menu::savePressed);
 
-    loadButton = new QPushButton(QString("load"), this);
+    loadButton = new MyButton("Load", this);
     int loadButtonX = saveButtonX + buttonWidth + menuWidth / 9.0;
     int loadButtonY = saveButtonY;
-    loadButton->setGeometry(loadButtonX, loadButtonY, buttonWidth, buttonHeight);
+    loadButton->setRect(loadButtonX, loadButtonY, buttonWidth, buttonHeight);
+    QObject::connect(loadButton, &MyButton::pressed, this, &Menu::loadPressed);
 
-    sampleWall = new Wall;
+    sampleWall = new Wall(QRectF(POS + menuWidth / 2.0 - 50,
+                                 menuHeight - buttonHeight - 60 - sampleSize - (menuWidth - sampleSize) / 2.0 - sampleSize / 2.0 - 50,
+                                 100,
+                                 100),
+                           100);
     sampleWall->setParentItem(this);
-    sampleWall->setRect(POS + menuWidth / 2.0 - 50,
-                        menuHeight - buttonHeight - 60 - sampleSize - (menuWidth - sampleSize) / 2.0 - sampleSize / 2.0 - 50,
-                        100,
-                        100);
-    sampleWall->setSize(100);
 
-    sampleRobot = new Robot;
+    sampleRobot = new Robot(QRectF(POS + menuWidth / 2.0 - ROBOTSIZE / 2.0,
+                                   menuHeight - buttonHeight - 60 - sampleSize / 2.0 - ROBOTSIZE / 2.0,
+                                   ROBOTSIZE,
+                                   ROBOTSIZE),
+                            0,
+                            false);
     sampleRobot->setParentItem(this);
-    sampleRobot->setRect(POS + menuWidth / 2.0 - ROBOTSIZE / 2.0,
-                         menuHeight - buttonHeight - 60 - sampleSize / 2.0 - ROBOTSIZE / 2.0,
-                         ROBOTSIZE,
-                         ROBOTSIZE);
-    sampleRobot->setAngle(0);
-    sampleRobot->setPlayer(false);
     QGraphicsRectItem::setVisible(false);
 }
 
@@ -63,4 +62,6 @@ void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                       option->rect.bottom() - buttonHeight - 60 - sampleSize,
                       sampleSize,
                       sampleSize);
+
+    //this->saveButton->paint(painter, option);
 }

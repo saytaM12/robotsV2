@@ -3,15 +3,15 @@
 
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsRectItem>
-#include <QPushButton>
+#include <QGraphicsWidget>
 #include <QPainter>
 #include <QObject>
-#include <QWidget>
 
+#include "myButton.h"
 #include "wall.h"
 #include "robot.h"
 
-#define POS 70
+#define POS 0
 #define SCALER (9.0/10.0)
 
 extern QSize windowSize;
@@ -21,8 +21,8 @@ class Menu : public QWidget, public QGraphicsRectItem {
     Q_OBJECT
 
     private:
-        QPushButton *saveButton;
-        QPushButton *loadButton;
+        MyButton *saveButton;
+        MyButton *loadButton;
         Wall *sampleWall;
         Robot *sampleRobot;
 
@@ -33,6 +33,10 @@ class Menu : public QWidget, public QGraphicsRectItem {
 
     public slots:
         void toggle();
+
+    signals:
+        void savePressed();
+        void loadPressed();
 };
 
 #endif // MENU

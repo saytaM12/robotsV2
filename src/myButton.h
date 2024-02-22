@@ -1,33 +1,25 @@
-#ifndef MENUICON
-#define MENUICON
-
 #include <QStyleOptionGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
 #include <QGraphicsRectItem>
 #include <QPainter>
 #include <QObject>
-#include <QWidget>
-#include <cmath>
 
-class MenuIcon : public QObject, public QGraphicsRectItem {
+class MyButton : public QObject, public QGraphicsRectItem {
 
     Q_OBJECT
 
     private:
         bool clicked;
+        QString string;
 
     public:
-        MenuIcon(QGraphicsRectItem *parent = nullptr);
+        MyButton(QString string, QGraphicsRectItem *parent = nullptr);
 
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+        void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
 
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     signals:
-        void menuToggled();
-
+        void pressed();
 };
-
-#endif // MENUICON

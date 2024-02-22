@@ -22,6 +22,8 @@ class Robot : public QObject, public QGraphicsEllipseItem {
     public:
         Robot(QGraphicsEllipseItem *parent = nullptr);
 
+        Robot(QRectF rect, int angle, bool player, QGraphicsEllipseItem *parent = nullptr);
+
         int getAngle();
 
         bool isPlayer();

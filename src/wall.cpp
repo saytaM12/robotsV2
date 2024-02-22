@@ -8,6 +8,11 @@ Wall::Wall(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
     selectedFromHover = false;
 }
 
+Wall::Wall(QRectF rect, int size, QGraphicsRectItem *parent) : Wall(parent) {
+    setRect(rect);
+    setSize(size);
+}
+
 int Wall::getSize() {
     return this->size;
 }
