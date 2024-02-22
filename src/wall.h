@@ -1,3 +1,6 @@
+#ifndef WALL
+#define WALL
+
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsRectItem>
 #include <QPainter>
@@ -35,3 +38,5 @@ class Wall : public QObject, public QGraphicsRectItem {
     public slots:
         void selectionChanged();
 };
+
+#endif // WALL

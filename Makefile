@@ -52,17 +52,23 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = src/editPanel.cpp \
-		src/main.cpp \
+SOURCES       = src/main.cpp \
+		src/menu.cpp \
+		src/menuIcon.cpp \
 		src/robot.cpp \
-		src/wall.cpp moc_editPanel.cpp \
+		src/wall.cpp \
+		src/savedData.cpp moc_menu.cpp \
+		moc_menuIcon.cpp \
 		moc_robot.cpp \
 		moc_wall.cpp
-OBJECTS       = editPanel.o \
-		main.o \
+OBJECTS       = main.o \
+		menu.o \
+		menuIcon.o \
 		robot.o \
 		wall.o \
-		moc_editPanel.o \
+		savedData.o \
+		moc_menu.o \
+		moc_menuIcon.o \
 		moc_robot.o \
 		moc_wall.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -284,13 +290,17 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		robotsV2.pro src/editPanel.h \
-		src/json.hpp \
+		robotsV2.pro src/json.hpp \
+		src/menu.h \
+		src/menuIcon.h \
 		src/robot.h \
-		src/wall.h src/editPanel.cpp \
-		src/main.cpp \
+		src/wall.h \
+		src/savedData.h src/main.cpp \
+		src/menu.cpp \
+		src/menuIcon.cpp \
 		src/robot.cpp \
-		src/wall.cpp
+		src/wall.cpp \
+		src/savedData.cpp
 QMAKE_TARGET  = robotsV2
 DESTDIR       = 
 TARGET        = robotsV2
@@ -758,8 +768,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/editPanel.h src/json.hpp src/robot.h src/wall.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/editPanel.cpp src/main.cpp src/robot.cpp src/wall.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/json.hpp src/menu.h src/menuIcon.h src/robot.h src/wall.h src/savedData.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/menu.cpp src/menuIcon.cpp src/robot.cpp src/wall.cpp src/savedData.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -790,13 +800,20 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_editPanel.cpp moc_robot.cpp moc_wall.cpp
+compiler_moc_header_make_all: moc_menu.cpp moc_menuIcon.cpp moc_robot.cpp moc_wall.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_editPanel.cpp moc_robot.cpp moc_wall.cpp
-moc_editPanel.cpp: src/editPanel.h \
+	-$(DEL_FILE) moc_menu.cpp moc_menuIcon.cpp moc_robot.cpp moc_wall.cpp
+moc_menu.cpp: src/menu.h \
+		src/wall.h \
+		src/robot.h \
 		moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/editPanel.h -o moc_editPanel.cpp
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/menu.h -o moc_menu.cpp
+
+moc_menuIcon.cpp: src/menuIcon.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/menuIcon.h -o moc_menuIcon.cpp
 
 moc_robot.cpp: src/robot.h \
 		moc_predefs.h \
@@ -824,14 +841,21 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-editPanel.o: src/editPanel.cpp src/editPanel.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o editPanel.o src/editPanel.cpp
-
-main.o: src/main.cpp src/json.hpp \
-		src/editPanel.h \
+main.o: src/main.cpp src/savedData.h \
+		src/json.hpp \
+		src/wall.h \
 		src/robot.h \
-		src/wall.h
+		src/menuIcon.h \
+		src/menu.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
+
+menu.o: src/menu.cpp src/menu.h \
+		src/wall.h \
+		src/robot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menu.o src/menu.cpp
+
+menuIcon.o: src/menuIcon.cpp src/menuIcon.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menuIcon.o src/menuIcon.cpp
 
 robot.o: src/robot.cpp src/robot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o robot.o src/robot.cpp
@@ -839,8 +863,17 @@ robot.o: src/robot.cpp src/robot.h
 wall.o: src/wall.cpp src/wall.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wall.o src/wall.cpp
 
-moc_editPanel.o: moc_editPanel.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_editPanel.o moc_editPanel.cpp
+savedData.o: src/savedData.cpp src/savedData.h \
+		src/json.hpp \
+		src/wall.h \
+		src/robot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o savedData.o src/savedData.cpp
+
+moc_menu.o: moc_menu.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_menu.o moc_menu.cpp
+
+moc_menuIcon.o: moc_menuIcon.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_menuIcon.o moc_menuIcon.cpp
 
 moc_robot.o: moc_robot.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robot.o moc_robot.cpp

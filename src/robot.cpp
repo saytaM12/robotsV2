@@ -56,6 +56,11 @@ void Robot::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 */
 
+void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *) {
+    this->player = !this->player;
+    this->update();
+}
+
 void Robot::selectionChanged() {
     this->update();
 }

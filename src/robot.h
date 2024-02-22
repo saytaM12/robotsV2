@@ -1,10 +1,13 @@
+#ifndef ROBOT
+#define ROBOT
+
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsEllipseItem>
 #include <QPainter>
 #include <QObject>
 #include <QWidget>
 
-#define ROBOTSIZE 80
+#define ROBOTSIZE 60
 
 class Robot : public QObject, public QGraphicsEllipseItem {
 
@@ -39,6 +42,8 @@ class Robot : public QObject, public QGraphicsEllipseItem {
 
         //void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+        void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     public slots:
@@ -47,3 +52,4 @@ class Robot : public QObject, public QGraphicsEllipseItem {
 
 //class AngleSlider : public QObject, public QGraphicskk
 
+#endif // ROBOT
