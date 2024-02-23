@@ -17,7 +17,6 @@ class Data : public QObject {
 
     private:
         MyScene *scene;
-        json data;
 
     public: 
         Data(MyScene *scene);

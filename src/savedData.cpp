@@ -13,6 +13,62 @@ int Data::saveData() {
     dialog.setDefaultSuffix(tr(".json"));
     QString fileName = dialog.getSaveFileName();
     if (fileName.isEmpty()) return 0;
+
+    std::ofstream f(qPrintable(fileName));
+
+    json data;
+
+    data = json::parse(R"(
+    {
+        "players": {
+            "len": 0,
+            "list": []
+        },
+        "robots": {
+            "len": 0,
+            "list": []
+        },
+        "walls": {
+            "len": 0,
+            "list": []
+        }
+    }
+    )");
+
+    qsizetype playersLen = this->scene->getPlayers().size();
+    data["players"]["len"] = playersLen;
+    for (qsizetype i = 0; i < playersLen; i++) {
+        Robot *item = this->scene->getPlayers().at(i);
+        //QPointF point(item->x(), item->y());
+        //point = item->mapToScene(point);
+        data["players"]["list"][i]["x"] = item->pos().x();
+        data["players"]["list"][i]["y"] = item->pos().y();
+        data["players"]["list"][i]["angle"] = item->getAngle();
+    }
+
+    qsizetype robotsLen = this->scene->getRobots().size();
+    data["robots"]["len"] = robotsLen;
+    for (qsizetype i = 0; i < robotsLen; i++) {
+        Robot *item = this->scene->getRobots().at(i);
+        //QPointF point(item->x(), item->y());
+        //point = item->mapToScene(point);
+        data["robots"]["list"][i]["x"] = item->pos().x();
+        data["robots"]["list"][i]["y"] = item->pos().y();
+        data["robots"]["list"][i]["angle"] = item->getAngle();
+    }
+
+    qsizetype wallsLen = this->scene->getWalls().size();
+    data["walls"]["len"] = wallsLen;
+    for (qsizetype i = 0; i < wallsLen; i++) {
+        Wall *item = this->scene->getWalls().at(i);
+        QPointF point(item->x(), item->y());
+        point = item->mapToParent(point);
+        data["walls"]["list"][i]["x"] = item->pos().x();
+        data["walls"]["list"][i]["y"] = item->pos().y();
+        data["walls"]["list"][i]["size"] = item->getSize();
+    }
+
+    f << data.dump(4) << std::endl;
     
     return 0;
 }
@@ -20,8 +76,9 @@ int Data::saveData() {
 int Data::loadData() {
     QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open File"), "examples/", tr("JSON (*.json)"));
     if (fileName.isEmpty()) return 0;
-
     std::ifstream f(qPrintable(fileName));
+
+    json data;
     try {
         data = json::parse(f);
     } catch (json::parse_error& ex) {
@@ -58,6 +115,7 @@ int Data::loadData() {
 
         QRectF rect(x, y, ROBOTSIZE, ROBOTSIZE);
         Robot *player = new Robot(rect, angle, true);
+        player->setParent(this);
         scene->newItem(player);
         QObject::connect(scene, &MyScene::selectionChanged, player, &Robot::selectionChanged);
     }
@@ -80,6 +138,7 @@ int Data::loadData() {
 
         QRectF rect(x, y, ROBOTSIZE, ROBOTSIZE);
         Robot *robot = new Robot(rect, angle, false);
+        robot->setParent(this);
         scene->newItem(robot);
         QObject::connect(scene, &MyScene::selectionChanged, robot, &Robot::selectionChanged);
     }
@@ -101,6 +160,7 @@ int Data::loadData() {
 
         QRectF rect(x, y, size, size);
         Wall *wall = new Wall(rect, size);
+        wall->setParent(this);
         scene->newItem(wall);
         QObject::connect(scene, &MyScene::selectionChanged, wall, &Wall::selectionChanged);
     }

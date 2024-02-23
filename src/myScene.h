@@ -13,7 +13,9 @@ class MyScene : public QGraphicsScene {
         QSize size;
         Menu *menu;
         MenuIcon *menuIcon;
-        QList<QGraphicsItem *> items;
+        QList<Robot *> players;
+        QList<Robot *> robots;
+        QList<Wall *> walls;
 
     public:
         MyScene(QGraphicsScene *parent = nullptr);
@@ -22,7 +24,15 @@ class MyScene : public QGraphicsScene {
 
         MenuIcon *getMenuIcon();
 
-        void newItem(QGraphicsItem *item);
+        QList<Robot *> getPlayers();
+
+        QList<Robot *> getRobots();
+
+        QList<Wall *> getWalls();
+
+        void newItem(Wall *wall);
+
+        void newItem(Robot *robot);
 
         void clear();
 };

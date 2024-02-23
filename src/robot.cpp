@@ -8,8 +8,10 @@ Robot::Robot(QGraphicsEllipseItem *parent) : QGraphicsEllipseItem(parent) {
     selectedFromHover = false;
 }
 
-Robot::Robot(QRectF rect, int angle, bool player, QGraphicsEllipseItem *parent) : Robot(parent) {
-    setRect(rect);
+Robot::Robot(QRectF r, int angle, bool player, QGraphicsEllipseItem *parent) : Robot(parent) {
+    setRect(0, 0, r.width(), r.height());
+    setX(r.x());
+    setY(r.y());
     setAngle(angle);
     setPlayer(player);
 }
