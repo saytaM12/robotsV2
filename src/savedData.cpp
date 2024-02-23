@@ -18,23 +18,6 @@ int Data::saveData() {
 
     json data;
 
-    data = json::parse(R"(
-    {
-        "players": {
-            "len": 0,
-            "list": []
-        },
-        "robots": {
-            "len": 0,
-            "list": []
-        },
-        "walls": {
-            "len": 0,
-            "list": []
-        }
-    }
-    )");
-
     qsizetype playersLen = this->scene->getPlayers().size();
     data["players"]["len"] = playersLen;
     for (qsizetype i = 0; i < playersLen; i++) {
