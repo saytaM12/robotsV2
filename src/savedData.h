@@ -21,12 +21,8 @@ class Data : public QObject {
     public: 
         Data(MyScene *scene);
 
+    public slots:
         int saveData();
 
         int loadData();
-
-    public slots:
-        void saveDataSlot();
-
-        void loadDataSlot();
 };

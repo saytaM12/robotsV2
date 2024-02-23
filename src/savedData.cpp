@@ -3,8 +3,8 @@
 Data::Data(MyScene *scene) {
     this->scene = scene;
 
-    QObject::connect(scene->getMenu(), &Menu::savePressed, this, &Data::saveDataSlot);
-    QObject::connect(scene->getMenu(), &Menu::loadPressed, this, &Data::loadDataSlot);
+    QObject::connect(scene->getMenu(), &Menu::savePressed, this, &Data::saveData);
+    QObject::connect(scene->getMenu(), &Menu::loadPressed, this, &Data::loadData);
 }
 
 int Data::saveData() {
@@ -149,12 +149,4 @@ int Data::loadData() {
     }
 
     return 0;
-}
-
-void Data::saveDataSlot() {
-    this->saveData();
-}
-
-void Data::loadDataSlot() {
-    this->loadData();
 }
