@@ -15,8 +15,8 @@ EQ            = =
 CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+CFLAGS        = -g -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -g -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I. -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I. -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -f
@@ -55,32 +55,40 @@ OBJECTS_DIR   = ./
 SOURCES       = src/main.cpp \
 		src/menu.cpp \
 		src/menuIcon.cpp \
-		src/robot.cpp \
-		src/wall.cpp \
-		src/savedData.cpp \
 		src/myButton.cpp \
-		src/myScene.cpp moc_menu.cpp \
+		src/myScene.cpp \
+		src/robot.cpp \
+		src/sampleRobot.cpp \
+		src/sampleWall.cpp \
+		src/savedData.cpp \
+		src/wall.cpp moc_menu.cpp \
 		moc_menuIcon.cpp \
-		moc_robot.cpp \
-		moc_wall.cpp \
-		moc_savedData.cpp \
 		moc_myButton.cpp \
-		moc_myScene.cpp
+		moc_myScene.cpp \
+		moc_robot.cpp \
+		moc_sampleRobot.cpp \
+		moc_sampleWall.cpp \
+		moc_savedData.cpp \
+		moc_wall.cpp
 OBJECTS       = main.o \
 		menu.o \
 		menuIcon.o \
-		robot.o \
-		wall.o \
-		savedData.o \
 		myButton.o \
 		myScene.o \
+		robot.o \
+		sampleRobot.o \
+		sampleWall.o \
+		savedData.o \
+		wall.o \
 		moc_menu.o \
 		moc_menuIcon.o \
-		moc_robot.o \
-		moc_wall.o \
-		moc_savedData.o \
 		moc_myButton.o \
-		moc_myScene.o
+		moc_myScene.o \
+		moc_robot.o \
+		moc_sampleRobot.o \
+		moc_sampleWall.o \
+		moc_savedData.o \
+		moc_wall.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -303,18 +311,22 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		robotsV2.pro src/json.hpp \
 		src/menu.h \
 		src/menuIcon.h \
-		src/robot.h \
-		src/wall.h \
-		src/savedData.h \
 		src/myButton.h \
-		src/myScene.h src/main.cpp \
+		src/myScene.h \
+		src/robot.h \
+		src/sampleRobot.h \
+		src/sampleWall.h \
+		src/savedData.h \
+		src/wall.h src/main.cpp \
 		src/menu.cpp \
 		src/menuIcon.cpp \
-		src/robot.cpp \
-		src/wall.cpp \
-		src/savedData.cpp \
 		src/myButton.cpp \
-		src/myScene.cpp
+		src/myScene.cpp \
+		src/robot.cpp \
+		src/sampleRobot.cpp \
+		src/sampleWall.cpp \
+		src/savedData.cpp \
+		src/wall.cpp
 QMAKE_TARGET  = robotsV2
 DESTDIR       = 
 TARGET        = robotsV2
@@ -782,8 +794,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/json.hpp src/menu.h src/menuIcon.h src/robot.h src/wall.h src/savedData.h src/myButton.h src/myScene.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/main.cpp src/menu.cpp src/menuIcon.cpp src/robot.cpp src/wall.cpp src/savedData.cpp src/myButton.cpp src/myScene.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/json.hpp src/menu.h src/menuIcon.h src/myButton.h src/myScene.h src/robot.h src/sampleRobot.h src/sampleWall.h src/savedData.h src/wall.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/main.cpp src/menu.cpp src/menuIcon.cpp src/myButton.cpp src/myScene.cpp src/robot.cpp src/sampleRobot.cpp src/sampleWall.cpp src/savedData.cpp src/wall.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -814,12 +826,14 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_menu.cpp moc_menuIcon.cpp moc_robot.cpp moc_wall.cpp moc_savedData.cpp moc_myButton.cpp moc_myScene.cpp
+compiler_moc_header_make_all: moc_menu.cpp moc_menuIcon.cpp moc_myButton.cpp moc_myScene.cpp moc_robot.cpp moc_sampleRobot.cpp moc_sampleWall.cpp moc_savedData.cpp moc_wall.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_menu.cpp moc_menuIcon.cpp moc_robot.cpp moc_wall.cpp moc_savedData.cpp moc_myButton.cpp moc_myScene.cpp
+	-$(DEL_FILE) moc_menu.cpp moc_menuIcon.cpp moc_myButton.cpp moc_myScene.cpp moc_robot.cpp moc_sampleRobot.cpp moc_sampleWall.cpp moc_savedData.cpp moc_wall.cpp
 moc_menu.cpp: src/menu.h \
 		src/myButton.h \
+		src/sampleWall.h \
 		src/wall.h \
+		src/sampleRobot.h \
 		src/robot.h \
 		moc_predefs.h \
 		/usr/bin/moc
@@ -830,28 +844,6 @@ moc_menuIcon.cpp: src/menuIcon.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/menuIcon.h -o moc_menuIcon.cpp
 
-moc_robot.cpp: src/robot.h \
-		moc_predefs.h \
-		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/robot.h -o moc_robot.cpp
-
-moc_wall.cpp: src/wall.h \
-		moc_predefs.h \
-		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/wall.h -o moc_wall.cpp
-
-moc_savedData.cpp: src/savedData.h \
-		src/json.hpp \
-		src/myScene.h \
-		src/menu.h \
-		src/myButton.h \
-		src/wall.h \
-		src/robot.h \
-		src/menuIcon.h \
-		moc_predefs.h \
-		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/savedData.h -o moc_savedData.cpp
-
 moc_myButton.cpp: src/myButton.h \
 		moc_predefs.h \
 		/usr/bin/moc
@@ -860,17 +852,71 @@ moc_myButton.cpp: src/myButton.h \
 moc_myScene.cpp: src/myScene.h \
 		src/menu.h \
 		src/myButton.h \
+		src/sampleWall.h \
 		src/wall.h \
+		src/sampleRobot.h \
 		src/robot.h \
 		src/menuIcon.h \
 		moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/myScene.h -o moc_myScene.cpp
 
+moc_robot.cpp: src/robot.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/robot.h -o moc_robot.cpp
+
+moc_sampleRobot.cpp: src/sampleRobot.h \
+		src/robot.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/sampleRobot.h -o moc_sampleRobot.cpp
+
+moc_sampleWall.cpp: src/sampleWall.h \
+		src/wall.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/sampleWall.h -o moc_sampleWall.cpp
+
+moc_savedData.cpp: src/savedData.h \
+		src/json.hpp \
+		src/myScene.h \
+		src/menu.h \
+		src/myButton.h \
+		src/sampleWall.h \
+		src/wall.h \
+		src/sampleRobot.h \
+		src/robot.h \
+		src/menuIcon.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/savedData.h -o moc_savedData.cpp
+
+moc_wall.cpp: src/wall.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/wall.h -o moc_wall.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
-compiler_moc_source_make_all:
+compiler_moc_source_make_all: main.moc
 compiler_moc_source_clean:
+	-$(DEL_FILE) main.moc
+main.moc: src/main.cpp \
+		src/savedData.h \
+		src/json.hpp \
+		src/myScene.h \
+		src/menu.h \
+		src/myButton.h \
+		src/sampleWall.h \
+		src/wall.h \
+		src/sampleRobot.h \
+		src/robot.h \
+		src/menuIcon.h \
+		moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/main.cpp -o main.moc
+
 compiler_uic_make_all:
 compiler_uic_clean:
 compiler_yacc_decl_make_all:
@@ -879,7 +925,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_moc_source_clean 
 
 ####### Compile
 
@@ -888,35 +934,23 @@ main.o: src/main.cpp src/savedData.h \
 		src/myScene.h \
 		src/menu.h \
 		src/myButton.h \
+		src/sampleWall.h \
 		src/wall.h \
+		src/sampleRobot.h \
 		src/robot.h \
 		src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
 
 menu.o: src/menu.cpp src/menu.h \
 		src/myButton.h \
+		src/sampleWall.h \
 		src/wall.h \
+		src/sampleRobot.h \
 		src/robot.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menu.o src/menu.cpp
 
 menuIcon.o: src/menuIcon.cpp src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menuIcon.o src/menuIcon.cpp
-
-robot.o: src/robot.cpp src/robot.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o robot.o src/robot.cpp
-
-wall.o: src/wall.cpp src/wall.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wall.o src/wall.cpp
-
-savedData.o: src/savedData.cpp src/savedData.h \
-		src/json.hpp \
-		src/myScene.h \
-		src/menu.h \
-		src/myButton.h \
-		src/wall.h \
-		src/robot.h \
-		src/menuIcon.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o savedData.o src/savedData.cpp
 
 myButton.o: src/myButton.cpp src/myButton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myButton.o src/myButton.cpp
@@ -924,10 +958,38 @@ myButton.o: src/myButton.cpp src/myButton.h
 myScene.o: src/myScene.cpp src/myScene.h \
 		src/menu.h \
 		src/myButton.h \
+		src/sampleWall.h \
 		src/wall.h \
+		src/sampleRobot.h \
 		src/robot.h \
 		src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myScene.o src/myScene.cpp
+
+robot.o: src/robot.cpp src/robot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o robot.o src/robot.cpp
+
+sampleRobot.o: src/sampleRobot.cpp src/sampleRobot.h \
+		src/robot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sampleRobot.o src/sampleRobot.cpp
+
+sampleWall.o: src/sampleWall.cpp src/sampleWall.h \
+		src/wall.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sampleWall.o src/sampleWall.cpp
+
+savedData.o: src/savedData.cpp src/savedData.h \
+		src/json.hpp \
+		src/myScene.h \
+		src/menu.h \
+		src/myButton.h \
+		src/sampleWall.h \
+		src/wall.h \
+		src/sampleRobot.h \
+		src/robot.h \
+		src/menuIcon.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o savedData.o src/savedData.cpp
+
+wall.o: src/wall.cpp src/wall.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o wall.o src/wall.cpp
 
 moc_menu.o: moc_menu.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_menu.o moc_menu.cpp
@@ -935,20 +997,26 @@ moc_menu.o: moc_menu.cpp
 moc_menuIcon.o: moc_menuIcon.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_menuIcon.o moc_menuIcon.cpp
 
-moc_robot.o: moc_robot.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robot.o moc_robot.cpp
-
-moc_wall.o: moc_wall.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_wall.o moc_wall.cpp
-
-moc_savedData.o: moc_savedData.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_savedData.o moc_savedData.cpp
-
 moc_myButton.o: moc_myButton.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_myButton.o moc_myButton.cpp
 
 moc_myScene.o: moc_myScene.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_myScene.o moc_myScene.cpp
+
+moc_robot.o: moc_robot.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robot.o moc_robot.cpp
+
+moc_sampleRobot.o: moc_sampleRobot.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_sampleRobot.o moc_sampleRobot.cpp
+
+moc_sampleWall.o: moc_sampleWall.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_sampleWall.o moc_sampleWall.cpp
+
+moc_savedData.o: moc_savedData.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_savedData.o moc_savedData.cpp
+
+moc_wall.o: moc_wall.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_wall.o moc_wall.cpp
 
 ####### Install
 

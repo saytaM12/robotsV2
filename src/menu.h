@@ -8,13 +8,11 @@
 #include <QObject>
 
 #include "myButton.h"
-#include "wall.h"
-#include "robot.h"
+#include "sampleWall.h"
+#include "sampleRobot.h"
 
 #define POS 0
 #define SCALER (9.0/10.0)
-
-extern QSize windowSize;
 
 class Menu : public QWidget, public QGraphicsRectItem {
 
@@ -23,13 +21,18 @@ class Menu : public QWidget, public QGraphicsRectItem {
     private:
         MyButton *saveButton;
         MyButton *loadButton;
-        Wall *sampleWall;
-        Robot *sampleRobot;
+        SampleWall *sampleWall;
+        SampleRobot *sampleRobot;
 
     public:
         Menu(QGraphicsRectItem *parent = nullptr);
 
+        SampleWall *getSampleWall();
+
+        SampleRobot *getSampleRobot();
+
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
 
     public slots:
         void toggle();

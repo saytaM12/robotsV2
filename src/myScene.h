@@ -1,6 +1,8 @@
+#ifndef MYSCENE
+#define MYSCENE
+
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QApplication>
 
 #include "menu.h"
 #include "menuIcon.h"
@@ -20,6 +22,8 @@ class MyScene : public QGraphicsScene {
     public:
         MyScene(QGraphicsScene *parent = nullptr);
 
+        QSize getSize();
+
         Menu *getMenu();
 
         MenuIcon *getMenuIcon();
@@ -30,9 +34,26 @@ class MyScene : public QGraphicsScene {
 
         QList<Wall *> getWalls();
 
-        void newItem(Wall *wall);
+        void addRobot(Robot *robot);
 
-        void newItem(Robot *robot);
+        void addWall(Wall *wall);
 
         void clear();
 };
+
+class MyView : public QGraphicsView {
+
+    Q_OBJECT
+
+    private:
+        MyScene *scene;
+        bool alreadyClicked;
+
+    public:
+        MyView(MyScene *scene = nullptr);
+
+    public slots:
+        void mousePressEvent(QMouseEvent *e) override;
+};
+
+#endif // MYSCENE

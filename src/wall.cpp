@@ -15,6 +15,8 @@ Wall::Wall(QRectF r, int size, QGraphicsRectItem *parent) : Wall(parent) {
     setSize(size);
 }
 
+Wall::Wall(Wall *wall, QGraphicsRectItem *parent) : Wall(QRectF(wall->x(), wall->y(), wall->rect().width(), wall->rect().height()), wall->getSize(), parent) { }
+
 int Wall::getSize() {
     return this->size;
 }
@@ -36,16 +38,6 @@ void Wall::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
         this->selectedFromHover = false;
     }
 }
-
-/*
-void Wall::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    this->setCursor(Qt::ClosedHandCursor);
-}
-
-void Wall::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    this->setCursor(Qt::OpenHandCursor);
-}
-*/
 
 void Wall::selectionChanged() {
     this->update();

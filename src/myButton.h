@@ -1,3 +1,6 @@
+#ifndef MYBUTTON
+#define MYBUTTON
+
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsRectItem>
 #include <QPainter>
@@ -23,3 +26,5 @@ class MyButton : public QObject, public QGraphicsRectItem {
     signals:
         void pressed();
 };
+
+#endif // MYBUTTON

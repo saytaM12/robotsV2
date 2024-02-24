@@ -23,6 +23,8 @@ class Wall : public QObject, public QGraphicsRectItem {
 
         Wall(QRectF rect, int size, QGraphicsRectItem *parent = nullptr);
 
+        Wall(Wall *wall, QGraphicsRectItem *parent = nullptr);
+
         int getSize();
 
         void setSize(int size);
@@ -30,11 +32,7 @@ class Wall : public QObject, public QGraphicsRectItem {
         void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
         void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-        //void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
-        //void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
+        
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     public slots:

@@ -16,6 +16,9 @@ Robot::Robot(QRectF r, int angle, bool player, QGraphicsEllipseItem *parent) : R
     setPlayer(player);
 }
 
+Robot::Robot(Robot *robot, QGraphicsEllipseItem *parent) : Robot(QRectF(robot->x(), robot->y(), robot->rect().width(), robot->rect().height()), robot->getAngle(), robot->isPlayer(), parent) {
+}
+
 int Robot::getAngle() {
     return this->angle;
 }
@@ -53,16 +56,6 @@ void Robot::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
         this->selectedFromHover = false;
     }
 }
-
-/*
-void Robot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    this->setCursor(Qt::ClosedHandCursor);
-}
-
-void Robot::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    this->setCursor(Qt::OpenHandCursor);
-}
-*/
 
 void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *) {
     this->player = !this->player;

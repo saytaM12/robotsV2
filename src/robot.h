@@ -24,6 +24,8 @@ class Robot : public QObject, public QGraphicsEllipseItem {
 
         Robot(QRectF rect, int angle, bool player, QGraphicsEllipseItem *parent = nullptr);
 
+        Robot(Robot *robot, QGraphicsEllipseItem *parent = nullptr);
+
         int getAngle();
 
         bool isPlayer();
@@ -39,10 +41,6 @@ class Robot : public QObject, public QGraphicsEllipseItem {
         void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
         void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-        //void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
-        //void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
         void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 

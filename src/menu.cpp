@@ -2,6 +2,8 @@
 
 Menu::Menu(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
 
+    QSize windowSize(1280, 920);
+
     int menuWidth = windowSize.width() / 4.0;
     int menuHeight = windowSize.height();
     int buttonWidth = menuWidth / 3.0;
@@ -23,26 +25,35 @@ Menu::Menu(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
     loadButton->setRect(loadButtonX, loadButtonY, buttonWidth, buttonHeight);
     QObject::connect(loadButton, &MyButton::pressed, this, &Menu::loadPressed);
 
-    sampleWall = new Wall(QRectF(POS + menuWidth / 2.0 - 50,
-                                 menuHeight - buttonHeight - 60 - sampleSize - (menuWidth - sampleSize) / 2.0 - sampleSize / 2.0 - 50,
-                                 100,
-                                 100),
-                           100);
-    sampleWall->setParentItem(this);
+    sampleWall = new SampleWall(QRectF(POS + menuWidth / 2.0 - 50,
+                                       menuHeight - buttonHeight - 60 - sampleSize / 2.0 - 50,
+                                       100,
+                                       100),
+                                100);
+    sampleWall->Wall::setParentItem(this);
 
-    sampleRobot = new Robot(QRectF(POS + menuWidth / 2.0 - ROBOTSIZE / 2.0,
-                                   menuHeight - buttonHeight - 60 - sampleSize / 2.0 - ROBOTSIZE / 2.0,
-                                   ROBOTSIZE,
-                                   ROBOTSIZE),
-                            0,
+    sampleRobot = new SampleRobot(QRectF(POS + menuWidth / 2.0 - ROBOTSIZE / 2.0,
+                                         menuHeight - buttonHeight - 60 - sampleSize - (menuWidth - sampleSize) / 2.0 - sampleSize / 2.0 - ROBOTSIZE / 2.0,
+                                         ROBOTSIZE,
+                                         ROBOTSIZE),
+                                  0,
                             false);
-    sampleRobot->setParentItem(this);
+    sampleRobot->Robot::setParentItem(this);
+
     QGraphicsRectItem::setVisible(false);
 }
 
 void Menu::toggle() {
     QGraphicsRectItem::setVisible(!QGraphicsRectItem::isVisible());
     QGraphicsRectItem::update();
+}
+
+SampleWall *Menu::getSampleWall() {
+    return this->sampleWall;
+}
+
+SampleRobot *Menu::getSampleRobot() {
+    return this->sampleRobot;
 }
 
 void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {

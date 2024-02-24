@@ -98,8 +98,8 @@ int Data::loadData() {
 
         QRectF rect(x, y, ROBOTSIZE, ROBOTSIZE);
         Robot *player = new Robot(rect, angle, true);
-        player->setParent(this);
-        scene->newItem(player);
+        //player->setParent(this);
+        scene->addRobot(player);
         QObject::connect(scene, &MyScene::selectionChanged, player, &Robot::selectionChanged);
     }
 
@@ -121,8 +121,8 @@ int Data::loadData() {
 
         QRectF rect(x, y, ROBOTSIZE, ROBOTSIZE);
         Robot *robot = new Robot(rect, angle, false);
-        robot->setParent(this);
-        scene->newItem(robot);
+        //robot->setParent(this);
+        scene->addRobot(robot);
         QObject::connect(scene, &MyScene::selectionChanged, robot, &Robot::selectionChanged);
     }
 
@@ -143,8 +143,8 @@ int Data::loadData() {
 
         QRectF rect(x, y, size, size);
         Wall *wall = new Wall(rect, size);
-        wall->setParent(this);
-        scene->newItem(wall);
+        //wall->setParent(this);
+        scene->addWall(wall);
         QObject::connect(scene, &MyScene::selectionChanged, wall, &Wall::selectionChanged);
     }
 

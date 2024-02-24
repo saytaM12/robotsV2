@@ -1,3 +1,6 @@
+#ifndef SAVEDDATA
+#define SAVEDDATA
+
 #include <QFileDialog>
 #include <QObject>
 #include <iostream>
@@ -26,3 +29,5 @@ class Data : public QObject {
 
         int loadData();
 };
+
+#endif // SAVEDDATA

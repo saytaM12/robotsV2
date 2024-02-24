@@ -1,10 +1,7 @@
-#include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QApplication>
 
 #include "savedData.h"
-
-QSize windowSize(1280, 920);
 
 int main(int argc, char **argv) {
 
@@ -14,13 +11,13 @@ int main(int argc, char **argv) {
 
     Data data(&scene);
 
-    QGraphicsView view(&scene);
+    MyView view(&scene);
     view.setDragMode(QGraphicsView::RubberBandDrag);
-    view.setMinimumSize(windowSize.width(), windowSize.height());
-    view.setMaximumSize(windowSize.width(), windowSize.height());
+    view.setMinimumSize(scene.getSize().width(), scene.getSize().height());
+    view.setMaximumSize(scene.getSize().width(), scene.getSize().height());
     view.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view.setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //view.showFullScreen();
+
     view.show();
 
     return app.exec();
