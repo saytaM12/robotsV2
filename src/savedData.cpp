@@ -1,152 +1,189 @@
 #include "savedData.h"
 
 Data::Data(MyScene *scene) {
-    this->scene = scene;
+  this->scene = scene;
 
-    QObject::connect(scene->getMenu(), &Menu::savePressed, this, &Data::saveData);
-    QObject::connect(scene->getMenu(), &Menu::loadPressed, this, &Data::loadData);
+  QObject::connect(scene->getMenu(), &Menu::savePressed, this, &Data::saveData);
+  QObject::connect(scene->getMenu(), &Menu::loadPressed, this, &Data::loadData);
 }
 
-int Data::saveData() {
-    QFileDialog dialog(nullptr, tr("Save File"), "examples/", tr("JSON (*.json)"));
-    dialog.setAcceptMode(QFileDialog::AcceptSave);
-    dialog.setDefaultSuffix(tr(".json"));
-    QString fileName = dialog.getSaveFileName();
-    if (fileName.isEmpty()) return 0;
+void Data::saveData() {
+  QFileDialog dialog(nullptr, tr("Save File"), "examples/",
+                     tr("JSON (*.json)"));
+  dialog.setAcceptMode(QFileDialog::AcceptSave);
+  dialog.setDefaultSuffix(tr(".json"));
+  QString fileName = dialog.getSaveFileName();
+  if (fileName.isEmpty())
+    return;
 
-    std::ofstream f(qPrintable(fileName));
+  std::ofstream f(qPrintable(fileName));
 
-    json data;
+  json data;
 
-    qsizetype playersLen = this->scene->getPlayers().size();
-    data["players"]["len"] = playersLen;
-    for (qsizetype i = 0; i < playersLen; i++) {
-        Robot *item = this->scene->getPlayers().at(i);
-        //QPointF point(item->x(), item->y());
-        //point = item->mapToScene(point);
-        data["players"]["list"][i]["x"] = item->pos().x();
-        data["players"]["list"][i]["y"] = item->pos().y();
-        data["players"]["list"][i]["angle"] = item->getAngle();
+  for (MyItem *item : this->scene->getItems()) {
+    json itemData;
+    itemData["x"] = item->MyItem::pos().x();
+    itemData["y"] = item->MyItem::pos().y();
+
+    if (item->isWall()) {
+      Wall *wall = static_cast<Wall *>(item);
+      json wallData = itemData;
+      wallData["size"] = wall->getSize();
+      data["walls"]["list"].push_back(wallData);
+
+    } else {
+      Robot *robot = static_cast<Robot *>(item);
+      json robotData = itemData;
+      robotData["angle"] = robot->getAngle();
+      robotData["player"] = robot->isPlayer();
+      data["robots"]["list"].push_back(robotData);
     }
+  }
 
-    qsizetype robotsLen = this->scene->getRobots().size();
-    data["robots"]["len"] = robotsLen;
-    for (qsizetype i = 0; i < robotsLen; i++) {
-        Robot *item = this->scene->getRobots().at(i);
-        //QPointF point(item->x(), item->y());
-        //point = item->mapToScene(point);
-        data["robots"]["list"][i]["x"] = item->pos().x();
-        data["robots"]["list"][i]["y"] = item->pos().y();
-        data["robots"]["list"][i]["angle"] = item->getAngle();
-    }
-
-    qsizetype wallsLen = this->scene->getWalls().size();
-    data["walls"]["len"] = wallsLen;
-    for (qsizetype i = 0; i < wallsLen; i++) {
-        Wall *item = this->scene->getWalls().at(i);
-        QPointF point(item->x(), item->y());
-        point = item->mapToParent(point);
-        data["walls"]["list"][i]["x"] = item->pos().x();
-        data["walls"]["list"][i]["y"] = item->pos().y();
-        data["walls"]["list"][i]["size"] = item->getSize();
-    }
-
-    f << data.dump(4) << std::endl;
-    
-    return 0;
+  f << data.dump(4) << std::endl;
 }
 
-int Data::loadData() {
-    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open File"), "examples/", tr("JSON (*.json)"));
-    if (fileName.isEmpty()) return 0;
-    std::ifstream f(qPrintable(fileName));
+void Data::loadData() {
+  QString fileWithPath = QFileDialog::getOpenFileName(
+      nullptr, tr("Open File"), "examples/", tr("JSON (*.json)"));
+  if (fileWithPath.isEmpty())
+    return;
+  std::ifstream f(qPrintable(fileWithPath));
 
-    json data;
-    try {
-        data = json::parse(f);
-    } catch (json::parse_error& ex) {
-        std::cerr << "JSON file has wrong format\n";
-        f.close();
-        return -1;
-    }
-
+  QString fileName = fileWithPath.remove(0, fileWithPath.lastIndexOf('/') + 1);
+  json data;
+  try {
+    data = json::parse(f);
+  } catch (json::parse_error &ex) {
+    std::cerr << "file " << qPrintable(fileName) << "has wrong format"
+              << std::endl;
     f.close();
+    return;
+  }
 
-    if (data["players"]["len"] < 0 ||
-        data["robots"]["len"] < 0 ||
-        data["walls"]["len"] < 0) {
-        std::cerr << "in JSON file: \"len\" cannot be less than 0\n";
-        return -1;
-    }
+  f.close();
 
-    this->scene->clear();
+  this->scene->clear();
 
-    for (int i = 0; i < data["players"]["len"]; i++) {
+  for (auto &robotData : data["robots"]["list"].items()) {
 
-        int x = data["players"]["list"][i]["x"];
-        int y = data["players"]["list"][i]["y"];
-        if (x < 0 || y < 0) {
-            std::cerr << "in JSON file: player.\"x\"/\"y\" cannot be less than 0\n";
-            return -1;
-        }
+    qreal x;
+    qreal y;
+    qreal angle;
+    bool player;
 
-        int angle = data["players"]["list"][i]["angle"];
-        if (angle < 0 || angle >= 360) {
-            std::cerr << "in JSON file: player.\"angle\" must be between 0 (included) and 360 (excluded)\n";
-            return -1;
-        }
+    validateRobotData(robotData, &x, &y, &angle, &player, fileName);
 
-        QRectF rect(x, y, ROBOTSIZE, ROBOTSIZE);
-        Robot *player = new Robot(rect, angle, true);
-        //player->setParent(this);
-        scene->addRobot(player);
-        QObject::connect(scene, &MyScene::selectionChanged, player, &Robot::selectionChanged);
-    }
+    QPointer<Robot> robot = new Robot(x, y, angle, player);
+    scene->addItem(robot);
+  }
 
-    for (int i = 0; i < data["robots"]["len"]; i++) {
+  for (auto &wallData : data["walls"]["list"].items()) {
 
-        int x = data["robots"]["list"][i]["x"];
-        int y = data["robots"]["list"][i]["y"];
-        if (x < 0 || y < 0) {
-            std::cerr << "in JSON file: robot.\"x\"/\"y\" cannot be less than 0\n";
-            return -1;
-        }
+    qreal x;
+    qreal y;
+    int size;
 
-        int angle = data["robots"]["list"][i]["angle"];
-        if (angle < 0 || angle >= 360) {
-            std::cerr << "in JSON file: robot.\"angle\" must be between 0 (included) and 360 (excluded)\n";
-            return -1;
-        }
+    validateWallData(wallData, &x, &y, &size, fileName);
 
+    QPointer<Wall> wall = new Wall(x, y, size);
+    scene->addItem(wall);
+  }
+}
 
-        QRectF rect(x, y, ROBOTSIZE, ROBOTSIZE);
-        Robot *robot = new Robot(rect, angle, false);
-        //robot->setParent(this);
-        scene->addRobot(robot);
-        QObject::connect(scene, &MyScene::selectionChanged, robot, &Robot::selectionChanged);
-    }
+void Data::validateRobotData(
+    const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
+        nlohmann::json_abi_v3_11_3::detail::iter_impl<
+            nlohmann::json_abi_v3_11_3::basic_json<>>>
+        robotData,
+    qreal *x, qreal *y, qreal *angle, bool *player, QString fileName) {
+  try {
+    *x = robotData.value()["x"];
+    *y = robotData.value()["y"];
+    *angle = robotData.value()["angle"];
+    *player = robotData.value()["player"];
+  } catch (json::type_error &ex) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": a robot is missing a value or a value was entered with "
+                 "incorrect type\nskipping this robot\n"
+              << std::endl;
+    return;
+  }
 
-    for (int i = 0; i < data["walls"]["len"]; i++) {
+  if (*x < 0 || *y < 0) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": \"robot.x/y\" cannot be less than 0\nsetting value to 0\n"
+              << std::endl;
+    *x = *x < 0 ? 0 : *x;
+    *y = *y < 0 ? 0 : *y;
+  }
 
-        int x = data["walls"]["list"][i]["x"];
-        int y = data["walls"]["list"][i]["y"];
-        if (x < 0 || y < 0) {
-            std::cerr << "in JSON file: wall.\"x\"/\"y\" cannot be less than 0\n";
-            return -1;
-        }
+  int xLimit = this->scene->getSize().width() - ROBOTSIZE - 4;
+  int yLimit = this->scene->getSize().height() - ROBOTSIZE - 4;
+  if (*x > xLimit || *y > yLimit) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": \"robot.x/y\" cannot be more than screen size\nsetting "
+                 "value to maximum possible\n"
+              << std::endl;
+    *x = *x > xLimit ? xLimit : *x;
+    *y = *y > yLimit ? yLimit : *y;
+  }
 
-        int size = data["walls"]["list"][i]["size"];
-        if (size <= 0) {
-            std::cerr << "in JSON file: wall.\"size\" cannot be less than or equal to 0\n";
-            return -1;
-        }
+  if (*angle < 0 || *angle >= 360) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": \"robot.angle\" cannot be outside interval <0, "
+                 "360)\nsetting value to 0\n"
+              << std::endl;
+    *angle = 0;
+  }
+}
 
-        QRectF rect(x, y, size, size);
-        Wall *wall = new Wall(rect, size);
-        //wall->setParent(this);
-        scene->addWall(wall);
-        QObject::connect(scene, &MyScene::selectionChanged, wall, &Wall::selectionChanged);
-    }
+void Data::validateWallData(
+    const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
+        nlohmann::json_abi_v3_11_3::detail::iter_impl<
+            nlohmann::json_abi_v3_11_3::basic_json<>>>
+        wallData,
+    qreal *x, qreal *y, int *size, QString fileName) {
+  try {
+    *x = wallData.value()["x"];
+    *y = wallData.value()["y"];
+    *size = wallData.value()["size"];
+  } catch (json::type_error &ex) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": a wall is missing a value or a value was entered with "
+                 "incorrect type\nskipping this wall\n"
+              << std::endl;
+    return;
+  }
 
-    return 0;
+  if (*x < 0 || *y < 0) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": \"wall.x/y\" cannot be less than 0\nsetting value to 0\n"
+              << std::endl;
+    *x = *x < 0 ? 0 : *x;
+    *y = *y < 0 ? 0 : *y;
+  }
+
+  if (*size <= 0) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": \"wall.size\" cannot be less than or equal to zero "
+                 "\nsetting value to 1\n"
+              << std::endl;
+    *size = 1;
+  }
+
+  int xLimit = this->scene->getSize().width() - *size - 4;
+  int yLimit = this->scene->getSize().height() - *size - 4;
+  if (*x > xLimit || *y > yLimit) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": \"wall.x/y\" cannot be more than screen size\nsetting "
+                 "value to maximum possible\n"
+              << std::endl;
+    *x = *x > xLimit ? xLimit : *x;
+    *y = *y > yLimit ? yLimit : *y;
+  }
 }

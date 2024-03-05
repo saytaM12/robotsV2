@@ -1,46 +1,45 @@
 {
-    "players": {
-        "len": 2,
+    "robots": {
         "list": [
             {
                 "x": 0,
                 "y": 0,
-                "angle": 180
+                "angle": 180,
+                "player": true
             },
             {
                 "x": 870,
                 "y": 670,
-                "angle": 0
-            }
-        ]
-    },
-    "robots": {
-        "len": 4,
-        "list": [
+                "angle": 0,
+                "player": true
+            },
             {
                 "x": 50,
                 "y": 50,
-                "angle": 90
+                "angle": 90,
+                "player": false
             },
             {
                 "x": 100,
                 "y": 0,
-                "angle": 20
+                "angle": 20,
+                "player": false
             },
             {
                 "x": 0,
                 "y": 200,
-                "angle": 40
+                "angle": 40,
+                "player": false
             },
             {
                 "x": 150,
                 "y": 410,
-                "angle": 60
+                "angle": 60,
+                "player": false
             }
         ]
     },
     "walls": {
-        "len": 3,
         "list": [
             {
                 "x": 0,
