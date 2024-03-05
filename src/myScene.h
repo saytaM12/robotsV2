@@ -1,5 +1,4 @@
-#ifndef MYSCENE
-#define MYSCENE
+#pragma once
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -9,51 +8,88 @@
 
 class MyScene : public QGraphicsScene {
 
-    Q_OBJECT
+  Q_OBJECT
 
-    private:
-        QSize size;
-        Menu *menu;
-        MenuIcon *menuIcon;
-        QList<Robot *> players;
-        QList<Robot *> robots;
-        QList<Wall *> walls;
+private:
+  QPointer<Menu> menu;
+  QPointer<MenuIcon> menuIcon;
+  QList<QPointer<MyItem>> items;
 
-    public:
-        MyScene(QGraphicsScene *parent = nullptr);
+public:
+  /*
+   * This constructor is used to create a new MyScene object.
+   * @param QGraphicsScene *parent: The parent of this object.
+   */
+  MyScene(QSize size, QGraphicsScene *parent = nullptr);
 
-        QSize getSize();
+  /*
+   * This method is used to get the size of the scene.
+   * @return: QSize
+   */
+  QSize getSize() { return QSize(this->width(), this->height()); }
 
-        Menu *getMenu();
+  /*
+   * This method returns the menu.
+   * @return: Menu*
+   */
+  Menu *getMenu() { return this->menu; }
 
-        MenuIcon *getMenuIcon();
+  /*
+   * This method returns the menu icon.
+   * @return: MenuIcon*
+   */
+  MenuIcon *getMenuIcon() { return this->menuIcon; }
 
-        QList<Robot *> getPlayers();
+  /*
+   * This method returns the items in the scene. (excluding the menu and the
+   * menu icon)
+   * @return: QList<QPointer<MyItem>>
+   */
+  QList<QPointer<MyItem>> getItems() { return this->items; }
 
-        QList<Robot *> getRobots();
+  /*
+   * This methos adds an item to the scene and to the items list.
+   * @param MyItem *item: The item to be added.
+   * @return: void
+   */
+  void addItem(MyItem *item);
 
-        QList<Wall *> getWalls();
+  /*
+   * This methos removes all items from the scene. (excluding the menu and the
+   * menu icon). It also clears the items list.
+   * @return: void
+   */
+  void clear();
 
-        void addRobot(Robot *robot);
-
-        void addWall(Wall *wall);
-
-        void clear();
+public slots:
+  /*
+   * This slot is called when an item is dropped on the scene.
+   * It is used to check whether to remove an item, because it was dropped on
+   * the menu.
+   * @param MyItem *item: The item that was dropped.
+   * @return: void
+   */
+  void itemDropped(MyItem *item);
 };
 
 class MyView : public QGraphicsView {
 
-    Q_OBJECT
+private:
+  MyScene *scene;
 
-    private:
-        MyScene *scene;
-        bool alreadyClicked;
+public:
+  /*
+   * This constructor is used to create a new MyView object.
+   * @param MyScene *scene: The scene to be displayed.
+   */
+  MyView(MyScene *scene = nullptr);
 
-    public:
-        MyView(MyScene *scene = nullptr);
-
-    public slots:
-        void mousePressEvent(QMouseEvent *e) override;
+  /*
+   * This method is called when the mouse is pressed.
+   * It is used to create a new item when the sample robot or the sample wall is
+   * clicked.
+   * @param QMouseEvent *e: The mouse event.
+   * @return: void
+   */
+  void mousePressEvent(QMouseEvent *e);
 };
-
-#endif // MYSCENE
