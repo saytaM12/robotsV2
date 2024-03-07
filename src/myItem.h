@@ -1,5 +1,4 @@
-#ifndef ITEM
-#define ITEM
+#pragma once
 
 #include <QAbstractGraphicsShapeItem>
 #include <QWidget>
@@ -12,29 +11,19 @@ private:
   bool selectedFromHover;
 
 public:
-  /*
-   * This constructor is used to create a new item
+  /* This constructor is used to create a new item
    * @param qreal x: The x position of the item
    * @param qreal y: The y position of the item
    * @param QAbstractGraphicsShapeItem *parent: The parent of this object.
    */
-  MyItem(qreal x, qreal y, QAbstractGraphicsShapeItem *parent = nullptr);
+  MyItem(qreal x, qreal y, QGraphicsItem *parent = nullptr);
 
-  /*
-   * This constructor is used to create a copy of an existing item
-   * @param MyItem *item: The item to be copied
-   * @param QAbstractGraphicsShapeItem *parent: The parent of this object.
-   */
-  MyItem(MyItem *item, QAbstractGraphicsShapeItem *parent = nullptr);
-
-  /*
-   * This virtual method must be implemented by the subclasses to return if the
+  /* This virtual method must be implemented by the subclasses to return if the
    * item is a wall
    */
   virtual bool isWall() const = 0;
 
-  /*
-   * This method is called when the mouse enters the item
+  /* This method is called when the mouse enters the item
    * If the item wasn't selected, it will become selected and the fact that it
    * was selected from mouse hover will be stored. This is so that the item
    * cannot be unselected be hoverLeaveEvent if it was selevted by group
@@ -44,16 +33,14 @@ public:
    */
   void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
-  /*
-   * This method is called when the mouse leaves the item
+  /* This method is called when the mouse leaves the item
    * If the item was selected from hover, it will be unselected.
    * @param QGraphicsSceneHoverEvent *event: The event that triggered this
    * @return: void
    */
   void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
-  /*
-   * This method is called when the user presses the mouse button
+  /* This method is called when the user presses the mouse button
    * Changes the cursor, and puts the item on top of all of the other items (for
    * painting purposes).
    * @param QGraphicsSceneMouseEvent *event: The event that triggered this
@@ -61,8 +48,7 @@ public:
    */
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-  /*
-   * This method is called when the user releases the mouse button
+  /* This method is called when the user releases the mouse button
    * Changes the cursor and puts the item back the bottom layer (for painting
    * purposes). This method also emits the mouseReleased signal.
    * @parem QGraphicsSceneMouseEvent *event: The event that triggered this
@@ -73,5 +59,3 @@ public:
 signals:
   void mouseReleased(MyItem *item);
 };
-
-#endif // ITEM
