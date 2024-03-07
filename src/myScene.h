@@ -1,5 +1,4 @@
-#ifndef MYSCENE
-#define MYSCENE
+#pragma once
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -12,7 +11,6 @@ class MyScene : public QGraphicsScene {
   Q_OBJECT
 
 private:
-  QSize size;
   QPointer<Menu> menu;
   QPointer<MenuIcon> menuIcon;
   QList<QPointer<MyItem>> items;
@@ -22,32 +20,32 @@ public:
    * This constructor is used to create a new MyScene object.
    * @param QGraphicsScene *parent: The parent of this object.
    */
-  MyScene(QGraphicsScene *parent = nullptr);
+  MyScene(QSize size, QGraphicsScene *parent = nullptr);
 
   /*
    * This method is used to get the size of the scene.
    * @return: QSize
    */
-  QSize getSize();
+  QSize getSize() { return QSize(this->width(), this->height()); }
 
   /*
    * This method returns the menu.
    * @return: Menu*
    */
-  Menu *getMenu();
+  Menu *getMenu() { return this->menu; }
 
   /*
    * This method returns the menu icon.
    * @return: MenuIcon*
    */
-  MenuIcon *getMenuIcon();
+  MenuIcon *getMenuIcon() { return this->menuIcon; }
 
   /*
    * This method returns the items in the scene. (excluding the menu and the
    * menu icon)
    * @return: QList<QPointer<MyItem>>
    */
-  QList<QPointer<MyItem>> getItems();
+  QList<QPointer<MyItem>> getItems() { return this->items; }
 
   /*
    * This methos adds an item to the scene and to the items list.
@@ -76,8 +74,6 @@ public slots:
 
 class MyView : public QGraphicsView {
 
-  Q_OBJECT
-
 private:
   MyScene *scene;
 
@@ -88,15 +84,12 @@ public:
    */
   MyView(MyScene *scene = nullptr);
 
-public slots:
   /*
-   * This slot is called when the mouse is pressed on the view.
-   * If the click was on a sample item a new item will be created and added to
-   * the scene.
-   * @param QMouseEvent *e: The event that was triggered.
+   * This method is called when the mouse is pressed.
+   * It is used to create a new item when the sample robot or the sample wall is
+   * clicked.
+   * @param QMouseEvent *e: The mouse event.
    * @return: void
    */
-  void mousePressEvent(QMouseEvent *e) override;
+  void mousePressEvent(QMouseEvent *e);
 };
-
-#endif // MYSCENE

@@ -1,7 +1,7 @@
-#ifndef ROBOT
-#define ROBOT
+#pragma once
 
 #include <QGraphicsEllipseItem>
+#include <QGraphicsRectItem>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
@@ -31,59 +31,61 @@ public:
    * @param MyItem *parent The parent of the robot.
    */
   Robot(int x, int y, int angle = 0, bool player = false,
-        MyItem *parent = nullptr);
+        QGraphicsItem *parent = nullptr);
 
   /*
-   * The constructor used to create a nwe Robot from an existing Robot.
-   * @param Robot *robot The robot to be copied.
+   * The constructor used to create a new Robot based off of another robot.
+   * @param Robot *robot The robot that this robot is based off of.
    * @param MyItem *parent The parent of the robot.
    */
-  Robot(Robot *robot, MyItem *parent = nullptr);
+  Robot(Robot *robot, QGraphicsItem *parent = nullptr)
+      : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getAngle(),
+              robot->isPlayer(), parent) {}
 
   /*
    * Method that returns whether this item is a wall or not. Always returns
    * false.
    * @return: bool false
    */
-  bool isWall() const;
+  bool isWall() const { return false; }
 
   /*
    * This method returns the angle that the robot is facing.
    * @return: int
    */
-  int getAngle();
+  int getAngle() { return this->angle; }
 
   /*
    * This method returns whether the robot is a player or not.
    * @return: bool
    */
-  bool isPlayer();
+  bool isPlayer() { return this->player; }
 
   /*
    * This method returns whether the robot is moving or not.
    * @return: bool
    */
-  bool getMoving();
+  bool getMoving() { return this->moving; }
 
   /*
    * This method sets the angle that the robot is facing.
    * @param int angle: The angle that the robot is facing.
    * @return: void
    */
-  void setAngle(int angle);
+  void setAngle(int angle) { this->angle = angle; }
 
   /*
    * This method sets the player status of the robot.
    * @param bool player: Whether the robot is a player or not.
    */
-  void setPlayer(bool player);
+  void setPlayer(bool player) { this->player = player; }
 
   /*
    * This method sets the moving status of the robot.
    * @param bool moving: Whether the robot is moving or not.
    * @return: void
    */
-  void setMoving(bool moving);
+  void setMoving(bool moving) { this->moving = moving; }
 
   /*
    * This method is called when the robot is right clicked.
@@ -99,7 +101,7 @@ public:
    * to inheritance sheananigans.
    * @return: QRectF
    */
-  QRectF boundingRect() const;
+  QRectF boundingRect() const { return this->rect(); }
 
   /*
    * This method is used to paint the robot.
@@ -112,5 +114,3 @@ public:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr);
 };
-
-#endif // ROBOT

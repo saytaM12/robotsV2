@@ -1,6 +1,6 @@
 #include "robot.h"
 
-Robot::Robot(int x, int y, int angle, bool player, MyItem *parent)
+Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
     : MyItem(x, y, parent) {
   setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
   this->angle = angle;
@@ -8,30 +8,10 @@ Robot::Robot(int x, int y, int angle, bool player, MyItem *parent)
   this->moving = false;
 }
 
-Robot::Robot(Robot *robot, MyItem *parent)
-    : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getAngle(),
-            robot->isPlayer(), parent) {}
-
-bool Robot::isWall() const { return false; }
-
-int Robot::getAngle() { return this->angle; }
-
-bool Robot::isPlayer() { return this->player; }
-
-bool Robot::getMoving() { return this->moving; }
-
-void Robot::setAngle(int angle) { this->angle = angle; }
-
-void Robot::setPlayer(bool player) { this->player = player; }
-
-void Robot::setMoving(bool moving) { this->moving = moving; }
-
 void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *) {
   this->player = !this->player;
   this->MyItem::update();
 }
-
-QRectF Robot::boundingRect() const { return this->rect(); }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                   QWidget *) {

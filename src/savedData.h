@@ -1,5 +1,4 @@
-#ifndef SAVEDDATA
-#define SAVEDDATA
+#pragma once
 
 #include <QFileDialog>
 #include <QObject>
@@ -83,5 +82,3 @@ public:
           wallData,
       qreal *x, qreal *y, int *size, QString fileName);
 };
-
-#endif // SAVEDDATA

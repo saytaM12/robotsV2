@@ -1,29 +1,12 @@
 #include "menuIcon.h"
 
-MenuIcon::MenuIcon(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
+MenuIcon::MenuIcon(QGraphicsScene *parent) : QGraphicsRectItem() {
+  parent->addItem(this);
   setAcceptHoverEvents(true);
   setCursor(Qt::PointingHandCursor);
-  int iconSize = 50;
-  int iconX = 40;
-  int iconY = 40;
-  setRect(iconX, iconY, iconSize, iconSize);
+  setRect(40, 40, 50, 50);
   setOpacity(0.5);
   setZValue(2);
-}
-
-void MenuIcon::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
-    this->clicked = true;
-  }
-}
-
-void MenuIcon::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-  if (event->button() == Qt::LeftButton) {
-    if (this->clicked) {
-      this->clicked = false;
-      emit menuToggled();
-    }
-  }
 }
 
 void MenuIcon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

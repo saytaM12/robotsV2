@@ -1,25 +1,47 @@
 #include "wall.h"
 
-Wall::Wall(int x, int y, int size, MyItem *parent) : MyItem(x, y, parent) {
-  setRect(0, 0, size, size);
-  this->size = size;
+WallResize::WallResize(Wall *wall, Position pos) : QGraphicsRectItem() {
+  switch (pos) {
+  case TOP:
+    this->setRect(0, 0, wall->rect().width(), WALL_RESIZE_SIZE);
+    this->setCursor(Qt::SizeVerCursor);
+    break;
+  case BOTTOM:
+    this->setRect(0, wall->rect().height() - WALL_RESIZE_SIZE,
+                  wall->rect().width(), WALL_RESIZE_SIZE);
+    this->setCursor(Qt::SizeVerCursor);
+    break;
+  case LEFT:
+    this->setRect(0, 0, WALL_RESIZE_SIZE, wall->rect().height());
+    this->setCursor(Qt::SizeHorCursor);
+    break;
+  case RIGHT:
+    this->setRect(wall->rect().width() - WALL_RESIZE_SIZE, 0, WALL_RESIZE_SIZE,
+                  wall->rect().height());
+    this->setCursor(Qt::SizeHorCursor);
+    break;
+  }
+  this->setFlag(QGraphicsItem::ItemIsMovable);
+  this->setZValue(10);
 
+  MyItem *item = wall;
+  this->setParentItem(item);
 }
 
-Wall::Wall(Wall *wall, MyItem *parent)
-    : Wall(wall->MyItem::x(), wall->MyItem::y(), wall->getSize(), parent) {}
-
-bool Wall::isWall() const { return true; }
-
-int Wall::getSize() { return this->size; }
+Wall::Wall(int x, int y, int size, QGraphicsItem *parent)
+    : MyItem(x, y, parent), QGraphicsRectItem(0, 0, size, size), size(size),
+      topResize(new WallResize(this, TOP)),
+      bottomResize(new WallResize(this, BOTTOM)),
+      leftResize(new WallResize(this, LEFT)),
+      rightResize(new WallResize(this, RIGHT)) {
+  setRect(0, 0, size, size);
+}
 
 void Wall::setSize(int size) {
   this->size = size;
   this->setRect(0, 0, size, size);
   this->MyItem::update();
 }
-
-QRectF Wall::boundingRect() const { return this->rect(); }
 
 void Wall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                  QWidget *) {

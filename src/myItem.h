@@ -1,5 +1,4 @@
-#ifndef ITEM
-#define ITEM
+#pragma once
 
 #include <QAbstractGraphicsShapeItem>
 #include <QWidget>
@@ -18,14 +17,7 @@ public:
    * @param qreal y: The y position of the item
    * @param QAbstractGraphicsShapeItem *parent: The parent of this object.
    */
-  MyItem(qreal x, qreal y, QAbstractGraphicsShapeItem *parent = nullptr);
-
-  /*
-   * This constructor is used to create a copy of an existing item
-   * @param MyItem *item: The item to be copied
-   * @param QAbstractGraphicsShapeItem *parent: The parent of this object.
-   */
-  MyItem(MyItem *item, QAbstractGraphicsShapeItem *parent = nullptr);
+  MyItem(qreal x, qreal y, QGraphicsItem *parent = nullptr);
 
   /*
    * This virtual method must be implemented by the subclasses to return if the
@@ -73,5 +65,3 @@ public:
 signals:
   void mouseReleased(MyItem *item);
 };
-
-#endif // ITEM

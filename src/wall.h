@@ -1,5 +1,4 @@
-#ifndef WALL
-#define WALL
+#pragma once
 
 #include <QGraphicsRectItem>
 #include <QPainter>
@@ -8,9 +7,20 @@
 #include <QWidget>
 
 #include "myItem.h"
-#include "wallResize.h"
 
-class WallResize;
+#define WALL_RESIZE_SIZE 10
+
+class Wall;
+
+enum Position { TOP, BOTTOM, LEFT, RIGHT };
+
+class WallResize : public QObject, public QGraphicsRectItem {
+
+  Q_OBJECT
+
+public:
+  WallResize(Wall *wall, Position pos);
+};
 
 class Wall : public MyItem, public QGraphicsRectItem {
 
@@ -18,6 +28,10 @@ class Wall : public MyItem, public QGraphicsRectItem {
 
 private:
   int size;
+  QPointer<WallResize> topResize;
+  QPointer<WallResize> bottomResize;
+  QPointer<WallResize> leftResize;
+  QPointer<WallResize> rightResize;
 
 public:
   /*
@@ -26,27 +40,27 @@ public:
    * @param int size: The size of the wall. default is 100.
    * @param MyItem *parent: The parent of the wall.
    */
-  Wall(int x, int y, int size = 100, MyItem *parent = nullptr);
+  Wall(int x, int y, int size = 100, QGraphicsItem *parent = nullptr);
 
   /*
-   * Constructor for the Wall object. Creates a new Wall based on an existing
-   * Wall.
-   * @param Wall *wall: The wall to be copied.
+   * Constructor for the Wall object. Creates a new wall based off of another
+   * @param Wall *wall: The wall that this wall is based off of.
    * @param MyItem *parent: The parent of the wall.
    */
-  Wall(Wall *wall, MyItem *parent = nullptr);
+  Wall(Wall *wall, QGraphicsItem *parent = nullptr)
+      : Wall(wall->MyItem::x(), wall->MyItem::y(), wall->getSize(), parent) {}
 
   /*
    * This method returns whether the item is a wall. Always returns true.
    * @return: bool true
    */
-  bool isWall() const;
+  bool isWall() const { return true; }
 
   /*
    * This method returns the size of the wall.
    * @return: int
    */
-  int getSize();
+  int getSize() { return this->size; }
 
   /*
    * This method sets the size of the wall.
@@ -61,7 +75,7 @@ public:
    * due to inheritance sheananigans.
    * @return: QRectF
    */
-  QRectF boundingRect() const;
+  QRectF boundingRect() const { return this->rect(); }
 
   /*
    * This method is used to paint the wall.
@@ -74,5 +88,3 @@ public:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr);
 };
-
-#endif // WALL
