@@ -1,7 +1,7 @@
-#ifndef ROBOT
-#define ROBOT
+#pragma once
 
 #include <QGraphicsEllipseItem>
+#include <QGraphicsRectItem>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
@@ -23,86 +23,79 @@ private:
   bool clockwise;
 
 public:
-  /*
-   * The constructor used to create a new Robot.
+  /* The constructor used to create a new Robot.
    * @param QRectF rect The rectangle that the robot is in.
    * @param int angle The angle that the robot is facing.
    * @param bool player Whether the robot is a player or not.
    * @param MyItem *parent The parent of the robot.
    */
   Robot(int x, int y, int angle = 0, bool player = false,
-        MyItem *parent = nullptr);
+        QGraphicsItem *parent = nullptr);
 
-  /*
-   * The constructor used to create a nwe Robot from an existing Robot.
-   * @param Robot *robot The robot to be copied.
+  /* The constructor used to create a new Robot based off of another robot.
+   * @param Robot *robot The robot that this robot is based off of.
    * @param MyItem *parent The parent of the robot.
    */
-  Robot(Robot *robot, MyItem *parent = nullptr);
+  Robot(Robot *robot, QGraphicsItem *parent = nullptr)
+      : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getAngle(),
+              robot->isPlayer(), parent) {}
 
-  /*
-   * Method that returns whether this item is a wall or not. Always returns
+  /* Method that returns whether this item is a wall or not. Always returns
    * false.
    * @return: bool false
    */
-  bool isWall() const;
+  inline bool isWall() const { return false; }
 
-  /*
-   * This method returns the angle that the robot is facing.
+  /* This method returns the angle that the robot is facing.
    * @return: int
    */
-  int getAngle();
+  inline int getAngle() { return this->angle; }
 
-  /*
-   * This method returns whether the robot is a player or not.
+  /* This method returns whether the robot is a player or not.
    * @return: bool
    */
-  bool isPlayer();
+  inline bool isPlayer() { return this->player; }
 
-  /*
-   * This method returns whether the robot is moving or not.
+  /* This method returns whether the robot is moving or not.
    * @return: bool
    */
-  bool getMoving();
+  inline bool getMoving() { return this->moving; }
 
-  /*
-   * This method sets the angle that the robot is facing.
+  /* This method sets the angle that the robot is facing.
    * @param int angle: The angle that the robot is facing.
    * @return: void
    */
-  void setAngle(int angle);
+  inline void setAngle(int angle) { this->angle = angle; }
 
-  /*
-   * This method sets the player status of the robot.
+  /* This method sets the player status of the robot.
    * @param bool player: Whether the robot is a player or not.
    */
-  void setPlayer(bool player);
+  inline void setPlayer(bool player) { this->player = player; }
 
-  /*
-   * This method sets the moving status of the robot.
+  /* This method sets the moving status of the robot.
    * @param bool moving: Whether the robot is moving or not.
    * @return: void
    */
-  void setMoving(bool moving);
+  inline void setMoving(bool moving) { this->moving = moving; }
 
-  /*
-   * This method is called when the robot is right clicked.
+  /* This method is called when the robot is right clicked.
    * It simply toggles the player status of the robot.
    * @param QGraphicsSceneContextMenuEvent *event: The event that occured.
    * @return: void
    */
-  void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+  inline void contextMenuEvent(QGraphicsSceneContextMenuEvent *) {
+    this->player = !this->player;
+    this->MyItem::update();
+  }
 
-  /*
-   * Method to return the bounding rectangle of the robot.
+  /* Method to return the bounding rectangle of the robot.
    * This method must be implemented, otherwise the program breaks. This is due
    * to inheritance sheananigans.
    * @return: QRectF
    */
-  QRectF boundingRect() const;
+  QRectF boundingRect() const { return this->rect(); }
 
-  /*
-   * This method is used to paint the robot.
+  /* This method is used to paint the robot.
    * @param QPainter *painter: The painter object.
    * @param QStyleOptionGraphicsItem *option: The options for the painting.
    * @param QWidget *widget: The widget that the painting is occuring in.
@@ -112,5 +105,3 @@ public:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
              QWidget *widget = nullptr);
 };
-
-#endif // ROBOT

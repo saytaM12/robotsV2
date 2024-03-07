@@ -1,57 +1,49 @@
 #include "menu.h"
 
-Menu::Menu(QGraphicsRectItem *parent) : QGraphicsRectItem(parent) {
+MyButton::MyButton(QRectF rect, QString string, Menu *menu)
+    : QGraphicsRectItem(menu), string(string) {
+
+  setCursor(Qt::PointingHandCursor);
+  setX(rect.x());
+  setY(rect.y());
+  setRect(0, 0, rect.width(), rect.height());
+}
+
+void MyButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                     QWidget *) {
+  painter->setPen(Qt::black);
+  painter->setBrush(Qt::white);
+  painter->drawRoundedRect(option->rect, option->rect.height() / 4.5,
+                           option->rect.height() / 4.5);
+
+  painter->setFont(QFont(QString("Arial"), option->rect.height() / 3.0));
+  painter->drawText(option->rect, this->string, QTextOption(Qt::AlignCenter));
+}
+
+Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *parent)
+    : QGraphicsRectItem(),
+      saveButton(
+          new MyButton(LEFT_BUTTON_RECT(menuWidth, menuHeight), "Save", this)),
+      loadButton(
+          new MyButton(RIGHT_BUTTON_RECT(menuWidth, menuHeight), "Load", this)),
+      sampleWall(new SampleWall(SAMPLE_WALL_RECT(menuWidth, menuHeight), this)),
+      sampleRobot(new SampleRobot(SAMPLE_ROBOT_TOPLEFT(menuWidth, menuHeight),
+                                  0, false, this)) {
 
   setAcceptHoverEvents(true);
   setFlag(QGraphicsItem::ItemIsSelectable);
-  QGraphicsRectItem::setCursor(Qt::ArrowCursor);
 
-  QSize windowSize(1280, 920);
-
-  int menuWidth = windowSize.width() / 4.0;
-  int menuHeight = windowSize.height();
-  int buttonWidth = menuWidth / 3.0;
-  int buttonHeight = menuWidth / 5.0;
-  int sampleSize = menuWidth * SCALER;
-
-  setRect(POS, 0, menuWidth, menuHeight);
-  setZValue(1);
-
-  saveButton = new MyButton("Save", this);
-  int saveButtonX = POS + menuWidth / 9.0;
-  int saveButtonY = menuHeight - buttonHeight - 30;
-  saveButton->setRect(saveButtonX, saveButtonY, buttonWidth, buttonHeight);
   QObject::connect(saveButton, &MyButton::pressed, this, &Menu::savePressed);
-
-  loadButton = new MyButton("Load", this);
-  int loadButtonX = saveButtonX + buttonWidth + menuWidth / 9.0;
-  int loadButtonY = saveButtonY;
-  loadButton->setRect(loadButtonX, loadButtonY, buttonWidth, buttonHeight);
   QObject::connect(loadButton, &MyButton::pressed, this, &Menu::loadPressed);
 
-  sampleRobot = new SampleRobot(POS + menuWidth / 2.0 - ROBOTSIZE / 2.0,
-                                menuHeight - buttonHeight - 60 - sampleSize -
-                                    (menuWidth - sampleSize) / 2.0 -
-                                    sampleSize / 2.0 - ROBOTSIZE / 2.0,
-                                0, false);
-  sampleRobot->MyItem::setParentItem(this);
+  setX(0);
+  setY(0);
+  setRect(0, 0, menuWidth, menuHeight);
+  setZValue(1);
 
-  sampleWall = new SampleWall(
-      POS + menuWidth / 2.0 - 50,
-      menuHeight - buttonHeight - 60 - sampleSize / 2.0 - 50, 100);
-  sampleWall->MyItem::setParentItem(this);
-
+  parent->addItem(this);
   QGraphicsRectItem::setVisible(false);
 }
-
-void Menu::toggle() {
-  QGraphicsRectItem::setVisible(!QGraphicsRectItem::isVisible());
-  QGraphicsRectItem::update();
-}
-
-SampleRobot *Menu::getSampleRobot() { return this->sampleRobot; }
-
-SampleWall *Menu::getSampleWall() { return this->sampleWall; }
 
 void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                  QWidget *) {
@@ -59,15 +51,9 @@ void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
   painter->setBrush(Qt::gray);
   painter->drawRect(option->rect);
 
-  int buttonHeight = option->rect.width() / 5.0;
-  int sampleSize = option->rect.width() * SCALER;
-  int samplePadding = (option->rect.width() - sampleSize) / 2.0;
   painter->setBrush(Qt::darkGray);
-  painter->drawRect(option->rect.x() + samplePadding,
-                    option->rect.bottom() - buttonHeight - 60 - sampleSize * 2 -
-                        samplePadding,
-                    sampleSize, sampleSize);
-  painter->drawRect(option->rect.x() + samplePadding,
-                    option->rect.bottom() - buttonHeight - 60 - sampleSize,
-                    sampleSize, sampleSize);
+  painter->drawRect(
+      TOP_SAMPLE_BACKGROUND_RECT(option->rect.width(), option->rect.height()));
+  painter->drawRect(
+      BOT_SAMPLE_BACKGROUND_RECT(option->rect.width(), option->rect.height()));
 }

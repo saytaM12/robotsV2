@@ -1,7 +1,7 @@
-#ifndef MENUICON
-#define MENUICON
+#pragma once
 
 #include <QGraphicsRectItem>
+#include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QObject>
 #include <QPainter>
@@ -13,38 +13,30 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
 
   Q_OBJECT
 
-private:
-  bool clicked;
-
 public:
-  /*
-   * This construcetor is used to create a new MenuIcon object.
+  /* This construcetor is used to create a new MenuIcon object.
    * @param QGraphicsRectItem *parent: The parent of this object.
    */
-  MenuIcon(QGraphicsRectItem *parent = nullptr);
+  MenuIcon(QGraphicsScene *parent = nullptr);
 
-  /*
-   * This method is called when the mouse is pressed on the menu icon.
-   * It stores the fact that the mouse was pressed on the icon. This is needed
-   * so the user cannot just release the  the mouse on the icon and trigger the
-   * event.
+  /* This method is called when the mouse is pressed on the menu icon.
+   * It does nothing, but if it isn't implemented, the `mouseReleaseEvent`
+   * method won't ever be called.
    * @param QGraphicsSceneMouseEvent *event: The event that was triggered.
    * @return: void
    */
-  void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  void mousePressEvent(QGraphicsSceneMouseEvent *) {}
 
-  /*
-   * This methos is called when the mouse, which was pressed on the menu icon,
+  /* This methos is called when the mouse, which was pressed on the menu icon,
    * is released.
    * If the mouse was pressed on the icon and then released on the icon, a
    * signal (menuToggled) will be emitted to toggle the menu.
    * @param QGraphicsSceneMouseEvent *event: The event that was triggered.
    * @return: void
    */
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent *) { emit menuToggled(); }
 
-  /*
-   * This method is called to paint the menu icon.
+  /* This method is called to paint the menu icon.
    * @param QPainter *painter: The painter to be used.
    * @param const QStyleOptionGraphicsItem *option: The option to be used.
    * @param QWidget *widget: The widget on which the painting will be done.
@@ -57,5 +49,3 @@ public:
 signals:
   void menuToggled();
 };
-
-#endif // MENUICON
