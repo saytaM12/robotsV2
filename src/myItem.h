@@ -16,7 +16,7 @@ public:
    * @param qreal y: The y position of the item
    * @param QAbstractGraphicsShapeItem *parent: The parent of this object.
    */
-  MyItem(qreal x, qreal y, QGraphicsItem *parent = nullptr);
+  MyItem(QGraphicsItem *parent = nullptr);
 
   /* This virtual method must be implemented by the subclasses to return if the
    * item is a wall
