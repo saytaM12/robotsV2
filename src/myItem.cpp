@@ -1,11 +1,13 @@
 #include "myItem.h"
 
-MyItem::MyItem(QGraphicsItem *parent)
+MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
     : QAbstractGraphicsShapeItem(parent), selectedFromHover(false) {
   setFlag(QGraphicsItem::ItemIsSelectable);
   setFlag(QGraphicsItem::ItemIsMovable);
   setCursor(Qt::OpenHandCursor);
   setAcceptHoverEvents(true);
+  setX(x);
+  setY(y);
 }
 
 void MyItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {

@@ -37,7 +37,7 @@ public:
    * @param MyItem *parent The parent of the robot.
    */
   Robot(Robot *robot, QGraphicsItem *parent = nullptr)
-      : Robot(robot->rect().x(), robot->rect().y(), robot->getAngle(),
+      : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getAngle(),
               robot->isPlayer(), parent) {}
 
   /* Method that returns whether this item is a wall or not. Always returns
