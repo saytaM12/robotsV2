@@ -19,8 +19,9 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
   painter->setPen(Qt::NoPen);
   painter->drawEllipse(option->rect);
 
-  /* painter->setPen(QPen(Qt::yellow, ROBOTSIZE / 10, Qt::SolidLine, */
-  /*                      Qt::RoundCap, Qt::RoundJoin)); */
+  /* painter->setPen(QPen(Qt::yellow, ROBOTSIZE / 10, Qt::SolidLine,
+   * Qt::RoundCap, */
+  /*                      Qt::RoundJoin)); */
   /* painter->setBrush(Qt::NoBrush); */
   /* QLineF line(option->rect.center(), QPointF(0, 0)); */
   /* line.setLength(ROBOTSIZE * (4.0 / 10.0)); */
