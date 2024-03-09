@@ -202,11 +202,7 @@ void Data::loadData() {
     qreal angle;
     bool player;
 
-    if (validateRobotData(robotData, &x, &y, &angle, &player,
-                          this->scene->getWidth(), this->scene->getHeight(),
-                          fileName)) {
-      continue;
-    }
+    validateRobotData(robotData, &x, &y, &angle, &player, fileName);
 
     QPointer<Robot> robot = new Robot(x, y, angle, player);
     scene->addItem(robot);
@@ -216,16 +212,108 @@ void Data::loadData() {
 
     qreal x;
     qreal y;
-    int width;
-    int height;
+    int size;
 
-    if (validateWallData(wallData, &x, &y, &width, &height,
-                         this->scene->getWidth(), this->scene->getHeight(),
-                         fileName)) {
-      continue;
-    }
+    validateWallData(wallData, &x, &y, &size, fileName);
 
-    QPointer<Wall> wall = new Wall(x, y, width, height);
+    QPointer<Wall> wall = new Wall(x, y, size);
     scene->addItem(wall);
+  }
+}
+
+void Data::validateRobotData(
+    const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
+        nlohmann::json_abi_v3_11_3::detail::iter_impl<
+            nlohmann::json_abi_v3_11_3::basic_json<>>>
+        robotData,
+    qreal *x, qreal *y, qreal *angle, bool *player, QString fileName) {
+  try {
+    *x = robotData.value()["x"];
+    *y = robotData.value()["y"];
+    *angle = robotData.value()["angle"];
+    *player = robotData.value()["player"];
+  } catch (json::type_error &ex) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": a robot is missing a value or a value was entered with "
+                 "incorrect type\nskipping this robot\n"
+              << std::endl;
+    return;
+  }
+
+  if (*x < 0 || *y < 0) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": \"robot.x/y\" cannot be less than 0\nsetting value to 0\n"
+              << std::endl;
+    *x = *x < 0 ? 0 : *x;
+    *y = *y < 0 ? 0 : *y;
+  }
+
+  int xLimit = this->scene->getSize().width() - ROBOTSIZE - 4;
+  int yLimit = this->scene->getSize().height() - ROBOTSIZE - 4;
+  if (*x > xLimit || *y > yLimit) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": \"robot.x/y\" cannot be more than screen size\nsetting "
+                 "value to maximum possible\n"
+              << std::endl;
+    *x = *x > xLimit ? xLimit : *x;
+    *y = *y > yLimit ? yLimit : *y;
+  }
+
+  if (*angle < 0 || *angle >= 360) {
+    std::cerr << "in file "
+              << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+              << ": \"robot.angle\" cannot be outside interval <0, "
+                 "360)\nsetting value to 0\n"
+              << std::endl;
+    *angle = 0;
+  }
+}
+
+void Data::validateWallData(
+    const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
+        nlohmann::json_abi_v3_11_3::detail::iter_impl<
+            nlohmann::json_abi_v3_11_3::basic_json<>>>
+        wallData,
+    qreal *x, qreal *y, int *size, QString fileName) {
+  try {
+    *x = wallData.value()["x"];
+    *y = wallData.value()["y"];
+    *size = wallData.value()["size"];
+  } catch (json::type_error &ex) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": a wall is missing a value or a value was entered with "
+                 "incorrect type\nskipping this wall\n"
+              << std::endl;
+    return;
+  }
+
+  if (*x < 0 || *y < 0) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": \"wall.x/y\" cannot be less than 0\nsetting value to 0\n"
+              << std::endl;
+    *x = *x < 0 ? 0 : *x;
+    *y = *y < 0 ? 0 : *y;
+  }
+
+  if (*size <= 0) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": \"wall.size\" cannot be less than or equal to zero "
+                 "\nsetting value to 1\n"
+              << std::endl;
+    *size = 1;
+  }
+
+  int xLimit = this->scene->getSize().width() - *size - 4;
+  int yLimit = this->scene->getSize().height() - *size - 4;
+  if (*x > xLimit || *y > yLimit) {
+    std::cerr << "in file " << qPrintable(fileName)
+              << ": \"wall.x/y\" cannot be more than screen size\nsetting "
+                 "value to maximum possible\n"
+              << std::endl;
+    *x = *x > xLimit ? xLimit : *x;
+    *y = *y > yLimit ? yLimit : *y;
   }
 }
