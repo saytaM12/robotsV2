@@ -1,5 +1,23 @@
 #include "myScene.h"
 
+void MyScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  QGraphicsScene::mouseMoveEvent(event);
+
+  for (MyItem *item : this->items) {
+    int width = item->boundingRect().width();
+    int x = item->MyItem::x();
+    x = x + width > this->getWidth() ? this->getWidth() - width : x;
+    x = x < 0 ? 0 : x;
+    item->MyItem::setX(x);
+
+    int height = item->boundingRect().height();
+    int y = item->MyItem::y();
+    y = y + height > this->getHeight() ? this->getHeight() - height : y;
+    y = y < 0 ? 0 : y;
+    item->MyItem::setY(y);
+  }
+}
+
 MyScene::MyScene(QSize size, QGraphicsScene *parent)
     : QGraphicsScene(parent),
       menu(new Menu(size.width() / 5.0, size.height(), this)),
