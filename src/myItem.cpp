@@ -28,7 +28,7 @@ void MyItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
   this->setCursor(Qt::ClosedHandCursor);
   this->setZValue(3);
 
-  QGraphicsItem::mouseReleaseEvent(event);
+  QGraphicsItem::mousePressEvent(event);
 }
 
 void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
@@ -36,6 +36,5 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   this->setZValue(0);
 
   QGraphicsItem::mouseReleaseEvent(event);
-
   emit mouseReleased(this);
 }

@@ -27,14 +27,14 @@ void Data::saveData() {
       json wallData = itemData;
       wallData["width"] = wall->rect().width();
       wallData["height"] = wall->rect().height();
-      data["walls"]["list"].push_back(wallData);
+      data["walls"].push_back(wallData);
 
     } else {
       Robot *robot = static_cast<Robot *>(item);
       json robotData = itemData;
       robotData["angle"] = robot->getAngle();
       robotData["player"] = robot->isPlayer();
-      data["robots"]["list"].push_back(robotData);
+      data["robots"].push_back(robotData);
     }
   }
 
@@ -195,7 +195,7 @@ void Data::loadData() {
 
   this->scene->clear();
 
-  for (auto &robotData : data["robots"]["list"].items()) {
+  for (auto &robotData : data["robots"].items()) {
 
     qreal x;
     qreal y;
@@ -212,7 +212,7 @@ void Data::loadData() {
     scene->addItem(robot);
   }
 
-  for (auto &wallData : data["walls"]["list"].items()) {
+  for (auto &wallData : data["walls"].items()) {
 
     qreal x;
     qreal y;
