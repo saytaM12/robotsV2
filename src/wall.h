@@ -45,7 +45,7 @@ public:
    * @param MyItem *parent: The parent of the wall.
    */
   Wall(Wall *wall, QGraphicsItem *parent = nullptr)
-      : Wall(wall->rect().x(), wall->rect().y(), wall->rect().width(),
+      : Wall(wall->MyItem::x(), wall->MyItem::y(), wall->rect().width(),
              wall->rect().height(), parent) {}
 
   /* This method returns whether the item is a wall. Always returns true.

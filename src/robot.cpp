@@ -1,8 +1,9 @@
 #include "robot.h"
 
 Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
-    : MyItem(parent), QGraphicsEllipseItem(x, y, ROBOTSIZE, ROBOTSIZE),
-      angle(angle), player(player), moving(false) {}
+    : MyItem(x, y, parent), angle(angle), player(player), moving(false) {
+  setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
+}
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                   QWidget *) {
