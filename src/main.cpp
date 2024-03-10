@@ -16,13 +16,3 @@ int main(int argc, char **argv) {
 
   return app.exec();
 }
-
-/* TODO
- * 4. collisions (+ if dropped in wrong place, move it)
- * 1. wall resize correctly
- * 2. robot change angle
- * 3. robot change automove parameters (from requirements) (on right click idk)
- * 5. scene sizing (with args during startup)
- * 6. robot moving
- * 7. player controls
- */
