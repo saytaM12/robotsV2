@@ -53,13 +53,6 @@ public:
    */
   void addItem(MyItem *item);
 
-  /* This method is called when the mouse is moved.
-   * Used to forbid moving an item outside the scene.
-   * @param QGraphicsSceneMouseEvent *event: The mouse event.
-   * @return: void
-   */
-  void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-
   /* This methos removes all items from the scene. (excluding the menu and the
    * menu icon). It also clears the items list.
    * @return: void

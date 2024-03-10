@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractGraphicsShapeItem>
+#include <QGraphicsScene>
 #include <QWidget>
 
 class MyItem : public QObject, public QAbstractGraphicsShapeItem {
@@ -55,6 +56,16 @@ public:
    * @return: void
    */
   void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+  /* This method is called when the item is changes in any way
+   * Here it is used to check if the item is being moved out of the scene.
+   * If so, it will be stopped from going further.
+   * @param QGraphicsItem::GraphicsItemChange change: The type of change
+   * @param const QVariant &value: The value of the change
+   * @return: QVariant
+   */
+  QVariant itemChange(QGraphicsItem::GraphicsItemChange change,
+                      const QVariant &value);
 
 signals:
   void mouseReleased(MyItem *item);

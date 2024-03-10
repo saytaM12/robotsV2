@@ -1,9 +1,12 @@
 #include "myItem.h"
 
+#include <iostream>
+
 MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
     : QAbstractGraphicsShapeItem(parent), selectedFromHover(false) {
   setFlag(QGraphicsItem::ItemIsSelectable);
   setFlag(QGraphicsItem::ItemIsMovable);
+  setFlag(QGraphicsItem::ItemSendsGeometryChanges);
   setCursor(Qt::OpenHandCursor);
   setAcceptHoverEvents(true);
   setX(x);
@@ -37,4 +40,24 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
   QGraphicsItem::mouseReleaseEvent(event);
   emit mouseReleased(this);
+}
+
+QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change,
+                            const QVariant &value) {
+  if (change == ItemPositionChange && scene()) {
+    QPointF newPos = value.toPointF();
+    QRectF rect = scene()->sceneRect();
+
+    if (!rect.contains(QRectF(
+            newPos, QSizeF(boundingRect().width(), boundingRect().height())))) {
+      newPos.setX(
+          qBound((qreal)0, newPos.x(), rect.right() - boundingRect().width()));
+
+      newPos.setY(qBound((qreal)0, newPos.y(),
+                         rect.bottom() - boundingRect().height()));
+
+      return newPos;
+    }
+  }
+  return QGraphicsItem::itemChange(change, value);
 }
