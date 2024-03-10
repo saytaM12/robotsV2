@@ -6,6 +6,7 @@ MyScene::MyScene(QSize size, QGraphicsScene *parent)
       menuIcon(new MenuIcon(this)) {
 
   setSceneRect(0, 0, size.width() - 4, size.height() - 4);
+  setBackgroundBrush(QBrush(QColor(35, 35, 35)));
   QObject::connect(menuIcon, &MenuIcon::menuToggled, menu, &Menu::toggle);
 }
 
@@ -18,6 +19,7 @@ void MyScene::addItem(MyItem *item) {
 void MyScene::clear() {
   for (MyItem *item : this->items) {
     this->removeItem(item);
+    delete item;
   }
   this->items.clear();
 }
@@ -27,6 +29,7 @@ void MyScene::itemDropped(MyItem *item) {
       this->menu->QGraphicsRectItem::isVisible()) {
     this->items.removeOne(item);
     this->removeItem(item);
+    delete item;
   }
 }
 
