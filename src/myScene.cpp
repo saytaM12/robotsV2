@@ -35,8 +35,8 @@ void MyScene::itemDropped(MyItem *item) {
 
 MyView::MyView(MyScene *scene) : QGraphicsView(scene), scene(scene) {
   setDragMode(QGraphicsView::RubberBandDrag);
-  setMinimumSize(scene->getSize().width(), scene->getSize().height());
-  setMaximumSize(scene->getSize().width(), scene->getSize().height());
+  setMinimumSize(scene->getWidth(), scene->getHeight());
+  setMaximumSize(scene->getWidth(), scene->getHeight());
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
