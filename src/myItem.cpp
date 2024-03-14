@@ -39,7 +39,9 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
   this->setZValue(0);
 
   QGraphicsItem::mouseReleaseEvent(event);
-  emit mouseReleased(this);
+  if (event->button() == Qt::LeftButton) {
+    emit mouseReleased(this);
+  }
 }
 
 QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change,
