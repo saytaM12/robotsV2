@@ -11,23 +11,23 @@ MyScene::MyScene(QSize size, QGraphicsScene *parent)
 }
 
 void MyScene::addItem(MyItem *item) {
-  this->items.push_back(item);
+  this->itemList.push_back(item);
   this->QGraphicsScene::addItem(item);
   QObject::connect(item, &MyItem::mouseReleased, this, &MyScene::itemDropped);
 }
 
 void MyScene::clear() {
-  for (MyItem *item : this->items) {
+  for (MyItem *item : this->itemList) {
     this->removeItem(item);
     delete item;
   }
-  this->items.clear();
+  this->itemList.clear();
 }
 
 void MyScene::itemDropped(MyItem *item) {
   if (this->menu->isUnderMouse() &&
       this->menu->QGraphicsRectItem::isVisible()) {
-    this->items.removeOne(item);
+    this->itemList.removeOne(item);
     this->removeItem(item);
     delete item;
   }

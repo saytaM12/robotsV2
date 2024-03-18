@@ -2,6 +2,7 @@
 
 #include <QAbstractGraphicsShapeItem>
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 #include <QWidget>
 
 class MyItem : public QObject, public QAbstractGraphicsShapeItem {

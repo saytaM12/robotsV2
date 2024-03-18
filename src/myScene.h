@@ -13,7 +13,7 @@ class MyScene : public QGraphicsScene {
 private:
   QPointer<Menu> menu;
   QPointer<MenuIcon> menuIcon;
-  QList<QPointer<MyItem>> items;
+  QList<QPointer<MyItem>> itemList;
 
 public:
   /* This constructor is used to create a new MyScene object.
@@ -45,7 +45,13 @@ public:
    * menu icon)
    * @return: QList<QPointer<MyItem>>
    */
-  inline QList<QPointer<MyItem>> getItems() { return this->items; }
+  inline QList<MyItem *> items() {
+    QList<MyItem *> returnItems;
+    for (MyItem *item : this->itemList) {
+      returnItems.push_back(item);
+    }
+    return returnItems;
+  }
 
   /* This methos adds an item to the scene and to the items list.
    * @param MyItem *item: The item to be added.

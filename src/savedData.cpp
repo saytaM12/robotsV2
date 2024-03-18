@@ -17,7 +17,7 @@ void Data::saveData() {
   std::ofstream f(qPrintable(fileName));
   json data;
 
-  for (MyItem *item : this->scene->getItems()) {
+  for (MyItem *item : this->scene->items()) {
     json itemData;
     itemData["x"] = item->MyItem::x();
     itemData["y"] = item->MyItem::y();

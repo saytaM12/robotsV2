@@ -191,6 +191,9 @@ public:
 
 class SampleWall : public Wall {
 
+protected:
+  void resizeEvent(QGraphicsSceneHoverEvent *) {}
+
 public:
   /* Constructor for SampleWall. creates a new SampleWall.
    * @param QrectF rect: Rectangle in which the wall is placed.
