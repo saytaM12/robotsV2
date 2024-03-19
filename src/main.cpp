@@ -5,14 +5,14 @@
 
 int main(int argc, char **argv) {
 
-  QApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-  MyScene scene(QSize(1440, 900));
+    MyScene scene(QSize(1440, 900));
 
-  Data data(&scene);
+    Data data(&scene);
 
-  MyView view(&scene);
-  view.show();
+    MyView view(&scene);
+    view.show();
 
-  return app.exec();
+    return app.exec();
 }

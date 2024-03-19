@@ -15,28 +15,28 @@ using json = nlohmann::json;
 
 class Data : public QObject {
 
-  Q_OBJECT
+    Q_OBJECT
 
-private:
-  MyScene *scene;
+  private:
+    MyScene *scene;
 
-public slots:
-  /* When this slot is called all robots and walls in the scene are savad to a
-   * json file.
-   * @return: void
-   */
-  void saveData();
+  public slots:
+    /* When this slot is called all robots and walls in the scene are savad to a
+     * json file.
+     * @return: void
+     */
+    void saveData();
 
-  /* When this slot is called the scene is populated with robots and walls form
-   * a file.
-   * @return: void
-   */
-  void loadData();
+    /* When this slot is called the scene is populated with robots and walls form
+     * a file.
+     * @return: void
+     */
+    void loadData();
 
-public:
-  /* Constructor for the Data object.
-   * @param MyScene *scene: The scene to and from which the data is saved and
-   * loaded.
-   */
-  Data(MyScene *scene);
+  public:
+    /* Constructor for the Data object.
+     * @param MyScene *scene: The scene to and from which the data is saved and
+     * loaded.
+     */
+    Data(MyScene *scene);
 };
