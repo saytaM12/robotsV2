@@ -10,23 +10,23 @@ MyScene::MyScene(QSize size, QGraphicsScene *parent)
 }
 
 void MyScene::addItem(MyItem *item) {
-    this->itemList.push_back(item);
-    this->QGraphicsScene::addItem(item);
+    itemList.push_back(item);
+    QGraphicsScene::addItem(item);
     QObject::connect(item, &MyItem::mouseReleased, this, &MyScene::itemDropped);
 }
 
 void MyScene::clear() {
-    for (MyItem *item : this->itemList) {
-        this->removeItem(item);
+    for (MyItem *item : itemList) {
+        removeItem(item);
         delete item;
     }
-    this->itemList.clear();
+    itemList.clear();
 }
 
 void MyScene::itemDropped(MyItem *item) {
-    if (this->menu->isUnderMouse() && this->menu->QGraphicsRectItem::isVisible()) {
-        this->itemList.removeOne(item);
-        this->removeItem(item);
+    if (menu->isUnderMouse() && menu->QGraphicsRectItem::isVisible()) {
+        itemList.removeOne(item);
+        removeItem(item);
         delete item;
     }
 }
@@ -40,18 +40,22 @@ MyView::MyView(MyScene *scene) : QGraphicsView(scene), scene(scene) {
 }
 
 void MyView::mousePressEvent(QMouseEvent *e) {
-    SampleRobot *sampleRobot = this->scene->getMenu()->getSampleRobot();
+    if (e->button() != Qt::LeftButton) {
+        QGraphicsView::mousePressEvent(e);
+        return;
+    }
+    SampleRobot *sampleRobot = scene->getMenu()->getSampleRobot();
     if (sampleRobot->MyItem::isUnderMouse() && sampleRobot->MyItem::isVisible()) {
         QPointer<Robot> robot = new Robot(sampleRobot);
         robot->MyItem::setZValue(3);
-        this->scene->addItem(robot);
+        scene->addItem(robot);
     }
 
-    SampleWall *sampleWall = this->scene->getMenu()->getSampleWall();
+    SampleWall *sampleWall = scene->getMenu()->getSampleWall();
     if (sampleWall->MyItem::isUnderMouse() && sampleWall->MyItem::isVisible()) {
         QPointer<Wall> wall = new Wall(sampleWall);
         wall->MyItem::setZValue(3);
-        this->scene->addItem(wall);
+        scene->addItem(wall);
     }
 
     QGraphicsView::mousePressEvent(e);

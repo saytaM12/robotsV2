@@ -81,10 +81,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param QGraphicsSceneContextMenuEvent *event: The event that occured.
      * @return: void
      */
-    inline void contextMenuEvent(QGraphicsSceneContextMenuEvent *) {
-        this->player = !this->player;
-        this->MyItem::update();
-    }
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due

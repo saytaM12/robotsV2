@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QDebug>
-
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
@@ -24,11 +22,7 @@ class MyScene : public QGraphicsScene {
     MyScene(QSize size, QGraphicsScene *parent = nullptr);
 
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-        qDebug() << "mouse: " << event->scenePos();
         if (items().size() > 0) {
-            qDebug() << "item: x: " << items()[0]->x() << ", y: " << items()[0]->y()
-                     << ", width: " << items()[0]->boundingRect().width()
-                     << ", height: " << items()[0]->boundingRect().height();
         }
         QGraphicsScene::mouseMoveEvent(event);
     }
@@ -36,22 +30,22 @@ class MyScene : public QGraphicsScene {
     /* This method is used to get the width of the scene.
      * @return: qreal
      */
-    inline qreal getWidth() { return this->width(); }
+    inline qreal getWidth() { return width(); }
 
     /* This method is used to get the height of the scene.
      * @return: qreal
      */
-    inline qreal getHeight() { return this->height(); }
+    inline qreal getHeight() { return height(); }
 
     /* This method returns the menu.
      * @return: Menu*
      */
-    inline Menu *getMenu() { return this->menu; }
+    inline Menu *getMenu() { return menu; }
 
     /* This method returns the menu icon.
      * @return: MenuIcon*
      */
-    inline MenuIcon *getMenuIcon() { return this->menuIcon; }
+    inline MenuIcon *getMenuIcon() { return menuIcon; }
 
     /* This method returns the items in the scene. (excluding the menu and the
      * menu icon)
@@ -59,7 +53,7 @@ class MyScene : public QGraphicsScene {
      */
     inline QList<MyItem *> items() {
         QList<MyItem *> returnItems;
-        for (MyItem *item : this->itemList) {
+        for (MyItem *item : itemList) {
             returnItems.push_back(item);
         }
         return returnItems;

@@ -35,7 +35,7 @@ class Wall : public MyItem, public QGraphicsRectItem {
      * @param QGraphicsSceneHoverEvent *event: The hover event.
      * @return: void
      */
-    virtual void resizeEvent(QGraphicsSceneHoverEvent *event);
+    virtual void myResizeEvent(QGraphicsSceneHoverEvent *event);
 
   public:
     /* Constructor for the Wall object.
@@ -64,17 +64,17 @@ class Wall : public MyItem, public QGraphicsRectItem {
      * due to inheritance sheananigans.
      * @return: QRectF
      */
-    QRectF boundingRect() const { return this->rect(); }
+    QRectF boundingRect() const { return rect(); }
 
     /* This method is called when the mouse enters the wall.
-     * It calls the resizeEvent method.
+     * It calls the myResizeEvent method.
      * @param QGraphicsSceneHoverEvent *event: The hover event.
      * @return: void
      */
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
     /* This method is called when the mouse moves within the wall.
-     * It calls the resizeEvent method.
+     * It calls the myResizeEvent method.
      * @param QGraphicsSceneHoverEvent *event: The hover event.
      * @return: void
      */

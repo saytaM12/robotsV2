@@ -1,13 +1,11 @@
 #include "wall.h"
 
-#include <QDebug>
-
 Wall::Wall(int x, int y, int width, int height, QGraphicsItem *parent)
     : MyItem(x, y, parent), QGraphicsRectItem(0, 0, width, height), binaryResizeSelector(0) {
     setRect(0, 0, width, height);
 }
 
-void Wall::resizeEvent(QGraphicsSceneHoverEvent *event) {
+void Wall::myResizeEvent(QGraphicsSceneHoverEvent *event) {
     binaryResizeSelector = 0;
     if (event->pos().x() < WALL_RESIZE_SIZE) { // left side
         binaryResizeSelector |= 0b1000;
@@ -43,19 +41,20 @@ void Wall::resizeEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 void Wall::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-    resizeEvent(event);
+    myResizeEvent(event);
     MyItem::hoverEnterEvent(event);
 }
 
 void Wall::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
-    resizeEvent(event);
+    myResizeEvent(event);
     MyItem::hoverMoveEvent(event);
 }
 
 void Wall::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
     if (justCreated || binaryResizeSelector == 0) {
-        setFlag(QGraphicsItem::ItemIsMovable, false);
+        MyItem::mouseMoveEvent(event);
+        return;
     }
 
     QRectF oldRect(MyItem::x(), MyItem::y(), rect().width(), rect().height());
@@ -80,12 +79,10 @@ void Wall::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 
     MyItem::scene()->update(oldRect);
     MyItem::update();
-
-    MyItem::mouseMoveEvent(event);
 }
 
 void Wall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-    if (!this->MyItem::isSelected()) {
+    if (!MyItem::isSelected()) {
         painter->setBrush(Qt::white);
         painter->setPen(Qt::NoPen);
         painter->drawRect(option->rect);

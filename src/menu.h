@@ -34,10 +34,10 @@
  * mw * (1 - 2 * bws) / 3
  */
 #define LBX(mW) ((mW) * (1 - 2 * BWS) / 3.0)
-/* LBX + mw / 2   // the same padding but from center of menu
- * simplifies to -> mw * (5 - 4 * bws) / 6
+/* LBX / 2 + mw / 2   // the same padding but from center of menu
+ * simplifies to -> mw * 5/9
  */
-#define RBX(mW) ((mW) * (5 - 4 * BWS) / 6.0)
+#define RBX(mW) ((mW) * 5.0 / 9.0)
 /* mw * bhs                 // button height
  * mw * (1 - 2 * bws) / 3   // button padding
  *
@@ -136,12 +136,12 @@ class Menu : public QWidget, public QGraphicsRectItem {
     /* This method returns the sample robot
      * @return: SampleRobot*
      */
-    inline SampleRobot *getSampleRobot() { return this->sampleRobot; }
+    inline SampleRobot *getSampleRobot() { return sampleRobot; }
 
     /* This method returns the sample wall
      * @return: SampleWall*
      */
-    inline SampleWall *getSampleWall() { return this->sampleWall; }
+    inline SampleWall *getSampleWall() { return sampleWall; }
 
     /* This method is called to paint the menu
      * @param QPainter *painter: The painter to be used

@@ -1,7 +1,5 @@
 #include "savedData.h"
 
-#include <QDebug>
-
 Data::Data(MyScene *scene) : scene(scene) {
     QObject::connect(scene->getMenu(), &Menu::savePressed, this, &Data::saveData);
     QObject::connect(scene->getMenu(), &Menu::loadPressed, this, &Data::loadData);
@@ -19,7 +17,7 @@ void Data::saveData() {
     std::ofstream f(qPrintable(fileName));
     json data;
 
-    for (MyItem *item : this->scene->items()) {
+    for (MyItem *item : scene->items()) {
         json itemData;
         itemData["x"] = item->MyItem::x();
         itemData["y"] = item->MyItem::y();
@@ -186,7 +184,7 @@ void Data::loadData() {
 
     f.close();
 
-    this->scene->clear();
+    scene->clear();
 
     for (auto &robotData : data["robots"].items()) {
 
@@ -195,8 +193,8 @@ void Data::loadData() {
         qreal angle;
         bool player;
 
-        if (validateRobotData(robotData, &x, &y, &angle, &player, this->scene->getWidth(),
-                              this->scene->getHeight(), fileName)) {
+        if (validateRobotData(robotData, &x, &y, &angle, &player, scene->getWidth(), scene->getHeight(),
+                              fileName)) {
             continue;
         }
 
@@ -211,8 +209,8 @@ void Data::loadData() {
         int width;
         int height;
 
-        if (validateWallData(wallData, &x, &y, &width, &height, this->scene->getWidth(),
-                             this->scene->getHeight(), fileName)) {
+        if (validateWallData(wallData, &x, &y, &width, &height, scene->getWidth(), scene->getHeight(),
+                             fileName)) {
             continue;
         }
 

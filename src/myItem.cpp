@@ -14,31 +14,42 @@ MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
 }
 
 void MyItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-    if (!this->isSelected()) {
-        this->setSelected(true);
-        this->selectedFromHover = true;
+    if (!isSelected()) {
+        setSelected(true);
+        selectedFromHover = true;
     }
 }
 
 void MyItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-    if (this->selectedFromHover) {
-        this->setSelected(false);
-        this->selectedFromHover = false;
+    if (selectedFromHover) {
+        setSelected(false);
+        selectedFromHover = false;
     }
 }
 
 void MyItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    this->setCursor(Qt::ClosedHandCursor);
-    this->setZValue(3);
+    if (event->button() != Qt::LeftButton) {
+        QGraphicsItem::mousePressEvent(event);
+        return;
+    }
+
+    setCursor(Qt::ClosedHandCursor);
+    setZValue(3);
 
     QGraphicsItem::mousePressEvent(event);
 }
 
 void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    this->setCursor(Qt::OpenHandCursor);
-    this->setZValue(0);
+    if (event->button() != Qt::LeftButton) {
+        QGraphicsItem::mousePressEvent(event);
+        return;
+    }
+
+    setCursor(Qt::OpenHandCursor);
+    setZValue(0);
 
     QGraphicsItem::mouseReleaseEvent(event);
+
     if (event->button() == Qt::LeftButton) {
         emit mouseReleased(this);
     }
