@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QtGlobal>
 
+#include "darkenImage.h"
 #include "myItem.h"
 
 class Wall : public MyItem, public QGraphicsRectItem {

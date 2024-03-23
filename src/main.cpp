@@ -6,6 +6,7 @@
 int main(int argc, char **argv) {
 
     QApplication app(argc, argv);
+    app.setApplicationName("Robot and Walls, What more could you want?");
 
     MyScene scene(QSize(1440, 900));
 

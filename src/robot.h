@@ -1,26 +1,39 @@
 #pragma once
 
+#include <QDialog>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsRectItem>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMenu>
 #include <QPainter>
+#include <QPointer>
+#include <QPushButton>
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
 
+#include "darkenImage.h"
 #include "myItem.h"
+#include "robotContextMenu.h"
 
-#define ROBOTSIZE 60
+#define ROBOTSIZE 80
 
 class Robot : public MyItem, public QGraphicsEllipseItem {
 
     Q_OBJECT
 
   private:
+    QString texture;
+
     int angle;
     bool player;
     bool moving;
     int detectionRange;
     int detectionAngle;
     bool clockwise;
+
+    QPointer<RobotContextMenu> contextMenu;
 
   public:
     /* The constructor used to create a new Robot.
@@ -98,4 +111,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @return: void
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
+  public slots:
+    void changeIcon();
 };

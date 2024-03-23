@@ -82,14 +82,13 @@ void Wall::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Wall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-    if (!MyItem::isSelected()) {
-        painter->setBrush(Qt::white);
-        painter->setPen(Qt::NoPen);
-        painter->drawRect(option->rect);
+    QImage texture("imgs/textures/wall.png");
 
-    } else {
-        painter->setBrush(Qt::gray);
-        painter->setPen(Qt::NoPen);
-        painter->drawRect(option->rect);
+    if (MyItem::isSelected()) {
+        darkenImage(texture);
     }
+
+    painter->setBrush(QBrush(texture));
+    painter->setPen(Qt::NoPen);
+    painter->drawRect(option->rect);
 }

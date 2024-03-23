@@ -5,7 +5,7 @@ MyScene::MyScene(QSize size, QGraphicsScene *parent)
       menuIcon(new MenuIcon(this)) {
 
     setSceneRect(0, 0, size.width() - 4, size.height() - 4);
-    setBackgroundBrush(QBrush(QColor(35, 35, 35)));
+    setBackgroundBrush(QBrush(QImage("imgs/textures/background2.png")));
     QObject::connect(menuIcon, &MenuIcon::menuToggled, menu, &Menu::toggle);
 }
 
