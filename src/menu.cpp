@@ -1,41 +1,47 @@
 #include "menu.h"
 
-MyButton::MyButton(QRectF rect, QString string, Menu *menu) : QGraphicsRectItem(menu), string(string) {
-
-    setCursor(Qt::PointingHandCursor);
-    setX(rect.x());
-    setY(rect.y());
-    setRect(0, 0, rect.width(), rect.height());
-}
-
-void MyButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-    painter->setPen(Qt::black);
-    painter->setBrush(Qt::white);
-    painter->drawRoundedRect(option->rect, option->rect.height() / 4.5, option->rect.height() / 4.5);
-
-    painter->setFont(QFont(QString("Arial"), option->rect.height() / 3.0));
-    painter->drawText(option->rect, this->string, QTextOption(Qt::AlignCenter));
-}
-
-Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *parent)
-    : QGraphicsRectItem(), saveButton(new MyButton(LEFT_BUTTON_RECT(menuWidth, menuHeight), "Save", this)),
-      loadButton(new MyButton(RIGHT_BUTTON_RECT(menuWidth, menuHeight), "Load", this)),
+Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
+    : QGraphicsRectItem(), saveButton(new QPushButton("Save")), loadButton(new QPushButton("Load")),
       sampleWall(new SampleWall(SAMPLE_WALL_RECT(menuWidth, menuHeight), this)),
       sampleRobot(new SampleRobot(SAMPLE_ROBOT_TOPLEFT(menuWidth, menuHeight), 0, false, this)) {
-
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
-
-    QObject::connect(saveButton, &MyButton::pressed, this, &Menu::savePressed);
-    QObject::connect(loadButton, &MyButton::pressed, this, &Menu::loadPressed);
 
     setX(0);
     setY(0);
     setRect(0, 0, menuWidth, menuHeight);
-    setZValue(1);
+    setZValue(-1);
 
-    parent->addItem(this);
+    scene->addItem(this);
+
+    saveButton->setGeometry(RIGHT_BUTTON_RECT(menuWidth, menuHeight));
+    loadButton->setGeometry(LEFT_BUTTON_RECT(menuWidth, menuHeight));
+    saveButton->hide();
+    loadButton->hide();
+
+    scene->addWidget(saveButton);
+    scene->addWidget(loadButton);
+
+    QObject::connect(saveButton, &QPushButton::clicked, this, &Menu::savePressed);
+    QObject::connect(loadButton, &QPushButton::clicked, this, &Menu::loadPressed);
+
     QGraphicsRectItem::setVisible(false);
+}
+
+void Menu::toggle() {
+    if (QGraphicsRectItem::isVisible()) {
+        saveButton->hide();
+        loadButton->hide();
+        QGraphicsRectItem::setVisible(false);
+        QGraphicsRectItem::update();
+
+        return;
+    }
+
+    saveButton->show();
+    loadButton->show();
+    QGraphicsRectItem::setVisible(true);
+    QGraphicsRectItem::update();
 }
 
 void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {

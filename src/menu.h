@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QPainter>
 #include <QPointer>
+#include <QPushButton>
 #include <QStyleOptionGraphicsItem>
 
 #include "robot.h"
@@ -45,8 +46,8 @@
  * mh - mw * (bhs + (1 - 2 * bws) / 3)
  */
 #define BY(mW, mH) ((mH) - (mW) * (BHS + (1 - 2 * BWS) / 3))
-#define LEFT_BUTTON_RECT(mW, mH) QRectF(LBX(mW), BY(mW, mH), BW(mW), BH(mW))
-#define RIGHT_BUTTON_RECT(mW, mH) QRectF(RBX(mW), BY(mW, mH), BW(mW), BH(mW))
+#define LEFT_BUTTON_RECT(mW, mH) QRect(LBX(mW), BY(mW, mH), BW(mW), BH(mW))
+#define RIGHT_BUTTON_RECT(mW, mH) QRect(RBX(mW), BY(mW, mH), BW(mW), BH(mW))
 
 /* GUI SAMLPLE ITEMS
  * SWS = sample wall size
@@ -113,7 +114,6 @@
 #define TOP_SAMPLE_BACKGROUND_RECT(mW, mH) QRectF(SBX(mW), TSBY(mW, mH), SBS(mW), SBS(mW))
 #define BOT_SAMPLE_BACKGROUND_RECT(mW, mH) QRectF(SBX(mW), BSBY(mW, mH), SBS(mW), SBS(mW))
 
-class MyButton;
 class SampleRobot;
 class SampleWall;
 
@@ -122,8 +122,8 @@ class Menu : public QWidget, public QGraphicsRectItem {
     Q_OBJECT
 
   private:
-    QPointer<MyButton> saveButton;
-    QPointer<MyButton> loadButton;
+    QPointer<QPushButton> saveButton;
+    QPointer<QPushButton> loadButton;
     QPointer<SampleWall> sampleWall;
     QPointer<SampleRobot> sampleRobot;
 
@@ -157,10 +157,7 @@ class Menu : public QWidget, public QGraphicsRectItem {
      * It toggles the visibility of the menu.
      * @return: void
      */
-    void toggle() {
-        QGraphicsRectItem::setVisible(!QGraphicsRectItem::isVisible());
-        QGraphicsRectItem::update();
-    }
+    void toggle();
 
   signals:
     void savePressed();
@@ -196,48 +193,4 @@ class SampleWall : public Wall {
     SampleWall(QRectF rect, Menu *parent) : Wall(rect.x(), rect.y(), rect.width(), rect.height(), parent) {
         MyItem::setFlag(QGraphicsItem::ItemIsMovable, false);
     }
-};
-
-class MyButton : public QObject, public QGraphicsRectItem {
-
-    Q_OBJECT
-
-  private:
-    QString string;
-
-  public:
-    /* This constructor is used to create a new MyButton object.
-     * @param QString string: The string to be displayed on the button.
-     * @param QGraphicsRectItem *parent: The parent of this object.
-     */
-    MyButton(QRectF rect, QString string, Menu *menu);
-
-    /* This method is called when the mouse is pressed on the button.
-     * It doens nothing, but if this method isn't implemented `mouseReleaseEvent`
-     * won't be called.
-     * @param QGraphicsSceneMouseEvent *event: The event that was triggered.
-     * @return: void
-     */
-    void mousePressEvent(QGraphicsSceneMouseEvent *) {}
-
-    /* This method is called when the mouse, which was pressed on the button, is
-     * released.
-     * If the mouse was pressed on the button it emits a signal (pressed) to
-     * trigger the evnt.
-     * @param QGraphicsSceneMouseEvent *event: The event that was triggered.
-     * @return: void
-     */
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) { emit pressed(); }
-
-    /* This method is called to paint the button.
-     * @param QPainter *painter: The painter to be used.
-     * @param const QStyleOptionGraphicsItem *option: The option to be used.
-     * @param QWidget *widget: The widget on which the painting will be done.
-     * Omit for global painting.
-     * @return: void
-     */
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
-
-  signals:
-    void pressed();
 };
