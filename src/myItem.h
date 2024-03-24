@@ -23,7 +23,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
     /* This virtual method must be implemented by the subclasses to return if the
      * item is a wall
      */
-    virtual bool isWall() const = 0;
+    virtual inline bool isWall() const = 0;
 
     /* This method is called when the mouse enters the item
      * If the item wasn't selected, it will become selected and the fact that it
@@ -33,14 +33,24 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      * @param QGraphicsSceneHoverEvent *event: The event that triggered this
      * @return: void
      */
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    inline void hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+        if (!isSelected()) {
+            setSelected(true);
+            selectedFromHover = true;
+        }
+    }
 
     /* This method is called when the mouse leaves the item
      * If the item was selected from hover, it will be unselected.
      * @param QGraphicsSceneHoverEvent *event: The event that triggered this
      * @return: void
      */
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    inline void hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+        if (selectedFromHover) {
+            setSelected(false);
+            selectedFromHover = false;
+        }
+    }
 
     /* This method is called when the user presses the mouse button
      * Changes the cursor, and puts the item on top of all of the other items (for

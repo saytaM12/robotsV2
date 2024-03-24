@@ -5,7 +5,7 @@ MyScene::MyScene(QSize size, QGraphicsScene *parent)
       menuIcon(new MenuIcon(this)) {
 
     setSceneRect(0, 0, size.width() - 4, size.height() - 4);
-    setBackgroundBrush(QBrush(QImage("imgs/textures/background2.png")));
+    setBackgroundBrush(QBrush(QImage("imgs/textures/background.png")));
     QObject::connect(menuIcon, &MenuIcon::menuToggled, menu, &Menu::toggle);
 }
 
@@ -24,7 +24,10 @@ void MyScene::clear() {
 }
 
 void MyScene::itemDropped(MyItem *item) {
-    if (menu->isUnderMouse() && menu->QGraphicsRectItem::isVisible()) {
+    getMenu()->getSampleRobot()->MyItem::setVisible(true);
+    getMenu()->getSampleWall()->MyItem::setVisible(true);
+
+    if (menu->QGraphicsRectItem::isUnderMouse() && menu->QGraphicsRectItem::isVisible()) {
         itemList.removeOne(item);
         removeItem(item);
         delete item;
@@ -44,17 +47,20 @@ void MyView::mousePressEvent(QMouseEvent *e) {
         QGraphicsView::mousePressEvent(e);
         return;
     }
+
     SampleRobot *sampleRobot = scene->getMenu()->getSampleRobot();
     if (sampleRobot->MyItem::isUnderMouse() && sampleRobot->MyItem::isVisible()) {
+        sampleRobot->MyItem::setVisible(false);
         QPointer<Robot> robot = new Robot(sampleRobot);
-        robot->MyItem::setZValue(3);
+        robot->MyItem::setZValue(0);
         scene->addItem(robot);
     }
 
     SampleWall *sampleWall = scene->getMenu()->getSampleWall();
     if (sampleWall->MyItem::isUnderMouse() && sampleWall->MyItem::isVisible()) {
+        sampleWall->MyItem::setVisible(false);
         QPointer<Wall> wall = new Wall(sampleWall);
-        wall->MyItem::setZValue(3);
+        wall->MyItem::setZValue(0);
         scene->addItem(wall);
     }
 

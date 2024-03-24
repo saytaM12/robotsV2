@@ -17,15 +17,19 @@
 #include "myItem.h"
 #include "robotContextMenu.h"
 
-#define setParametersWithDialog(inputLabelText, descriptionText, parameter)                                     \
+#define setParametersWithDialog(inputLabelText, descriptionText, limitMin, limitMax, parameter)                 \
     QDialog dialog;                                                                                             \
     QGridLayout layout(&dialog);                                                                                \
                                                                                                                 \
     QLabel inputLabel((inputLabelText));                                                                        \
                                                                                                                 \
     QLineEdit lineEdit;                                                                                         \
-    lineEdit.setValidator(new QIntValidator(0));                                                                \
-    lineEdit.setPlaceholderText(QString("current #parameter: %1").arg((parameter)));                            \
+    if (limitMax == 0) {                                                                                        \
+        lineEdit.setValidator(new QIntValidator(limitMin));                                                     \
+    } else {                                                                                                    \
+        lineEdit.setValidator(new QIntValidator(limitMin, limitMax));                                           \
+    }                                                                                                           \
+    lineEdit.setPlaceholderText(QString("current value: %2").arg((parameter)));                                 \
                                                                                                                 \
     QLabel description((descriptionText));                                                                      \
                                                                                                                 \
@@ -87,53 +91,53 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * false.
      * @return: bool false
      */
-    inline bool isWall() const { return false; }
+    inline bool isWall() const override { return false; }
 
     /* This method returns the angle that the robot is facing.
      * @return: int
      */
-    inline int getAngle() { return this->angle; }
+    inline int getAngle() { return angle; }
 
     /* This method returns whether the robot is a player or not.
      * @return: bool
      */
-    inline bool isPlayer() { return this->player; }
+    inline bool isPlayer() { return player; }
 
     /* This method returns whether the robot is moving or not.
      * @return: bool
      */
-    inline bool getMoving() { return this->moving; }
+    inline bool getMoving() { return moving; }
 
     /* This method sets the angle that the robot is facing.
      * @param int angle: The angle that the robot is facing.
      * @return: void
      */
-    inline void setAngle(int angle) { this->angle = angle; }
+    inline void setAngle(int newAngle) { angle = newAngle; }
 
     /* This method sets the player status of the robot.
      * @param bool player: Whether the robot is a player or not.
      */
-    inline void setPlayer(bool player) { this->player = player; }
+    inline void setPlayer(bool newPlayer) { player = newPlayer; }
 
     /* This method sets the moving status of the robot.
      * @param bool moving: Whether the robot is moving or not.
      * @return: void
      */
-    inline void setMoving(bool moving) { this->moving = moving; }
+    inline void setMoving(bool newMoving) { moving = newMoving; }
 
     /* This method is called when the robot is right clicked.
      * It simply toggles the player status of the robot.
      * @param QGraphicsSceneContextMenuEvent *event: The event that occured.
      * @return: void
      */
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due
      * to inheritance sheananigans.
      * @return: QRectF
      */
-    QRectF boundingRect() const { return this->rect(); }
+    QRectF boundingRect() const override { return rect(); }
 
     /* This method is used to paint the robot.
      * @param QPainter *painter: The painter object.
@@ -142,7 +146,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * Omit for global painting.
      * @return: void
      */
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   public slots:
     void rotate();

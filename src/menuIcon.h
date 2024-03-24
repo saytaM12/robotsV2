@@ -13,6 +13,9 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
 
     Q_OBJECT
 
+  private:
+    bool menuUp;
+
   public:
     /* This construcetor is used to create a new MenuIcon object.
      * @param QGraphicsRectItem *parent: The parent of this object.
@@ -25,7 +28,7 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
      * @param QGraphicsSceneMouseEvent *event: The event that was triggered.
      * @return: void
      */
-    void mousePressEvent(QGraphicsSceneMouseEvent *) {}
+    inline void mousePressEvent(QGraphicsSceneMouseEvent *) {}
 
     /* This methos is called when the mouse, which was pressed on the menu icon,
      * is released.
@@ -34,7 +37,11 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
      * @param QGraphicsSceneMouseEvent *event: The event that was triggered.
      * @return: void
      */
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) { emit menuToggled(); }
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
+        emit menuToggled();
+        menuUp = !menuUp;
+        setOpacity(menuUp ? 1 : 0.5);
+    }
 
     /* This method is called to paint the menu icon.
      * @param QPainter *painter: The painter to be used.

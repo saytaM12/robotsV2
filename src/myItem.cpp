@@ -1,7 +1,5 @@
 #include "myItem.h"
 
-#include <iostream>
-
 MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
     : QAbstractGraphicsShapeItem(parent), selectedFromHover(false) {
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -11,20 +9,7 @@ MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
     setAcceptHoverEvents(true);
     setX(x);
     setY(y);
-}
-
-void MyItem::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-    if (!isSelected()) {
-        setSelected(true);
-        selectedFromHover = true;
-    }
-}
-
-void MyItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-    if (selectedFromHover) {
-        setSelected(false);
-        selectedFromHover = false;
-    }
+    setZValue(-2);
 }
 
 void MyItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
@@ -34,7 +19,7 @@ void MyItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     setCursor(Qt::ClosedHandCursor);
-    setZValue(3);
+    setZValue(0);
 
     QGraphicsItem::mousePressEvent(event);
 }
@@ -46,7 +31,7 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     }
 
     setCursor(Qt::OpenHandCursor);
-    setZValue(0);
+    setZValue(-2);
 
     QGraphicsItem::mouseReleaseEvent(event);
 

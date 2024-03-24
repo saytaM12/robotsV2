@@ -57,6 +57,8 @@ void Wall::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
         return;
     }
 
+    MyItem::prepareGeometryChange();
+
     QRectF oldRect(MyItem::x(), MyItem::y(), rect().width(), rect().height());
 
     if (binaryResizeSelector & 0b1000) {

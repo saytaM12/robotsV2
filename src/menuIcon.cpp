@@ -1,6 +1,6 @@
 #include "menuIcon.h"
 
-MenuIcon::MenuIcon(QGraphicsScene *parent) : QGraphicsRectItem() {
+MenuIcon::MenuIcon(QGraphicsScene *parent) : QGraphicsRectItem(), menuUp(false) {
     parent->addItem(this);
     setAcceptHoverEvents(true);
     setCursor(Qt::PointingHandCursor);
@@ -11,12 +11,12 @@ MenuIcon::MenuIcon(QGraphicsScene *parent) : QGraphicsRectItem() {
 
 void MenuIcon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
     painter->setPen(Qt::NoPen);
-    painter->setBrush(Qt::black);
+    painter->setBrush(menuUp ? Qt::lightGray : Qt::black);
     painter->drawRoundedRect(rect(), rect().width() / 5, rect().width() / 5);
 
     // math magic to make lineWidth even, whole and width / 10
-    int lineWidth = std::ceil(rect().width() / 20.0) * 2;
-    painter->setPen(QPen(Qt::gray, lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    int lineWidth = ceil(rect().width() / 20.0) * 2;
+    painter->setPen(QPen(menuUp ? Qt::black : Qt::white, lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->setBrush(Qt::NoBrush);
 
     painter->drawLine(option->rect.left() + lineWidth * 1.5, option->rect.top() + rect().width() / 4,

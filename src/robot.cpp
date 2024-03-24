@@ -2,7 +2,9 @@
 
 Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
     : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), rotating(false), angle(angle), player(player),
-      moving(false), contextMenu(new RobotContextMenu(QString("hello"))) {
+      moving(false), speed(1), detectionRange(100), detectionAngle(1), clockwise(false),
+      contextMenu(new RobotContextMenu(QString("hello"))) {
+
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
 
     QObject::connect(contextMenu, &RobotContextMenu::rotate, this, &Robot::rotate);
@@ -67,25 +69,40 @@ void Robot::changeIcon() {
 
 void Robot::setSpeed() {
     setParametersWithDialog(("Set the speed of the robot: "),
-                            ("Speed indicates how many pixels the robot will move per frame.\n"
+                            ("Speed indicates how many pixels the robot will move per frame.\n\n"
+                             ""
                              "Minimum is 0 (no movement).\n"
-                             "There is no maximum, use common sense."),
-                            speed);
+                             "Maximum is effectively infinite"),
+                            0, 0, speed);
 }
 
 void Robot::setDetectionRange() {
     setParametersWithDialog(
         ("Set the detection range of the robot: "),
-        ("Detection range indicates how many pixels forward can the robot detect an obstacle\nWhen an "
-         "autonomous robot detects an obstacle it turns in the direction of 'turning direction' by 'detection "
-         "angle'\nWhen a player controlled robot detects an obstacle it stops accepting forward "
-         "movement\nMinimum is 0 (no detection).\nThere is no maximum number, but effectively its' anything "
-         "larger than the screen size"),
-        detectionRange);
+        ("Detection range indicates how many pixels forward can the robot detect an obstacle\n\n"
+         ""
+         "When an autonomous robot detects an obstacle it turns in the direction of\n"
+         "'turning direction' by 'detection angle' degrees\n\n"
+         ""
+         "When a player controlled robot detects an obstacle it stops accepting forward movement\n\n"
+         ""
+         "Minimum is 0 (no detection).\n"
+         "Maximum is effectively infinite"),
+        0, 0, detectionRange);
 }
 void Robot::setDetectionAngle() {
-    setParametersWithDialog(("Set the detection angle of the robot: "), ("TODO"), detectionAngle);
+    setParametersWithDialog(("Set the detection angle of the robot: "),
+                            ("Detection angle indivates by how many degrees the robot turns\nwhen it detects an "
+                             "obstacle in 'detection Range'\n\n"
+                             ""
+                             "Minimum is 0 (no turning).\n"
+                             "Maximum is 360 (back to no turning)"),
+                            0, 360, detectionAngle);
 }
 void Robot::setTurningDirection() {
-    setParametersWithDialog(("Set the turning direction of the robot: "), ("TODO"), clockwise);
+    setParametersWithDialog(("Set the turning direction of the robot: "),
+                            ("Turning Direction indicates wheter the robot turns clockwise\n"
+                             "or counter clockwise when detecting an obstacle\n"
+                             "1 means clockwise, 0 means counter clockwise\n"),
+                            0, 1, clockwise);
 }
