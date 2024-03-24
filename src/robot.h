@@ -17,6 +17,35 @@
 #include "myItem.h"
 #include "robotContextMenu.h"
 
+#define setParametersWithDialog(inputLabelText, descriptionText, parameter)                                     \
+    QDialog dialog;                                                                                             \
+    QGridLayout layout(&dialog);                                                                                \
+                                                                                                                \
+    QLabel inputLabel((inputLabelText));                                                                        \
+                                                                                                                \
+    QLineEdit lineEdit;                                                                                         \
+    lineEdit.setValidator(new QIntValidator(0));                                                                \
+    lineEdit.setPlaceholderText(QString("current #parameter: %1").arg((parameter)));                            \
+                                                                                                                \
+    QLabel description((descriptionText));                                                                      \
+                                                                                                                \
+    QPushButton okButton("OK");                                                                                 \
+    QPushButton cancelButton("Cancel");                                                                         \
+                                                                                                                \
+    layout.addWidget(&inputLabel, 0, 0);                                                                        \
+    layout.addWidget(&lineEdit, 0, 1);                                                                          \
+    layout.addWidget(&description, 1, 0, 1, 2);                                                                 \
+    layout.addWidget(&okButton, 2, 0);                                                                          \
+    layout.addWidget(&cancelButton, 2, 1);                                                                      \
+                                                                                                                \
+    QObject::connect(&okButton, &QPushButton::clicked, [&dialog, &lineEdit, this]() {                           \
+        dialog.accept();                                                                                        \
+        (parameter) = atoi(qPrintable(lineEdit.text()));                                                        \
+    });                                                                                                         \
+    QObject::connect(&cancelButton, &QPushButton::clicked, [&dialog]() { dialog.reject(); });                   \
+                                                                                                                \
+    dialog.exec();
+
 #define ROBOTSIZE 80
 
 class Robot : public MyItem, public QGraphicsEllipseItem {
@@ -26,9 +55,12 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
   private:
     QString texture;
 
+    bool rotating;
+
     int angle;
     bool player;
     bool moving;
+    int speed;
     int detectionRange;
     int detectionAngle;
     bool clockwise;
@@ -113,5 +145,10 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
   public slots:
+    void rotate();
     void changeIcon();
+    void setSpeed();
+    void setDetectionRange();
+    void setDetectionAngle();
+    void setTurningDirection();
 };

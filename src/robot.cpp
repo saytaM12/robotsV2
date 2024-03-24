@@ -34,6 +34,7 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->drawImage(option->rect, image);
 }
 
+void Robot::rotate() { rotating = true; }
 void Robot::changeIcon() {
     /* Create a dialog with options to select a new icon */
     QDialog dialog;
@@ -64,3 +65,27 @@ void Robot::changeIcon() {
     dialog.exec();
 }
 
+void Robot::setSpeed() {
+    setParametersWithDialog(("Set the speed of the robot: "),
+                            ("Speed indicates how many pixels the robot will move per frame.\n"
+                             "Minimum is 0 (no movement).\n"
+                             "There is no maximum, use common sense."),
+                            speed);
+}
+
+void Robot::setDetectionRange() {
+    setParametersWithDialog(
+        ("Set the detection range of the robot: "),
+        ("Detection range indicates how many pixels forward can the robot detect an obstacle\nWhen an "
+         "autonomous robot detects an obstacle it turns in the direction of 'turning direction' by 'detection "
+         "angle'\nWhen a player controlled robot detects an obstacle it stops accepting forward "
+         "movement\nMinimum is 0 (no detection).\nThere is no maximum number, but effectively its' anything "
+         "larger than the screen size"),
+        detectionRange);
+}
+void Robot::setDetectionAngle() {
+    setParametersWithDialog(("Set the detection angle of the robot: "), ("TODO"), detectionAngle);
+}
+void Robot::setTurningDirection() {
+    setParametersWithDialog(("Set the turning direction of the robot: "), ("TODO"), clockwise);
+}
