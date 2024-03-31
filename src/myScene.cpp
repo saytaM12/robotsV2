@@ -43,8 +43,11 @@ MyView::MyView(MyScene *scene) : QGraphicsView(scene), scene(scene) {
 }
 
 void MyView::mousePressEvent(QMouseEvent *e) {
+
     if (e->button() != Qt::LeftButton) {
-        QGraphicsView::mousePressEvent(e);
+        if (e->buttons().testFlag(Qt::LeftButton)) {
+            QGraphicsView::mousePressEvent(e);
+        }
         return;
     }
 

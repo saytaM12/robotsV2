@@ -1,5 +1,4 @@
 #include "darkenImage.h"
-#include <QDebug>
 
 void darkenImage(QImage &image) {
     for (int y = 0; y < image.height(); y++) {

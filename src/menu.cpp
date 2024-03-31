@@ -20,7 +20,7 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
     QObject::connect(saveButton, &QPushButton::clicked, this, &Menu::savePressed);
     QObject::connect(loadButton, &QPushButton::clicked, this, &Menu::loadPressed);
 
-    scene->addItem(static_cast<QGraphicsRectItem *>(this));
+    scene->addItem(this);
     scene->addWidget(saveButton);
     scene->addWidget(loadButton);
 }

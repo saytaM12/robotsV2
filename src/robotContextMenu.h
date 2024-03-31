@@ -11,6 +11,7 @@ class RobotContextMenu : public QMenu {
     RobotContextMenu(QString name, QWidget *parent = nullptr);
 
   signals:
+    void changePlayer();
     void rotate();
     void changeIcon();
     void setSpeed();

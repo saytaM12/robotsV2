@@ -13,25 +13,19 @@ MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
 }
 
 void MyItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if (event->button() != Qt::LeftButton) {
-        QGraphicsItem::mousePressEvent(event);
-        return;
+    if (event->button() == Qt::LeftButton) {
+        setCursor(Qt::ClosedHandCursor);
+        setZValue(0);
     }
-
-    setCursor(Qt::ClosedHandCursor);
-    setZValue(0);
 
     QGraphicsItem::mousePressEvent(event);
 }
 
 void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    if (event->button() != Qt::LeftButton) {
-        QGraphicsItem::mousePressEvent(event);
-        return;
+    if (event->button() == Qt::LeftButton) {
+        setCursor(Qt::OpenHandCursor);
+        setZValue(-2);
     }
-
-    setCursor(Qt::OpenHandCursor);
-    setZValue(-2);
 
     QGraphicsItem::mouseReleaseEvent(event);
 

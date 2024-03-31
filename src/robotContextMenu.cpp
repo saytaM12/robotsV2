@@ -1,6 +1,11 @@
 #include "robotContextMenu.h"
 
 RobotContextMenu::RobotContextMenu(QString name, QWidget *parent) : QMenu(name, parent) {
+    QAction *changePlayer = new QAction(QIcon("imgs/icons/player.svg"), "Set as player", this);
+    QObject::connect(changePlayer, &QAction::triggered, this, &RobotContextMenu::changePlayer);
+    addAction(changePlayer);
+    addSeparator();
+
     QAction *rotate = new QAction(QIcon("imgs/icons/rotate.svg"), "Rotate", this);
     QObject::connect(rotate, &QAction::triggered, this, &RobotContextMenu::rotate);
     addAction(rotate);

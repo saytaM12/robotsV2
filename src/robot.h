@@ -17,37 +17,37 @@
 #include "myItem.h"
 #include "robotContextMenu.h"
 
-#define setParametersWithDialog(inputLabelText, descriptionText, limitMin, limitMax, parameter)                 \
-    QDialog dialog;                                                                                             \
-    QGridLayout layout(&dialog);                                                                                \
-                                                                                                                \
-    QLabel inputLabel((inputLabelText));                                                                        \
-                                                                                                                \
-    QLineEdit lineEdit;                                                                                         \
-    if (limitMax == 0) {                                                                                        \
-        lineEdit.setValidator(new QIntValidator(limitMin));                                                     \
-    } else {                                                                                                    \
-        lineEdit.setValidator(new QIntValidator(limitMin, limitMax));                                           \
-    }                                                                                                           \
-    lineEdit.setPlaceholderText(QString("current value: %2").arg((parameter)));                                 \
-                                                                                                                \
-    QLabel description((descriptionText));                                                                      \
-                                                                                                                \
-    QPushButton okButton("OK");                                                                                 \
-    QPushButton cancelButton("Cancel");                                                                         \
-                                                                                                                \
-    layout.addWidget(&inputLabel, 0, 0);                                                                        \
-    layout.addWidget(&lineEdit, 0, 1);                                                                          \
-    layout.addWidget(&description, 1, 0, 1, 2);                                                                 \
-    layout.addWidget(&okButton, 2, 0);                                                                          \
-    layout.addWidget(&cancelButton, 2, 1);                                                                      \
-                                                                                                                \
-    QObject::connect(&okButton, &QPushButton::clicked, [&dialog, &lineEdit, this]() {                           \
-        dialog.accept();                                                                                        \
-        (parameter) = atoi(qPrintable(lineEdit.text()));                                                        \
-    });                                                                                                         \
-    QObject::connect(&cancelButton, &QPushButton::clicked, [&dialog]() { dialog.reject(); });                   \
-                                                                                                                \
+#define setParametersWithDialog(inputLabelText, descriptionText, limitMin, limitMax, parameter)               \
+    QDialog dialog;                                                                                           \
+    QGridLayout layout(&dialog);                                                                              \
+                                                                                                              \
+    QLabel inputLabel((inputLabelText));                                                                      \
+                                                                                                              \
+    QLineEdit lineEdit;                                                                                       \
+    if (limitMax == 0) {                                                                                      \
+        lineEdit.setValidator(new QIntValidator(limitMin));                                                   \
+    } else {                                                                                                  \
+        lineEdit.setValidator(new QIntValidator(limitMin, limitMax));                                         \
+    }                                                                                                         \
+    lineEdit.setPlaceholderText(QString("current value: %2").arg((parameter)));                               \
+                                                                                                              \
+    QLabel description((descriptionText));                                                                    \
+                                                                                                              \
+    QPushButton okButton("OK");                                                                               \
+    QPushButton cancelButton("Cancel");                                                                       \
+                                                                                                              \
+    layout.addWidget(&inputLabel, 0, 0);                                                                      \
+    layout.addWidget(&lineEdit, 0, 1);                                                                        \
+    layout.addWidget(&description, 1, 0, 1, 2);                                                               \
+    layout.addWidget(&okButton, 2, 0);                                                                        \
+    layout.addWidget(&cancelButton, 2, 1);                                                                    \
+                                                                                                              \
+    QObject::connect(&okButton, &QPushButton::clicked, [&dialog, &lineEdit, this]() {                         \
+        dialog.accept();                                                                                      \
+        (parameter) = atoi(qPrintable(lineEdit.text()));                                                      \
+    });                                                                                                       \
+    QObject::connect(&cancelButton, &QPushButton::clicked, [&dialog]() { dialog.reject(); });                 \
+                                                                                                              \
     dialog.exec();
 
 #define ROBOTSIZE 80
@@ -125,12 +125,12 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      */
     inline void setMoving(bool newMoving) { moving = newMoving; }
 
-    /* This method is called when the robot is right clicked.
-     * It simply toggles the player status of the robot.
-     * @param QGraphicsSceneContextMenuEvent *event: The event that occured.
+    /* This method is called when the mouse is realased after clicking the robot
+     * It brings up the context menu to change the robot's parameters
+     * @param QGraphicsSceneMouseEvent *event: The event that occured.
      * @return: void
      */
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due
@@ -149,6 +149,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   public slots:
+    void changePlayer();
     void rotate();
     void changeIcon();
     void setSpeed();

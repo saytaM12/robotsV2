@@ -81,7 +81,7 @@ class Wall : public MyItem, public QGraphicsRectItem {
      */
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
-    /* This method acts and a drag and drop event for the wall
+    /* This method acts as a drag and drop event for the wall
      * it checks if the wall should be resized and in that case it resizes instead
      * of the drag and drop.
      * @param QGraphicsSceneMouseEvent *event: The mouse event.

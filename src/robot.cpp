@@ -1,8 +1,8 @@
 #include "robot.h"
 
 Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
-    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), rotating(false), angle(angle), player(player),
-      moving(false), speed(1), detectionRange(100), detectionAngle(1), clockwise(false),
+    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), rotating(false), angle(angle),
+      player(player), moving(false), speed(1), detectionRange(100), detectionAngle(1), clockwise(false),
       contextMenu(new RobotContextMenu(QString("hello"))) {
 
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
@@ -15,14 +15,16 @@ Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
     QObject::connect(contextMenu, &RobotContextMenu::setTurningDirection, this, &Robot::setTurningDirection);
 }
 
-void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+void Robot::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
-    // chose whther to do the menu async or not
-    /* contextMenu->exec(event->screenPos()); */
-    contextMenu->popup(event->screenPos());
+    if (event->button() == Qt::RightButton) {
+        // chose whther to do the menu async or not
+        /* contextMenu->exec(event->screenPos()); */
+        contextMenu->popup(event->buttonDownScreenPos(Qt::RightButton));
+        return;
+    }
 
-    player = !player;
-    MyItem::update();
+    MyItem::mouseReleaseEvent(event);
 }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
@@ -36,6 +38,7 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->drawImage(option->rect, image);
 }
 
+void Robot::changePlayer() { player = !player; }
 void Robot::rotate() { rotating = true; }
 void Robot::changeIcon() {
     /* Create a dialog with options to select a new icon */
@@ -91,13 +94,14 @@ void Robot::setDetectionRange() {
         0, 0, detectionRange);
 }
 void Robot::setDetectionAngle() {
-    setParametersWithDialog(("Set the detection angle of the robot: "),
-                            ("Detection angle indivates by how many degrees the robot turns\nwhen it detects an "
-                             "obstacle in 'detection Range'\n\n"
-                             ""
-                             "Minimum is 0 (no turning).\n"
-                             "Maximum is 360 (back to no turning)"),
-                            0, 360, detectionAngle);
+    setParametersWithDialog(
+        ("Set the detection angle of the robot: "),
+        ("Detection angle indivates by how many degrees the robot turns\nwhen it detects an "
+         "obstacle in 'detection Range'\n\n"
+         ""
+         "Minimum is 0 (no turning).\n"
+         "Maximum is 360 (back to no turning)"),
+        0, 360, detectionAngle);
 }
 void Robot::setTurningDirection() {
     setParametersWithDialog(("Set the turning direction of the robot: "),
