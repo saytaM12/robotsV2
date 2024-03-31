@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
 #include <QGraphicsRectItem>
 #include <QGridLayout>
 #include <QLabel>
@@ -15,42 +16,7 @@
 
 #include "darkenImage.h"
 #include "myItem.h"
-#include "robotContextMenu.h"
-
-#define setParametersWithDialog(inputLabelText, descriptionText, limitMin, limitMax, parameter)               \
-    QDialog dialog;                                                                                           \
-    QGridLayout layout(&dialog);                                                                              \
-                                                                                                              \
-    QLabel inputLabel((inputLabelText));                                                                      \
-                                                                                                              \
-    QLineEdit lineEdit;                                                                                       \
-    if (limitMax == 0) {                                                                                      \
-        lineEdit.setValidator(new QIntValidator(limitMin));                                                   \
-    } else {                                                                                                  \
-        lineEdit.setValidator(new QIntValidator(limitMin, limitMax));                                         \
-    }                                                                                                         \
-    lineEdit.setPlaceholderText(QString("current value: %2").arg((parameter)));                               \
-                                                                                                              \
-    QLabel description((descriptionText));                                                                    \
-                                                                                                              \
-    QPushButton okButton("OK");                                                                               \
-    QPushButton cancelButton("Cancel");                                                                       \
-                                                                                                              \
-    layout.addWidget(&inputLabel, 0, 0);                                                                      \
-    layout.addWidget(&lineEdit, 0, 1);                                                                        \
-    layout.addWidget(&description, 1, 0, 1, 2);                                                               \
-    layout.addWidget(&okButton, 2, 0);                                                                        \
-    layout.addWidget(&cancelButton, 2, 1);                                                                    \
-                                                                                                              \
-    QObject::connect(&okButton, &QPushButton::clicked, [&dialog, &lineEdit, this]() {                         \
-        dialog.accept();                                                                                      \
-        (parameter) = atoi(qPrintable(lineEdit.text()));                                                      \
-    });                                                                                                       \
-    QObject::connect(&cancelButton, &QPushButton::clicked, [&dialog]() { dialog.reject(); });                 \
-                                                                                                              \
-    dialog.exec();
-
-#define ROBOTSIZE 80
+#include "robotUtils.h"
 
 class Robot : public MyItem, public QGraphicsEllipseItem {
 
@@ -59,16 +25,15 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
   private:
     QString texture;
 
-    bool rotating;
-
-    int angle;
-    bool player;
-    bool moving;
+    qreal angle;
     int speed;
+    bool moving;
+    bool player;
+    bool clockwise;
     int detectionRange;
     int detectionAngle;
-    bool clockwise;
 
+    QPointer<RobotRotateLine> rotatingLine;
     QPointer<RobotContextMenu> contextMenu;
 
   public:
@@ -130,7 +95,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param QGraphicsSceneMouseEvent *event: The event that occured.
      * @return: void
      */
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due
@@ -149,8 +114,10 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   public slots:
-    void changePlayer();
+    void rotateStart();
     void rotate();
+    void rotateEnd();
+    void changePlayer();
     void changeIcon();
     void setSpeed();
     void setDetectionRange();

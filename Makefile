@@ -59,14 +59,14 @@ SOURCES       = src/darkenImage.cpp \
 		src/myItem.cpp \
 		src/myScene.cpp \
 		src/robot.cpp \
-		src/robotContextMenu.cpp \
+		src/robotUtils.cpp \
 		src/savedData.cpp \
 		src/wall.cpp moc_menu.cpp \
 		moc_menuIcon.cpp \
 		moc_myItem.cpp \
 		moc_myScene.cpp \
 		moc_robot.cpp \
-		moc_robotContextMenu.cpp \
+		moc_robotUtils.cpp \
 		moc_savedData.cpp \
 		moc_wall.cpp
 OBJECTS       = darkenImage.o \
@@ -76,7 +76,7 @@ OBJECTS       = darkenImage.o \
 		myItem.o \
 		myScene.o \
 		robot.o \
-		robotContextMenu.o \
+		robotUtils.o \
 		savedData.o \
 		wall.o \
 		moc_menu.o \
@@ -84,7 +84,7 @@ OBJECTS       = darkenImage.o \
 		moc_myItem.o \
 		moc_myScene.o \
 		moc_robot.o \
-		moc_robotContextMenu.o \
+		moc_robotUtils.o \
 		moc_savedData.o \
 		moc_wall.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -210,7 +210,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/myItem.h \
 		src/myScene.h \
 		src/robot.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/savedData.h \
 		src/wall.h src/darkenImage.cpp \
 		src/main.cpp \
@@ -219,7 +219,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		src/myItem.cpp \
 		src/myScene.cpp \
 		src/robot.cpp \
-		src/robotContextMenu.cpp \
+		src/robotUtils.cpp \
 		src/savedData.cpp \
 		src/wall.cpp
 QMAKE_TARGET  = robotsV2
@@ -481,8 +481,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/darkenImage.h src/guiMacros.h src/json.hpp src/menu.h src/menuIcon.h src/myItem.h src/myScene.h src/robot.h src/robotContextMenu.h src/savedData.h src/wall.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/darkenImage.cpp src/main.cpp src/menu.cpp src/menuIcon.cpp src/myItem.cpp src/myScene.cpp src/robot.cpp src/robotContextMenu.cpp src/savedData.cpp src/wall.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents src/darkenImage.h src/guiMacros.h src/json.hpp src/menu.h src/menuIcon.h src/myItem.h src/myScene.h src/robot.h src/robotUtils.h src/savedData.h src/wall.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/darkenImage.cpp src/main.cpp src/menu.cpp src/menuIcon.cpp src/myItem.cpp src/myScene.cpp src/robot.cpp src/robotUtils.cpp src/savedData.cpp src/wall.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -513,15 +513,15 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_menu.cpp moc_menuIcon.cpp moc_myItem.cpp moc_myScene.cpp moc_robot.cpp moc_robotContextMenu.cpp moc_savedData.cpp moc_wall.cpp
+compiler_moc_header_make_all: moc_menu.cpp moc_menuIcon.cpp moc_myItem.cpp moc_myScene.cpp moc_robot.cpp moc_robotUtils.cpp moc_savedData.cpp moc_wall.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_menu.cpp moc_menuIcon.cpp moc_myItem.cpp moc_myScene.cpp moc_robot.cpp moc_robotContextMenu.cpp moc_savedData.cpp moc_wall.cpp
+	-$(DEL_FILE) moc_menu.cpp moc_menuIcon.cpp moc_myItem.cpp moc_myScene.cpp moc_robot.cpp moc_robotUtils.cpp moc_savedData.cpp moc_wall.cpp
 moc_menu.cpp: src/menu.h \
 		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h \
 		moc_predefs.h \
 		/usr/bin/moc
@@ -543,7 +543,7 @@ moc_myScene.cpp: src/myScene.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h \
 		src/menuIcon.h \
 		moc_predefs.h \
@@ -553,15 +553,15 @@ moc_myScene.cpp: src/myScene.h \
 moc_robot.cpp: src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/robot.h -o moc_robot.cpp
 
-moc_robotContextMenu.cpp: src/robotContextMenu.h \
+moc_robotUtils.cpp: src/robotUtils.h \
 		moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/robotContextMenu.h -o moc_robotContextMenu.cpp
+	/usr/bin/moc $(DEFINES) --include /home/sayta/coding/school/cpp/robotsV2/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/sayta/coding/school/cpp/robotsV2 -I/home/sayta/coding/school/cpp/robotsV2 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/13.2.1 -I/usr/include/c++/13.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/13.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/13.2.1/include-fixed -I/usr/include src/robotUtils.h -o moc_robotUtils.cpp
 
 moc_savedData.cpp: src/savedData.h \
 		src/json.hpp \
@@ -571,7 +571,7 @@ moc_savedData.cpp: src/savedData.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h \
 		src/menuIcon.h \
 		moc_predefs.h \
@@ -612,7 +612,7 @@ main.o: src/main.cpp src/savedData.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h \
 		src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
@@ -622,7 +622,7 @@ menu.o: src/menu.cpp src/menu.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menu.o src/menu.cpp
 
@@ -638,7 +638,7 @@ myScene.o: src/myScene.cpp src/myScene.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h \
 		src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myScene.o src/myScene.cpp
@@ -646,11 +646,11 @@ myScene.o: src/myScene.cpp src/myScene.h \
 robot.o: src/robot.cpp src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h
+		src/robotUtils.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o robot.o src/robot.cpp
 
-robotContextMenu.o: src/robotContextMenu.cpp src/robotContextMenu.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o robotContextMenu.o src/robotContextMenu.cpp
+robotUtils.o: src/robotUtils.cpp src/robotUtils.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o robotUtils.o src/robotUtils.cpp
 
 savedData.o: src/savedData.cpp src/savedData.h \
 		src/json.hpp \
@@ -660,7 +660,7 @@ savedData.o: src/savedData.cpp src/savedData.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
-		src/robotContextMenu.h \
+		src/robotUtils.h \
 		src/wall.h \
 		src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o savedData.o src/savedData.cpp
@@ -685,8 +685,8 @@ moc_myScene.o: moc_myScene.cpp
 moc_robot.o: moc_robot.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robot.o moc_robot.cpp
 
-moc_robotContextMenu.o: moc_robotContextMenu.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robotContextMenu.o moc_robotContextMenu.cpp
+moc_robotUtils.o: moc_robotUtils.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_robotUtils.o moc_robotUtils.cpp
 
 moc_savedData.o: moc_savedData.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_savedData.o moc_savedData.cpp

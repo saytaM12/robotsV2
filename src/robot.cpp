@@ -1,13 +1,20 @@
 #include "robot.h"
 
 Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
-    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), rotating(false), angle(angle),
-      player(player), moving(false), speed(1), detectionRange(100), detectionAngle(1), clockwise(false),
+    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), angle(angle), speed(1), moving(false),
+      player(player), clockwise(false), detectionRange(100), detectionAngle(1),
+      rotatingLine(new RobotRotateLine(ROBOTSIZE / 2.0, ROBOTSIZE / 2.0, ROBOTSIZE / 2.0, 0,
+                                       static_cast<MyItem *>(this))),
       contextMenu(new RobotContextMenu(QString("hello"))) {
 
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
 
-    QObject::connect(contextMenu, &RobotContextMenu::rotate, this, &Robot::rotate);
+    rotatingLine->setVisible(false);
+    QObject::connect(rotatingLine, &RobotRotateLine::rotated, this, &Robot::rotate);
+    QObject::connect(rotatingLine, &RobotRotateLine::mouseRelease, this, &Robot::rotateEnd);
+
+    QObject::connect(contextMenu, &RobotContextMenu::changePlayer, this, &Robot::changePlayer);
+    QObject::connect(contextMenu, &RobotContextMenu::rotate, this, &Robot::rotateStart);
     QObject::connect(contextMenu, &RobotContextMenu::changeIcon, this, &Robot::changeIcon);
     QObject::connect(contextMenu, &RobotContextMenu::setSpeed, this, &Robot::setSpeed);
     QObject::connect(contextMenu, &RobotContextMenu::setDetectionRange, this, &Robot::setDetectionRange);
@@ -15,31 +22,67 @@ Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
     QObject::connect(contextMenu, &RobotContextMenu::setTurningDirection, this, &Robot::setTurningDirection);
 }
 
-void Robot::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+    // chose whther to do the menu async or not
+    /* contextMenu->exec(event->screenPos()); */
+    contextMenu->popup(event->screenPos());
+    return;
 
-    if (event->button() == Qt::RightButton) {
-        // chose whther to do the menu async or not
-        /* contextMenu->exec(event->screenPos()); */
-        contextMenu->popup(event->buttonDownScreenPos(Qt::RightButton));
-        return;
-    }
-
-    MyItem::mouseReleaseEvent(event);
+    MyItem::contextMenuEvent(event);
 }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-
     QImage image(texture);
 
     if (MyItem::isSelected()) {
         darkenImage(image);
     }
 
+    painter->translate(ROBOTSIZE / 2.0, ROBOTSIZE / 2.0);
+    painter->rotate(-angle);
+    painter->translate(-ROBOTSIZE / 2.0, -ROBOTSIZE / 2.0);
+
     painter->drawImage(option->rect, image);
+
+    MyItem::update();
 }
 
-void Robot::changePlayer() { player = !player; }
-void Robot::rotate() { rotating = true; }
+void Robot::rotateStart() { rotatingLine->setVisible(true); }
+
+void Robot::rotate() {
+    angle = rotatingLine->line().angle() - 90;
+    angle = angle < 0 ? 360 + angle : angle;
+}
+
+void Robot::rotateEnd() { rotatingLine->setVisible(false); }
+
+void Robot::changePlayer() {
+    QDialog dialog;
+    QGridLayout layout(&dialog);
+
+    QLabel label(
+        QString("Currenttely this robot is set to be %1").arg(player ? "player controlled" : "autonomous"));
+    layout.addWidget(&label, 0, 0, 1, 2);
+
+    QPointer<QPushButton> buttonPlayer = new QPushButton();
+    buttonPlayer->setText("Set the Robot to be Player Controlled");
+    layout.addWidget(buttonPlayer, 1, 0);
+    QObject::connect(buttonPlayer, &QPushButton::clicked, [&dialog, this]() {
+        dialog.accept();
+        player = true;
+    });
+
+    QPointer<QPushButton> buttonNonPlayer = new QPushButton();
+    buttonNonPlayer->setText("Set the Robot to be Autonomous");
+    layout.addWidget(buttonNonPlayer, 1, 1);
+    QObject::connect(buttonNonPlayer, &QPushButton::clicked, [&dialog, this]() {
+        dialog.accept();
+        player = false;
+    });
+
+    dialog.exec();
+}
+
 void Robot::changeIcon() {
     /* Create a dialog with options to select a new icon */
     QDialog dialog;
