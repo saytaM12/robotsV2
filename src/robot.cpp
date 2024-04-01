@@ -1,8 +1,9 @@
 #include "robot.h"
 
-Robot::Robot(int x, int y, int angle, bool player, QGraphicsItem *parent)
-    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), angle(angle), speed(1), moving(false),
-      player(player), clockwise(false), detectionRange(100), detectionAngle(1),
+Robot::Robot(int x, int y, int speed, int angle, bool player, bool clockwise, int detectionAngle,
+             int detectionRange, QGraphicsItem *parent)
+    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), angle(angle), moving(false),
+      player(player), clockwise(clockwise), detectionRange(detectionRange), detectionAngle(detectionAngle),
       rotatingLine(new RobotRotateLine(ROBOTSIZE / 2.0, ROBOTSIZE / 2.0, ROBOTSIZE / 2.0, 0,
                                        static_cast<MyItem *>(this))),
       contextMenu(new RobotContextMenu(QString("hello"))) {
@@ -29,6 +30,19 @@ void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     return;
 
     MyItem::contextMenuEvent(event);
+}
+
+void Robot::gameTick() {
+    if (player) {
+        return;
+    }
+
+    if (moving) {
+        qreal dx = speed * qCos(qDegreesToRadians(angle));
+        qreal dy = speed * qSin(qDegreesToRadians(angle));
+        MyItem::setX(MyItem::x() + dx);
+        MyItem::setY(MyItem::y() + dy);
+    }
 }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {

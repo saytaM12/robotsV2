@@ -32,8 +32,12 @@ void Data::saveData() {
         } else {
             Robot *robot = static_cast<Robot *>(item);
             json robotData = itemData;
+            robotData["speed"] = robot->getSpeed();
             robotData["angle"] = robot->getAngle();
             robotData["player"] = robot->isPlayer();
+            robotData["clockwise"] = robot->isClockwise();
+            robotData["detectionAngle"] = robot->getDetectionAngle();
+            robotData["detectionRange"] = robot->getDetectionRange();
             data["robots"].push_back(robotData);
         }
     }
@@ -46,9 +50,14 @@ void Data::saveData() {
  * validated.
  * @param qreal *x: Pointer to variable in which to store the x coordinate.
  * @param qreal *y: Pointer to variable in which to store the y coordinate.
+ * @param int *speed: Pointer to variable in which to store the robot's speed.
  * @param qreal *angle: Pointer to variable in which to store the angle.
- * @param bool *player: Pointer to variable in which to store whether the
- * robot is a player.
+ * @param bool *player: Pointer to variable in which to store the player status
+ * @param bool *clockwise: Pointer to variable in which to store the turning direction
+ * @param int *detectionAngle: Pointer to variable in which to store the detection angle
+ * @param int *detectionRange: Pointer to variable in which to store the detection range
+ * @param qreal sceneWidth: Width of the scene.
+ * @param qreal sceneHeight: Height of the scene.
  * @param QString fileName: File from which the data was read. (for printing
  * in error messages).
  * @return: void
@@ -57,12 +66,17 @@ int validateRobotData(
     const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
         nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
         robotData,
-    qreal *x, qreal *y, qreal *angle, bool *player, qreal sceneWidth, qreal sceneHeight, QString fileName) {
+    qreal *x, qreal *y, int *speed, qreal *angle, bool *player, bool *clockwise, int *detectionAngle,
+    int *detectionRange, qreal sceneWidth, qreal sceneHeight, QString fileName) {
     try {
         *x = robotData.value()["x"];
         *y = robotData.value()["y"];
+        *speed = robotData.value()["speed"];
         *angle = robotData.value()["angle"];
         *player = robotData.value()["player"];
+        *clockwise = robotData.value()["clockwise"];
+        *detectionAngle = robotData.value()["detectionAngle"];
+        *detectionRange = robotData.value()["detectionRange"];
     } catch (json::type_error &ex) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
                   << ": a robot is missing a value or a value was entered with "
@@ -83,19 +97,42 @@ int validateRobotData(
     int yLimit = sceneHeight - ROBOTSIZE - 4;
     if (*x > xLimit || *y > yLimit) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
-                  << ": \"robot.x/y\" cannot be more than screen size\nsetting "
-                     "value to maximum possible\n"
+                  << ": \"robot.x/y\" cannot be more than screen size\n"
+                     "setting value to maximum possible\n"
                   << std::endl;
         *x = *x > xLimit ? xLimit : *x;
         *y = *y > yLimit ? yLimit : *y;
     }
 
+    if (*speed < 0) {
+        std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+                  << ": \"robot.speed\" cannot be less than zero\nsetting value to 0\n"
+                  << std::endl;
+        *speed = 0;
+    }
+
     if (*angle < 0 || *angle >= 360) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
-                  << ": \"robot.angle\" cannot be outside interval <0, "
-                     "360)\nsetting value to 0\n"
+                  << ": \"robot.angle\" cannot be outside interval <0, 360)\n"
+                     "setting value to 0\n"
                   << std::endl;
         *angle = 0;
+    }
+
+    if (*detectionAngle < 0 || *detectionAngle >= 360) {
+        std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+                  << ": \"robot.detectionAngle\" cannot be outside interval <0, 360)\n"
+                     "setting value to 0\n"
+                  << std::endl;
+        *detectionAngle = 0;
+    }
+
+    if (*detectionRange < 0) {
+        std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+                  << ": \"robot.detectionRange\" cannot be less than zero\n"
+                     "setting value to 0\n"
+                  << std::endl;
+        *detectionRange = 0;
     }
 
     return 0;
@@ -106,17 +143,19 @@ int validateRobotData(
  * validated.
  * @param qreal *x: Pointer to variable in which to store the x coordinate.
  * @param qreal *y: Pointer to variable in which to store the y coordinate.
- * @param int *size: Pointer to variable in which to store the size of the
- * wall.
+ * @param int *width: Pointer to variable in which to store the width
+ * @param int *height: Pointer to variable in which to store the height
+ * @param qreal sceneWidth: Width of the scene.
+ * @param qreal sceneHeight: Height of the scene.
  * @param QString fileName: File from which the data was read. (for printing
  * in error messages).
  * @return: void
  */
-int validateWallData(const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
-                         nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
-                         wallData,
-                     qreal *x, qreal *y, int *width, int *height, qreal sceneWidth, qreal sceneHeight,
-                     QString fileName) {
+int validateWallData(
+    const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
+        nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
+        wallData,
+    qreal *x, qreal *y, int *width, int *height, qreal sceneWidth, qreal sceneHeight, QString fileName) {
     try {
         *x = wallData.value()["x"];
         *y = wallData.value()["y"];
@@ -190,15 +229,20 @@ void Data::loadData() {
 
         qreal x;
         qreal y;
+        int speed;
         qreal angle;
         bool player;
+        bool clockwise;
+        int detectionAngle;
+        int detectionRange;
 
-        if (validateRobotData(robotData, &x, &y, &angle, &player, scene->getWidth(), scene->getHeight(),
-                              fileName)) {
+        if (validateRobotData(robotData, &x, &y, &speed, &angle, &player, &clockwise, &detectionAngle,
+                              &detectionRange, scene->getWidth(), scene->getHeight(), fileName)) {
             continue;
         }
 
-        QPointer<Robot> robot = new Robot(x, y, angle, player);
+        QPointer<Robot> robot =
+            new Robot(x, y, speed, angle, player, clockwise, detectionAngle, detectionRange);
         scene->addItem(robot);
     }
 

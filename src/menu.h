@@ -75,12 +75,11 @@ class SampleRobot : public Robot {
      * @param bool player: Whether the robot is a player or not.
      * @param Robot *parent: The parent of this object.
      */
-    SampleRobot(QPointF topLeft, int angle, bool player, Menu *parent)
-        : Robot(topLeft.x(), topLeft.y(), angle, player, parent) {
+    SampleRobot(QPointF topLeft, Menu *parent) : Robot(topLeft.x(), topLeft.y(), parent) {
         MyItem::setFlag(QGraphicsItem::ItemIsMovable, false);
     }
 
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override { MyItem::mouseReleaseEvent(event); }
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *) override {}
 };
 
 class SampleWall : public Wall {

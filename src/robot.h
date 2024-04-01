@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
+#include <QtMath>
 
 #include "darkenImage.h"
 #include "myItem.h"
@@ -25,8 +26,8 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
   private:
     QString texture;
 
-    qreal angle;
     int speed;
+    qreal angle;
     bool moving;
     bool player;
     bool clockwise;
@@ -39,18 +40,28 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
   public:
     /* The constructor used to create a new Robot.
      * @param QRectF rect The rectangle that the robot is in.
+     * @param int speed The speed of the robot.
      * @param int angle The angle that the robot is facing.
      * @param bool player Whether the robot is a player or not.
+     * @param clockwise Whether the robot turns clockwise on detection or not.
+     * @param int detectionAngle The angle the robot turn on detection.
+     * @param detectionRange The range of detection of the robot.
      * @param MyItem *parent The parent of the robot.
      */
-    Robot(int x, int y, int angle = 0, bool player = false, QGraphicsItem *parent = nullptr);
+    Robot(int x = 0, int y = 0, int speed = 1, int angle = 0, bool player = false, bool clockwise = false,
+          int detectionAngle = 1, int detectionRange = 100, QGraphicsItem *parent = nullptr);
+
+    Robot(int x = 0, int y = 0, QGraphicsItem *parent = nullptr)
+        : Robot(x, y, 1, 0, false, false, 1, 100, parent) {}
 
     /* The constructor used to create a new Robot based off of another robot.
      * @param Robot *robot The robot that this robot is based off of.
      * @param MyItem *parent The parent of the robot.
      */
     Robot(Robot *robot, QGraphicsItem *parent = nullptr)
-        : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getAngle(), robot->isPlayer(), parent) {}
+        : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getSpeed(), robot->getAngle(),
+                robot->isPlayer(), robot->isClockwise(), robot->getDetectionAngle(),
+                robot->getDetectionRange(), parent) {}
 
     /* Method that returns whether this item is a wall or not. Always returns
      * false.
@@ -58,20 +69,40 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      */
     inline bool isWall() const override { return false; }
 
+    /* This method returns the speed of the robot.
+     * @return: int
+     */
+    inline int getSpeed() { return speed; }
+
     /* This method returns the angle that the robot is facing.
      * @return: int
      */
     inline int getAngle() { return angle; }
+
+    /* This method returns whether the robot is moving or not.
+     * @return: bool
+     */
+    inline bool isMoving() { return moving; }
 
     /* This method returns whether the robot is a player or not.
      * @return: bool
      */
     inline bool isPlayer() { return player; }
 
-    /* This method returns whether the robot is moving or not.
+    /* This method returns the turning direction of the robot.
      * @return: bool
      */
-    inline bool getMoving() { return moving; }
+    inline bool isClockwise() { return clockwise; }
+
+    /* This method returns the detection range of the robot.
+     * @return: int
+     */
+    inline int getDetectionRange() { return detectionRange; }
+
+    /* This method returns the detection angle of the robot.
+     * @return: int
+     */
+    inline int getDetectionAngle() { return detectionAngle; }
 
     /* This method sets the angle that the robot is facing.
      * @param int angle: The angle that the robot is facing.
@@ -96,6 +127,8 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @return: void
      */
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+
+    void gameTick();
 
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due

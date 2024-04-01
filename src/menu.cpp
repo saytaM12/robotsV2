@@ -3,7 +3,7 @@
 Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
     : QGraphicsRectItem(), saveButton(new QPushButton("Save")), loadButton(new QPushButton("Load")),
       sampleWall(new SampleWall(SAMPLE_WALL_RECT(menuWidth, menuHeight), this)),
-      sampleRobot(new SampleRobot(SAMPLE_ROBOT_TOPLEFT(menuWidth, menuHeight), 0, false, this)) {
+      sampleRobot(new SampleRobot(SAMPLE_ROBOT_TOPLEFT(menuWidth, menuHeight), this)) {
 
     setRect(0, 0, menuWidth, menuHeight);
     QGraphicsRectItem::setX(0);
