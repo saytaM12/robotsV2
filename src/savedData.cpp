@@ -244,6 +244,8 @@ void Data::loadData() {
         QPointer<Robot> robot =
             new Robot(x, y, speed, angle, player, clockwise, detectionAngle, detectionRange);
         scene->addItem(robot);
+        QObject::connect(scene, &MyScene::gameTick, robot, &Robot::gameTick);
+        QObject::connect(robot, &Robot::clearArtefacts, scene, &MyScene::clearRobotArtefacts);
     }
 
     for (auto &wallData : data["walls"].items()) {

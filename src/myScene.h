@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QTimer>
 
 #include "menu.h"
 #include "menuIcon.h"
@@ -14,6 +15,7 @@ class MyScene : public QGraphicsScene {
     QPointer<Menu> menu;
     QPointer<MenuIcon> menuIcon;
     QList<QPointer<MyItem>> itemList;
+    QPointer<QTimer> gameTickTimer;
 
   public:
     /* This constructor is used to create a new MyScene object.
@@ -79,6 +81,12 @@ class MyScene : public QGraphicsScene {
      * @return: void
      */
     void itemDropped(MyItem *item);
+
+    void clearRobotArtefacts(Robot *robot);
+
+    void simulationPressed();
+  signals:
+    void gameTick();
 };
 
 class MyView : public QGraphicsView {

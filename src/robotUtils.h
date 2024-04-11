@@ -5,7 +5,7 @@
 #include <QMenu>
 #include <QPainter>
 #include <QWidget>
-#include <math.h>
+#include <cmath>
 
 #define ROBOTSIZE 80
 

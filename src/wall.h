@@ -44,7 +44,7 @@ class Wall : public MyItem, public QGraphicsRectItem {
      * @param int size: The size of the wall. default is 100.
      * @param MyItem *parent: The parent of the wall.
      */
-    Wall(int x, int y, int width, int height, QGraphicsItem *parent = nullptr);
+    Wall(int x = 0, int y = 0, int width = 0, int height = 0, QGraphicsItem *parent = nullptr);
 
     /* Constructor for the Wall object. Creates a new wall based off of another
      * @param Wall *wall: The wall that this wall is based off of.

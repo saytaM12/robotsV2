@@ -31,7 +31,7 @@ void RobotRotateLine::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 RobotContextMenu::RobotContextMenu(QString name, QWidget *parent) : QMenu(name, parent) {
-    QAction *changePlayer = new QAction(QIcon("imgs/icons/player.svg"), "Set robot type", this);
+    QAction *changePlayer = new QAction(QIcon("imgs/icons/player.svg"), "Set robot player status", this);
     QObject::connect(changePlayer, &QAction::triggered, this, &RobotContextMenu::changePlayer);
     addAction(changePlayer);
     addSeparator();

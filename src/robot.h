@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDebug>
 #include <QDialog>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
@@ -48,11 +49,11 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param detectionRange The range of detection of the robot.
      * @param MyItem *parent The parent of the robot.
      */
-    Robot(int x = 0, int y = 0, int speed = 1, int angle = 0, bool player = false, bool clockwise = false,
+    Robot(int x = 0, int y = 0, int speed = 1, int angle = 90, bool player = false, bool clockwise = false,
           int detectionAngle = 1, int detectionRange = 100, QGraphicsItem *parent = nullptr);
 
     Robot(int x = 0, int y = 0, QGraphicsItem *parent = nullptr)
-        : Robot(x, y, 1, 0, false, false, 1, 100, parent) {}
+        : Robot(x, y, 1, 90, false, false, 1, 100, parent) {}
 
     /* The constructor used to create a new Robot based off of another robot.
      * @param Robot *robot The robot that this robot is based off of.
@@ -128,14 +129,18 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      */
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
-    void gameTick();
-
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due
      * to inheritance sheananigans.
      * @return: QRectF
      */
-    QRectF boundingRect() const override { return rect(); }
+    QRectF boundingRect() const override {
+        /* qreal size = qMax(ROBOTSIZE * sqrt(2) * abs(cos(angle * (M_PI / 180) + M_PI / 4)),
+                          ROBOTSIZE * sqrt(2) * abs(sin(angle * (M_PI / 180) + M_PI / 4)));
+        QRectF drawRect(rect().y() - (size - ROBOTSIZE) / 2, rect().x() - (size - ROBOTSIZE) / 2, size, size);
+      */
+        return rect();
+    }
 
     /* This method is used to paint the robot.
      * @param QPainter *painter: The painter object.
@@ -147,6 +152,8 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   public slots:
+    void gameTick();
+
     void rotateStart();
     void rotate();
     void rotateEnd();
@@ -156,4 +163,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void setDetectionRange();
     void setDetectionAngle();
     void setTurningDirection();
+
+  signals:
+    QRectF clearArtefacts(Robot *robot);
 };

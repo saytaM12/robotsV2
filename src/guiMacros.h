@@ -1,79 +1,19 @@
 /* GUI BUTTONS
  * BWS = button width (inverse) scaler
  * BHS = button height (inverse) scaler
- * mW  = menu width
- * mH  = menu height
- * BW  = button width
- * BH  = button height
- * LBX = left button x
- * RBX = right button x
- * BY  = both button y
  */
 #define BWS (1.0 / 3.0) // must be between 0 and 1
 #define BHS (1.0 / 5.0) // must be between 0 and 1
-#define BW(mW) ((mW) * BWS)
-#define BH(mW) ((mW) * BHS)
-/* (mw - (mw * 2 * bws)) / 3  //(mw*2bws) = both_width, mw - (...) = white space
- * 1/3(1 - 2bws) * mw
- * mw * (1 - 2 * bws) / 3
- */
-#define LBX(mW) ((mW) * (1 - 2 * BWS) / 3.0)
-/* LBX / 2 + mw / 2   // the same padding but from center of menu
- * simplifies to -> mw * 5/9
- */
-#define RBX(mW) ((mW) * 5.0 / 9.0)
-/* mw * bhs                 // button height
- * mw * (1 - 2 * bws) / 3   // button padding
- *
- * mh - (mw * bhs + (mw * (1 - 2 * bws) / 3))
- * mh - mw * (bhs + (1 - 2 * bws) / 3)
- */
-#define BY(mW, mH) ((mH) - (mW) * (BHS + (1 - 2 * BWS) / 3))
-#define LEFT_BUTTON_RECT(mW, mH) QRect(LBX(mW), BY(mW, mH), BW(mW), BH(mW))
-#define RIGHT_BUTTON_RECT(mW, mH) QRect(RBX(mW), BY(mW, mH), BW(mW), BH(mW))
 
 /* GUI SAMLPLE ITEMS
- * SWS = sample wall size
  * SB  = sample background scaler
  * SBS = sample background size
- * RX  = robot x
- * RY  = robot y
- * WX  = wall x
- * WY  = wall y
  * SBX = sample background x
  * TSBY = top sample background y
  * BSBY = bottom sample background y
  */
-#define SWS 100
 #define SB (9.0 / 10.0) // must be between 0 and 1
 #define SBS(mW) ((mW) * SB)
-/* half of robot to the left of center of menu */
-#define RX(mW) ((mW) / 2.0 - ROBOTSIZE / 2.0)
-/* mw * bhs +                   // button height
- * mw * (1 - 2 * bws) / 1.5 +   // two button paddings (top and bot)
- * mw * 1.5 * sb +              // one and a half sample backgrounds
- * mw * (1 - sb) / 2 +          // one sample background padding
- * ROBOTSIZE / 2                // from center to top of robot
- *
- * mw * bhs + mw * (1 - 2 * bws) / 1.5 + mw * 1.5 * sb + mw * (1 - sb) / 2 +
- *   ROBOTSIZE / 2
- * mw * (bhs + (1 - 2 * bws) / 1.5 + 1.5 * sb + (1 - sb) / 2) + ROBOTSIZE / 2
- * mw * (bhs + (1 - 2 * bws) / 1.5 + (2 * sb + 1) / 2) + ROBOTSIZE / 2
- */
-#define RY(mW, mH) ((mH) - ((mW) * (BHS + (1 - 2 * BWS) / 1.5 + (2 * SB + 1) / 2.0) + ROBOTSIZE / 2.0))
-/* half of wall to the left of center of menu */
-#define WX(mW) ((mW) / 2.0 - SWS / 2.0)
-/* mw * bhs +                   // button height
- * mw * (1 - 2 * bws) / 1.5 +   // two button paddings (top and bot)
- * mw * 0.5 * sb +              // half a sample background
- * SWS / 2                      // from center to top of wall
- *
- * mw * bhs + mw * (1 - 2 * bws) / 1.5 + mw * 0.5 * sb + SWS / 2
- * mw * (bhs + (1 - 2 * bws) / 1.5 + 0.5 * sb) + SWS / 2
- */
-#define WY(mW, mH) ((mH) - ((mW) * (BHS + (1 - 2 * BWS) / 1.5 + 0.5 * SB) + SWS / 2.0))
-#define SAMPLE_ROBOT_TOPLEFT(mW, mH) QPointF(RX(mW), RY(mW, mH))
-#define SAMPLE_WALL_RECT(mW, mH) QRectF(WX(mW), WY(mW, mH), SWS, SWS)
 
 #define SBX(mW) ((mW) * (1 - SB) / 2.0)
 /* mw * bhs +                   // button width

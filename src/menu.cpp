@@ -1,9 +1,9 @@
 #include "menu.h"
 
 Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
-    : QGraphicsRectItem(), saveButton(new QPushButton("Save")), loadButton(new QPushButton("Load")),
-      sampleWall(new SampleWall(SAMPLE_WALL_RECT(menuWidth, menuHeight), this)),
-      sampleRobot(new SampleRobot(SAMPLE_ROBOT_TOPLEFT(menuWidth, menuHeight), this)) {
+    : QGraphicsRectItem(), saveButton(new MyPushButton("Save", this)),
+      loadButton(new MyPushButton("Load", this)), simulationButton(new MyPushButton("Start Simulation", this)),
+      sampleWall(new SampleWall(this)), sampleRobot(new SampleRobot(this)) {
 
     setRect(0, 0, menuWidth, menuHeight);
     QGraphicsRectItem::setX(0);
@@ -12,23 +12,46 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
     QGraphicsRectItem::setVisible(false);
     QGraphicsRectItem::setAcceptHoverEvents(true);
 
-    saveButton->setGeometry(RIGHT_BUTTON_RECT(menuWidth, menuHeight));
-    loadButton->setGeometry(LEFT_BUTTON_RECT(menuWidth, menuHeight));
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical, this);
+    layout->addItem(sampleWall);
+    layout->setContentsMargins(0, menuHeight / 3.0, 0, 0);
+    layout->setItemSpacing(0, 100);
+    layout->setAlignment(sampleWall, Qt::AlignHCenter);
+    layout->addItem(sampleRobot);
+    layout->setItemSpacing(1, 100);
+
+    QGraphicsLinearLayout *buttonLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    buttonLayout->addItem(saveButton);
+    buttonLayout->addItem(loadButton);
+    layout->addItem(buttonLayout);
+
+    layout->addItem(simulationButton);
+
     saveButton->hide();
     loadButton->hide();
+    simulationButton->hide();
 
     QObject::connect(saveButton, &QPushButton::clicked, this, &Menu::savePressed);
     QObject::connect(loadButton, &QPushButton::clicked, this, &Menu::loadPressed);
+    QObject::connect(simulationButton, &QPushButton::clicked, this, &Menu::simulationPressed);
+    QObject::connect(simulationButton, &QPushButton::clicked, this, &Menu::toggle);
+    QObject::connect(simulationButton, &QPushButton::clicked, this, [=]() {
+        simulationButton->setText(simulationButton->text() == "Start Simulation" ? "Stop Simulation"
+                                                                                 : "Start Simulation");
+    });
 
-    scene->addItem(this);
     scene->addWidget(saveButton);
     scene->addWidget(loadButton);
+    scene->addWidget(simulationButton);
+
+    scene->addItem(static_cast<QGraphicsRectItem *>(this));
 }
 
 void Menu::toggle() {
     if (QGraphicsRectItem::isVisible()) {
         saveButton->hide();
         loadButton->hide();
+        simulationButton->hide();
         QGraphicsRectItem::setVisible(false);
         QGraphicsRectItem::update();
 
@@ -37,6 +60,7 @@ void Menu::toggle() {
 
     saveButton->show();
     loadButton->show();
+    simulationButton->show();
     QGraphicsRectItem::setVisible(true);
     QGraphicsRectItem::update();
 }

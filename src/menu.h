@@ -1,6 +1,9 @@
 #pragma once
 
 #include <QEvent>
+#include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
+#include <QGraphicsProxyWidget>
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
@@ -13,19 +16,24 @@
 #include <QStyleOptionGraphicsItem>
 
 #include "guiMacros.h"
+#include "qgraphicslayoutitem.h"
 #include "robot.h"
 #include "wall.h"
 
+#define SAMPLE_WALL_SIZE 100
+
 class SampleRobot;
 class SampleWall;
+class MyPushButton;
 
-class Menu : public QWidget, public QGraphicsRectItem {
+class Menu : public QGraphicsWidget, public QGraphicsRectItem {
 
     Q_OBJECT
 
   private:
-    QPointer<QPushButton> saveButton;
-    QPointer<QPushButton> loadButton;
+    QPointer<MyPushButton> saveButton;
+    QPointer<MyPushButton> loadButton;
+    QPointer<MyPushButton> simulationButton;
     QPointer<SampleWall> sampleWall;
     QPointer<SampleRobot> sampleRobot;
 
@@ -52,7 +60,7 @@ class Menu : public QWidget, public QGraphicsRectItem {
      * painting.
      * @return: void
      */
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   public slots:
     /* When this slot is called the menu is toggled
@@ -64,34 +72,53 @@ class Menu : public QWidget, public QGraphicsRectItem {
   signals:
     void savePressed();
     void loadPressed();
+    void simulationPressed();
 };
 
-class SampleRobot : public Robot {
+class SampleRobot : public Robot, public QGraphicsLayoutItem {
 
   public:
     /* Constructor for SampleRobot. creates a new SampleRobot.
-     * @param QrectF rect: Rectangle in which the robot is placed.
-     * @param int angle: The angle the robot is facing.
-     * @param bool player: Whether the robot is a player or not.
+     * @param QPointF point: Top left of the robot.
      * @param Robot *parent: The parent of this object.
      */
-    SampleRobot(QPointF topLeft, Menu *parent) : Robot(topLeft.x(), topLeft.y(), parent) {
+    SampleRobot(Menu *parent) : Robot(0, 0, static_cast<QGraphicsRectItem *>(parent)) {
         MyItem::setFlag(QGraphicsItem::ItemIsMovable, false);
+        setOwnedByLayout(false);
     }
 
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *) override {}
+
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override {
+        switch (which) {
+        case Qt::MinimumSize:
+        case Qt::PreferredSize:
+            return rect().size();
+        case Qt::MaximumSize:
+            return QSizeF(1000, 1000);
+        default:
+            break;
+        }
+        return constraint;
+    }
+
+    void setGeometry(const QRectF &geom) override {
+        MyItem::prepareGeometryChange();
+        QGraphicsLayoutItem::setGeometry(geom);
+        MyItem::setPos(geom.topLeft());
+    }
 };
 
-class SampleWall : public Wall {
+class SampleWall : public Wall, public QGraphicsLayoutItem {
 
   public:
     /* Constructor for SampleWall. creates a new SampleWall.
-     * @param QrectF rect: Rectangle in which the wall is placed.
-     * @param int size: The size of the wall.
+     * @param QPointF point: Top left of the wall.
      * @param Wall *parent: The parent of this object.
      */
-    SampleWall(QRectF rect, Menu *parent) : Wall(rect.x(), rect.y(), rect.width(), rect.height(), parent) {
+    SampleWall(Menu *parent) : Wall(0, 0, 100, 100, static_cast<QGraphicsRectItem *>(parent)) {
         MyItem::setFlag(QGraphicsItem::ItemIsMovable, false);
+        setOwnedByLayout(false);
     }
 
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override { MyItem::mouseMoveEvent(event); }
@@ -99,4 +126,60 @@ class SampleWall : public Wall {
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override { MyItem::hoverEnterEvent(event); }
 
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override { MyItem::hoverMoveEvent(event); }
+
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override {
+        switch (which) {
+        case Qt::MinimumSize:
+        case Qt::PreferredSize:
+            return rect().size();
+        case Qt::MaximumSize:
+            return QSizeF(1000, 1000);
+        default:
+            break;
+        }
+        return constraint;
+    }
+
+    void setGeometry(const QRectF &geom) override {
+        MyItem::prepareGeometryChange();
+        QGraphicsLayoutItem::setGeometry(geom);
+        MyItem::setPos(geom.topLeft());
+    }
+};
+
+class MyPushButton : public QPushButton, public QGraphicsLayoutItem {
+
+    Q_OBJECT
+
+  private:
+    Menu *menu;
+
+  public:
+    /* Constructor for MyPushButton. creates a new MyPushButton.
+     * @param const QString &text: The text to be displayed on the button.
+     * @param QGraphicsItem *parent: The parent of this object.
+     */
+    MyPushButton(const QString &text, Menu *menu) : QPushButton(text), menu(menu) {}
+
+    QSize sizeHint() const override { return QPushButton::sizeHint(); }
+
+    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override {
+        switch (which) {
+        case Qt::MinimumSize:
+        case Qt::PreferredSize:
+            return QSizeF(menu->QGraphicsRectItem::rect().width() / 3,
+                          menu->QGraphicsRectItem::rect().width() / 6);
+        case Qt::MaximumSize:
+            return QSizeF(1000, 1000);
+        default:
+            break;
+        }
+        return constraint;
+    }
+
+    void setGeometry(const QRectF &geom) override {
+        QPushButton::setGeometry(geom.toRect());
+        QGraphicsLayoutItem::setGeometry(geom);
+        move(geom.x(), geom.y());
+    }
 };

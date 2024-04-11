@@ -32,20 +32,10 @@ void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     MyItem::contextMenuEvent(event);
 }
 
-void Robot::gameTick() {
-    if (player) {
-        return;
-    }
-
-    if (moving) {
-        qreal dx = speed * qCos(qDegreesToRadians(angle));
-        qreal dy = speed * qSin(qDegreesToRadians(angle));
-        MyItem::setX(MyItem::x() + dx);
-        MyItem::setY(MyItem::y() + dy);
-    }
-}
-
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
+
+    Q_UNUSED(option);
+
     QImage image(texture);
 
     if (MyItem::isSelected()) {
@@ -53,21 +43,31 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     }
 
     painter->translate(ROBOTSIZE / 2.0, ROBOTSIZE / 2.0);
-    painter->rotate(-angle);
+    painter->rotate(-angle + 90);
     painter->translate(-ROBOTSIZE / 2.0, -ROBOTSIZE / 2.0);
 
-    painter->drawImage(option->rect, image);
+    painter->drawImage(rect(), image);
+
+    emit clearArtefacts(this);
 
     MyItem::update();
 }
 
-void Robot::rotateStart() { rotatingLine->setVisible(true); }
+void Robot::gameTick() {
+    if (player) {
+        return;
+    }
 
-void Robot::rotate() {
-    angle = rotatingLine->line().angle() - 90;
-    angle = angle < 0 ? 360 + angle : angle;
+    if (moving) {
+        qreal dx = speed * sin(angle * M_PI / 180.0 + M_PI / 2.0);
+        qreal dy = speed * cos(angle * M_PI / 180.0 + M_PI / 2.0);
+        MyItem::setX(MyItem::x() + dx);
+        MyItem::setY(MyItem::y() + dy);
+    }
 }
 
+void Robot::rotateStart() { rotatingLine->setVisible(true); }
+void Robot::rotate() { angle = rotatingLine->line().angle(); }
 void Robot::rotateEnd() { rotatingLine->setVisible(false); }
 
 void Robot::changePlayer() {
