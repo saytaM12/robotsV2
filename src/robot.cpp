@@ -2,25 +2,28 @@
 
 Robot::Robot(int x, int y, int speed, int angle, bool player, bool clockwise, int detectionAngle,
              int detectionRange, QGraphicsItem *parent)
-    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), angle(angle), moving(false),
-      player(player), clockwise(clockwise), detectionRange(detectionRange), detectionAngle(detectionAngle),
-      rotatingLine(new RobotRotateLine(ROBOTSIZE / 2.0, ROBOTSIZE / 2.0, ROBOTSIZE / 2.0, 0,
-                                       static_cast<MyItem *>(this))),
+    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), player(player),
+      clockwise(clockwise), simulating(false), detectionRange(detectionRange), detectionAngle(detectionAngle),
       contextMenu(new RobotContextMenu(QString("hello"))) {
 
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
 
-    rotatingLine->setVisible(false);
-    QObject::connect(rotatingLine, &RobotRotateLine::rotated, this, &Robot::rotate);
-    QObject::connect(rotatingLine, &RobotRotateLine::mouseRelease, this, &Robot::rotateEnd);
+    MyItem::setTransformOriginPoint(rect().center());
+    MyItem::setRotation(angle);
+    rotationLine = new QGraphicsLineItem(rect().center().x(), rect().center().y(), rect().center().x(),
+                                         rect().center().y() - 100, static_cast<MyItem *>(this));
+    rotationLine->setPen(Qt::NoPen);
 
+    QObject::connect(contextMenu, &RobotContextMenu::rotate, this, [this]() {
+        rotating = true;
+        MyItem::grabMouse();
+    });
     QObject::connect(contextMenu, &RobotContextMenu::changePlayer, this, &Robot::changePlayer);
-    QObject::connect(contextMenu, &RobotContextMenu::rotate, this, &Robot::rotateStart);
-    QObject::connect(contextMenu, &RobotContextMenu::changeIcon, this, &Robot::changeIcon);
     QObject::connect(contextMenu, &RobotContextMenu::setSpeed, this, &Robot::setSpeed);
     QObject::connect(contextMenu, &RobotContextMenu::setDetectionRange, this, &Robot::setDetectionRange);
     QObject::connect(contextMenu, &RobotContextMenu::setDetectionAngle, this, &Robot::setDetectionAngle);
     QObject::connect(contextMenu, &RobotContextMenu::setTurningDirection, this, &Robot::setTurningDirection);
+    QObject::connect(contextMenu, &RobotContextMenu::changeIcon, this, &Robot::changeIcon);
 }
 
 void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
@@ -30,6 +33,25 @@ void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     return;
 
     MyItem::contextMenuEvent(event);
+}
+
+void Robot::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+    if (rotating) {
+        QLineF line(rotationLine->line().p1(), event->pos());
+        MyItem::setRotation(-rotationLine->line().angleTo(line) + 90);
+        line.setAngle(MyItem::rotation());
+        line.setLength(100);
+        rotationLine->setLine(line);
+    }
+    MyItem::mouseMoveEvent(event);
+}
+
+void Robot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    if (rotating) {
+        rotating = false;
+        MyItem::ungrabMouse();
+    }
+    MyItem::mousePressEvent(event);
 }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
@@ -42,15 +64,7 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
         darkenImage(image);
     }
 
-    painter->translate(ROBOTSIZE / 2.0, ROBOTSIZE / 2.0);
-    painter->rotate(-angle + 90);
-    painter->translate(-ROBOTSIZE / 2.0, -ROBOTSIZE / 2.0);
-
     painter->drawImage(rect(), image);
-
-    emit clearArtefacts(this);
-
-    MyItem::update();
 }
 
 void Robot::gameTick() {
@@ -58,17 +72,16 @@ void Robot::gameTick() {
         return;
     }
 
-    if (moving) {
-        qreal dx = speed * sin(angle * M_PI / 180.0 + M_PI / 2.0);
-        qreal dy = speed * cos(angle * M_PI / 180.0 + M_PI / 2.0);
-        MyItem::setX(MyItem::x() + dx);
-        MyItem::setY(MyItem::y() + dy);
+    if (simulating) {
+        qreal r = MyItem::rotation();
+        r = r < 0 ? 360 + r : r;
+        r = 360 - r;
+        qreal dx = speed * sin(r * M_PI / 180.0);
+        qreal dy = speed * cos(r * M_PI / 180.0);
+        MyItem::setX(MyItem::x() - dx);
+        MyItem::setY(MyItem::y() - dy);
     }
 }
-
-void Robot::rotateStart() { rotatingLine->setVisible(true); }
-void Robot::rotate() { angle = rotatingLine->line().angle(); }
-void Robot::rotateEnd() { rotatingLine->setVisible(false); }
 
 void Robot::changePlayer() {
     QDialog dialog;

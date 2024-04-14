@@ -42,22 +42,6 @@
                                                                                                               \
     dialog.exec();
 
-class RobotRotateLine : public QObject, public QGraphicsLineItem {
-
-    Q_OBJECT
-
-  public:
-    RobotRotateLine(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent = nullptr);
-
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-
-  signals:
-    void rotated();
-    void mouseRelease();
-};
-
 class RobotContextMenu : public QMenu {
 
     Q_OBJECT

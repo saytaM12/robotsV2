@@ -34,7 +34,6 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
     QObject::connect(saveButton, &QPushButton::clicked, this, &Menu::savePressed);
     QObject::connect(loadButton, &QPushButton::clicked, this, &Menu::loadPressed);
     QObject::connect(simulationButton, &QPushButton::clicked, this, &Menu::simulationPressed);
-    QObject::connect(simulationButton, &QPushButton::clicked, this, &Menu::toggle);
     QObject::connect(simulationButton, &QPushButton::clicked, this, [=]() {
         simulationButton->setText(simulationButton->text() == "Start Simulation" ? "Stop Simulation"
                                                                                  : "Start Simulation");

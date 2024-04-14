@@ -1,44 +1,14 @@
 #include "robotUtils.h"
 
-RobotRotateLine::RobotRotateLine(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent)
-    : QGraphicsLineItem(x1, y1, x2, y2, parent) {
-
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemIsSelectable);
-    setFlag(QGraphicsItem::ItemIsMovable, false);
-    setPen(QPen(Qt::yellow, 10, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    setCursor(Qt::CrossCursor);
-}
-
-void RobotRotateLine::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    qreal angle =
-        atan2(-(event->pos().y() - ROBOTSIZE / 2.0), event->pos().x() - ROBOTSIZE / 2.0) * 180 / M_PI;
-
-    QLineF newLine(line());
-    newLine.setAngle(angle);
-
-    this->setLine(newLine);
-
-    update();
-
-    emit rotated();
-    QGraphicsLineItem::mouseMoveEvent(event);
-}
-
-void RobotRotateLine::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    emit mouseRelease();
-    QGraphicsLineItem::mouseReleaseEvent(event);
-}
-
 RobotContextMenu::RobotContextMenu(QString name, QWidget *parent) : QMenu(name, parent) {
-    QAction *changePlayer = new QAction(QIcon("imgs/icons/player.svg"), "Set robot player status", this);
-    QObject::connect(changePlayer, &QAction::triggered, this, &RobotContextMenu::changePlayer);
-    addAction(changePlayer);
-    addSeparator();
-
     QAction *rotate = new QAction(QIcon("imgs/icons/rotate.svg"), "Rotate", this);
     QObject::connect(rotate, &QAction::triggered, this, &RobotContextMenu::rotate);
     addAction(rotate);
+    addSeparator();
+
+    QAction *changePlayer = new QAction(QIcon("imgs/icons/player.svg"), "Set robot player status", this);
+    QObject::connect(changePlayer, &QAction::triggered, this, &RobotContextMenu::changePlayer);
+    addAction(changePlayer);
     addSeparator();
 
     QAction *speed = new QAction(QIcon("imgs/icons/speed.svg"), "Set movement speed", this);

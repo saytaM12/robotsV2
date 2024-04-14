@@ -12,10 +12,11 @@ class MyScene : public QGraphicsScene {
     Q_OBJECT
 
   private:
+    bool simulating;
     QPointer<Menu> menu;
     QPointer<MenuIcon> menuIcon;
-    QList<QPointer<MyItem>> itemList;
     QPointer<QTimer> gameTickTimer;
+    QList<QPointer<MyItem>> itemList;
 
   public:
     /* This constructor is used to create a new MyScene object.
@@ -53,13 +54,7 @@ class MyScene : public QGraphicsScene {
      * menu icon)
      * @return: QList<MyItem *>
      */
-    inline QList<MyItem *> items() {
-        QList<MyItem *> returnItems;
-        for (MyItem *item : itemList) {
-            returnItems.push_back(item);
-        }
-        return returnItems;
-    }
+    QList<MyItem *> items();
 
     /* This methos adds an item to the scene and to the items list.
      * @param MyItem *item: The item to be added.
@@ -81,8 +76,6 @@ class MyScene : public QGraphicsScene {
      * @return: void
      */
     void itemDropped(MyItem *item);
-
-    void clearRobotArtefacts(Robot *robot);
 
     void simulationPressed();
   signals:

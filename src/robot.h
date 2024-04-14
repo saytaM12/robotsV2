@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QDebug>
 #include <QDialog>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsRectItem>
 #include <QGridLayout>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -26,16 +26,16 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
 
   private:
     QString texture;
+    QGraphicsLineItem *rotationLine;
 
     int speed;
-    qreal angle;
-    bool moving;
     bool player;
+    bool rotating;
     bool clockwise;
+    bool simulating;
     int detectionRange;
     int detectionAngle;
 
-    QPointer<RobotRotateLine> rotatingLine;
     QPointer<RobotContextMenu> contextMenu;
 
   public:
@@ -49,11 +49,10 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param detectionRange The range of detection of the robot.
      * @param MyItem *parent The parent of the robot.
      */
-    Robot(int x = 0, int y = 0, int speed = 1, int angle = 90, bool player = false, bool clockwise = false,
-          int detectionAngle = 1, int detectionRange = 100, QGraphicsItem *parent = nullptr);
+    Robot(int x, int y, int speed, int angle, bool player, bool clockwise, int detectionAngle,
+          int detectionRange, QGraphicsItem *parent = nullptr);
 
-    Robot(int x = 0, int y = 0, QGraphicsItem *parent = nullptr)
-        : Robot(x, y, 1, 90, false, false, 1, 100, parent) {}
+    Robot(int x, int y, QGraphicsItem *parent = nullptr) : Robot(x, y, 1, 0, false, false, 1, 100, parent) {}
 
     /* The constructor used to create a new Robot based off of another robot.
      * @param Robot *robot The robot that this robot is based off of.
@@ -78,12 +77,12 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     /* This method returns the angle that the robot is facing.
      * @return: int
      */
-    inline int getAngle() { return angle; }
+    inline int getAngle() { return MyItem::rotation(); }
 
     /* This method returns whether the robot is moving or not.
      * @return: bool
      */
-    inline bool isMoving() { return moving; }
+    inline bool isMoving() { return simulating; }
 
     /* This method returns whether the robot is a player or not.
      * @return: bool
@@ -109,7 +108,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param int angle: The angle that the robot is facing.
      * @return: void
      */
-    inline void setAngle(int newAngle) { angle = newAngle; }
+    inline void setAngle(int newAngle) { MyItem::setRotation(newAngle); }
 
     /* This method sets the player status of the robot.
      * @param bool player: Whether the robot is a player or not.
@@ -120,7 +119,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param bool moving: Whether the robot is moving or not.
      * @return: void
      */
-    inline void setMoving(bool newMoving) { moving = newMoving; }
+    inline void setMoving(bool newMoving) { simulating = newMoving; }
 
     /* This method is called when the mouse is realased after clicking the robot
      * It brings up the context menu to change the robot's parameters
@@ -129,18 +128,21 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      */
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
 
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
     /* Method to return the bounding rectangle of the robot.
      * This method must be implemented, otherwise the program breaks. This is due
      * to inheritance sheananigans.
      * @return: QRectF
      */
-    QRectF boundingRect() const override {
-        /* qreal size = qMax(ROBOTSIZE * sqrt(2) * abs(cos(angle * (M_PI / 180) + M_PI / 4)),
-                          ROBOTSIZE * sqrt(2) * abs(sin(angle * (M_PI / 180) + M_PI / 4)));
-        QRectF drawRect(rect().y() - (size - ROBOTSIZE) / 2, rect().x() - (size - ROBOTSIZE) / 2, size, size);
-      */
-        return rect();
-    }
+    QRectF boundingRect() const override { return QRectF(rect().toAlignedRect()); }
+
+    /* This method returns the visual bounding rectangle of the robot.
+     * @return: QRectF
+     */
+    QRectF visualBoundingRect() const override { return rect(); }
 
     /* This method is used to paint the robot.
      * @param QPainter *painter: The painter object.
@@ -154,16 +156,10 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
   public slots:
     void gameTick();
 
-    void rotateStart();
-    void rotate();
-    void rotateEnd();
     void changePlayer();
     void changeIcon();
     void setSpeed();
     void setDetectionRange();
     void setDetectionAngle();
     void setTurningDirection();
-
-  signals:
-    QRectF clearArtefacts(Robot *robot);
 };

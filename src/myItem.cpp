@@ -39,7 +39,7 @@ QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVar
         QPointF newPos = value.toPointF();
         QRectF rect = scene()->sceneRect();
 
-        if (!rect.contains(QRectF(newPos.x(), newPos.y(), boundingRect().width(), boundingRect().height()))) {
+        if (!rect.contains(QRectF(newPos, QSizeF(boundingRect().width(), boundingRect().height())))) {
             newPos.setX(qBound((qreal)0, newPos.x(), rect.right() - boundingRect().width()));
 
             newPos.setY(qBound((qreal)0, newPos.y(), rect.bottom() - boundingRect().height()));
