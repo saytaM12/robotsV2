@@ -1,4 +1,5 @@
 #include "myScene.h"
+#include "qnamespace.h"
 
 MyScene::MyScene(QSize size, QGraphicsScene *parent)
     : QGraphicsScene(parent), simulating(false), menu(new Menu(size.width() / 5.0, size.height(), this)),
@@ -13,7 +14,7 @@ MyScene::MyScene(QSize size, QGraphicsScene *parent)
     QObject::connect(gameTickTimer, &QTimer::timeout, this, &MyScene::gameTick);
 }
 
-QList<MyItem *> MyScene::items() {
+QList<MyItem *> MyScene::items() const {
     QList<MyItem *> returnItems;
     for (MyItem *item : itemList) {
         returnItems.push_back(item);
@@ -56,11 +57,31 @@ void MyScene::simulationPressed() {
     } else {
         gameTickTimer->stop();
     }
+}
 
-    for (MyItem *item : itemList) {
-        if (!item->isWall()) {
-            static_cast<Robot *>(item)->setMoving(simulating);
+void MyScene::ensureOnePlayer(Robot *robot, int player) {
+    if (player == 1) {
+        if (player1 == NULL) {
+            player1 = robot;
         }
+        if (robot == player1) {
+            return;
+        }
+
+        player1->setPlayer(0);
+        player1 = robot;
+    }
+
+    if (player == 2) {
+        if (player2 == NULL) {
+            player2 = robot;
+        }
+        if (robot == player2) {
+            return;
+        }
+
+        player2->setPlayer(0);
+        player2 = robot;
     }
 }
 
@@ -86,6 +107,7 @@ void MyView::mousePressEvent(QMouseEvent *e) {
         sampleRobot->MyItem::setVisible(false);
         QPointer<Robot> robot = new Robot(sampleRobot);
         QObject::connect(scene, &MyScene::gameTick, robot, &Robot::gameTick);
+        QObject::connect(robot, &Robot::playerChanged, scene, &MyScene::ensureOnePlayer);
         robot->MyItem::setZValue(0);
         scene->addItem(robot);
     }
@@ -100,3 +122,54 @@ void MyView::mousePressEvent(QMouseEvent *e) {
 
     QGraphicsView::mousePressEvent(e);
 }
+
+void setPlayerMovement(MyScene *scene, QKeyEvent *e, bool set) {
+    switch (e->key()) {
+    case Qt::Key_Left:
+        if (scene->getPlayer1()) {
+            scene->getPlayer1()->playerMove(turnLeft, set);
+        }
+        break;
+    case Qt::Key_Down:
+        if (scene->getPlayer1()) {
+            scene->getPlayer1()->playerMove(moveBack, set);
+        }
+        break;
+    case Qt::Key_Up:
+        if (scene->getPlayer1()) {
+            scene->getPlayer1()->playerMove(moveForward, set);
+        }
+        break;
+    case Qt::Key_Right:
+        if (scene->getPlayer1()) {
+            scene->getPlayer1()->playerMove(turnRight, set);
+        }
+        break;
+    case Qt::Key_A:
+        if (scene->getPlayer2()) {
+            scene->getPlayer2()->playerMove(turnLeft, set);
+        }
+        break;
+    case Qt::Key_S:
+        if (scene->getPlayer2()) {
+            scene->getPlayer2()->playerMove(moveBack, set);
+        }
+        break;
+    case Qt::Key_W:
+        if (scene->getPlayer2()) {
+            scene->getPlayer2()->playerMove(moveForward, set);
+        }
+        break;
+    case Qt::Key_D:
+        if (scene->getPlayer2()) {
+            scene->getPlayer2()->playerMove(turnRight, set);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void MyView::keyPressEvent(QKeyEvent *e) { setPlayerMovement(scene, e, true); }
+
+void MyView::keyReleaseEvent(QKeyEvent *e) { setPlayerMovement(scene, e, false); }

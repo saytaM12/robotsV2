@@ -1,9 +1,11 @@
 #include "robot.h"
 
-Robot::Robot(int x, int y, int speed, int angle, bool player, bool clockwise, int detectionAngle,
+#include <QDebug>
+
+Robot::Robot(int x, int y, int speed, int angle, int player, bool clockwise, int detectionAngle,
              int detectionRange, QGraphicsItem *parent)
     : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), player(player),
-      clockwise(clockwise), simulating(false), detectionRange(detectionRange), detectionAngle(detectionAngle),
+      clockwise(clockwise), detectionRange(detectionRange), detectionAngle(detectionAngle), playerMoving(0),
       contextMenu(new RobotContextMenu(QString("hello"))) {
 
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
@@ -67,44 +69,122 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->drawImage(rect(), image);
 }
 
+void Robot::playerMove(Direction direction, bool set) {
+    switch (direction) {
+    case turnLeft:
+        if (set) {
+            playerMoving |= 0b1000;
+        } else {
+            playerMoving &= 0b0111;
+        }
+        break;
+    case moveBack:
+        if (set) {
+            playerMoving |= 0b0100;
+        } else {
+            playerMoving &= 0b1011;
+        }
+        break;
+    case moveForward:
+        if (set) {
+            playerMoving |= 0b0010;
+        } else {
+            playerMoving &= 0b1101;
+        }
+        break;
+    case turnRight:
+        if (set) {
+            playerMoving |= 0b0001;
+        } else {
+            playerMoving &= 0b1110;
+        }
+    default:
+        break;
+    }
+}
+
 void Robot::gameTick() {
+    qreal r = 360 - MyItem::rotation();
+    qreal dx = speed * sin(r * M_PI / 180.0);
+    qreal dy = speed * cos(r * M_PI / 180.0);
+
     if (player) {
+        if (playerMoving & 0b1000) {
+            qDebug() << "1000";
+            MyItem::setRotation(MyItem::rotation() - detectionAngle * (clockwise ? -1 : 1));
+        }
+        if (playerMoving & 0b0100) {
+            qDebug() << "0100";
+            MyItem::setX(MyItem::x() + dx);
+            MyItem::setY(MyItem::y() + dy);
+        }
+        if (playerMoving & 0b0010) {
+            qDebug() << "0010";
+            MyItem::setX(MyItem::x() - dx);
+            MyItem::setY(MyItem::y() - dy);
+        }
+        if (playerMoving & 0b0001) {
+            qDebug() << "0001";
+            MyItem::setRotation(MyItem::rotation() + detectionAngle * (clockwise ? -1 : 1));
+        }
+
         return;
     }
-
-    if (simulating) {
-        qreal r = MyItem::rotation();
-        r = r < 0 ? 360 + r : r;
-        r = 360 - r;
-        qreal dx = speed * sin(r * M_PI / 180.0);
-        qreal dy = speed * cos(r * M_PI / 180.0);
-        MyItem::setX(MyItem::x() - dx);
-        MyItem::setY(MyItem::y() - dy);
-    }
+    MyItem::setX(MyItem::x() - dx);
+    MyItem::setY(MyItem::y() - dy);
 }
 
 void Robot::changePlayer() {
     QDialog dialog;
     QGridLayout layout(&dialog);
 
-    QLabel label(
-        QString("Currenttely this robot is set to be %1").arg(player ? "player controlled" : "autonomous"));
+    QLabel label(player ? QString("Currenttely this robot is set to be player %1").arg(player)
+                        : (QString("Currenttely this robot is set to be autonomous")));
     layout.addWidget(&label, 0, 0, 1, 2);
 
     QPointer<QPushButton> buttonPlayer = new QPushButton();
     buttonPlayer->setText("Set the Robot to be Player Controlled");
     layout.addWidget(buttonPlayer, 1, 0);
-    QObject::connect(buttonPlayer, &QPushButton::clicked, [&dialog, this]() {
-        dialog.accept();
-        player = true;
-    });
 
     QPointer<QPushButton> buttonNonPlayer = new QPushButton();
     buttonNonPlayer->setText("Set the Robot to be Autonomous");
     layout.addWidget(buttonNonPlayer, 1, 1);
+
+    QObject::connect(buttonPlayer, &QPushButton::clicked, [&dialog, this]() {
+        dialog.accept();
+
+        QDialog dialog2;
+        QGridLayout layout2(&dialog2);
+
+        QLabel label2("Which player should this robot be controlled by?");
+        layout2.addWidget(&label2, 0, 0, 1, 2);
+
+        QPointer<QPushButton> buttonPlayer1 = new QPushButton();
+        buttonPlayer1->setText("This is player 1");
+        layout2.addWidget(buttonPlayer1, 1, 0);
+
+        QPointer<QPushButton> buttonPlayer2 = new QPushButton();
+        buttonPlayer2->setText("This is player 2");
+        layout2.addWidget(buttonPlayer2, 1, 1);
+
+        QObject::connect(buttonPlayer1, &QPushButton::clicked, [&dialog2, this]() {
+            dialog2.accept();
+            player = 1;
+            emit playerChanged(this, 1);
+        });
+
+        QObject::connect(buttonPlayer2, &QPushButton::clicked, [&dialog2, this]() {
+            dialog2.accept();
+            player = 2;
+            emit playerChanged(this, 2);
+        });
+
+        dialog2.exec();
+    });
+
     QObject::connect(buttonNonPlayer, &QPushButton::clicked, [&dialog, this]() {
         dialog.accept();
-        player = false;
+        player = 0;
     });
 
     dialog.exec();

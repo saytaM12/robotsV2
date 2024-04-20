@@ -42,6 +42,8 @@
                                                                                                               \
     dialog.exec();
 
+typedef enum TRobotDirections { turnLeft, moveBack, moveForward, turnRight } Direction;
+
 class RobotContextMenu : public QMenu {
 
     Q_OBJECT

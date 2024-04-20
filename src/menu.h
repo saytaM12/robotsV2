@@ -46,12 +46,12 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
     /* This method returns the sample robot
      * @return: SampleRobot*
      */
-    inline SampleRobot *getSampleRobot() { return sampleRobot; }
+    inline SampleRobot *getSampleRobot() const { return sampleRobot; }
 
     /* This method returns the sample wall
      * @return: SampleWall*
      */
-    inline SampleWall *getSampleWall() { return sampleWall; }
+    inline SampleWall *getSampleWall() const { return sampleWall; }
 
     /* This method is called to paint the menu
      * @param QPainter *painter: The painter to be used

@@ -67,11 +67,6 @@ class Wall : public MyItem, public QGraphicsRectItem {
      */
     QRectF boundingRect() const { return rect(); }
 
-    /* This method returns the visual bounding rectangle of the wall.
-     * @return: QRectF
-     */
-    QRectF visualBoundingRect() const { return rect(); }
-
     /* This method is called when the mouse enters the wall.
      * It calls the myResizeEvent method.
      * @param QGraphicsSceneHoverEvent *event: The hover event.

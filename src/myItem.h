@@ -25,8 +25,6 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      */
     virtual inline bool isWall() const = 0;
 
-    virtual QRectF visualBoundingRect() const = 0;
-
     /* This method is called when the mouse enters the item
      * If the item wasn't selected, it will become selected and the fact that it
      * was selected from mouse hover will be stored. This is so that the item

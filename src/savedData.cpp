@@ -34,7 +34,7 @@ void Data::saveData() {
             json robotData = itemData;
             robotData["speed"] = robot->getSpeed();
             robotData["angle"] = robot->getAngle();
-            robotData["player"] = robot->isPlayer();
+            robotData["player"] = robot->getPlayer();
             robotData["clockwise"] = robot->isClockwise();
             robotData["detectionAngle"] = robot->getDetectionAngle();
             robotData["detectionRange"] = robot->getDetectionRange();
@@ -66,7 +66,7 @@ int validateRobotData(
     const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
         nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
         robotData,
-    qreal *x, qreal *y, int *speed, qreal *angle, bool *player, bool *clockwise, int *detectionAngle,
+    qreal *x, qreal *y, int *speed, qreal *angle, int *player, bool *clockwise, int *detectionAngle,
     int *detectionRange, qreal sceneWidth, qreal sceneHeight, QString fileName) {
     try {
         *x = robotData.value()["x"];
@@ -231,7 +231,7 @@ void Data::loadData() {
         qreal y;
         int speed;
         qreal angle;
-        bool player;
+        int player;
         bool clockwise;
         int detectionAngle;
         int detectionRange;

@@ -6,6 +6,7 @@
 
 #include "menu.h"
 #include "menuIcon.h"
+#include "qevent.h"
 
 class MyScene : public QGraphicsScene {
 
@@ -17,6 +18,8 @@ class MyScene : public QGraphicsScene {
     QPointer<MenuIcon> menuIcon;
     QPointer<QTimer> gameTickTimer;
     QList<QPointer<MyItem>> itemList;
+    QPointer<Robot> player1;
+    QPointer<Robot> player2;
 
   public:
     /* This constructor is used to create a new MyScene object.
@@ -33,28 +36,32 @@ class MyScene : public QGraphicsScene {
     /* This method is used to get the width of the scene.
      * @return: qreal
      */
-    inline qreal getWidth() { return width(); }
+    inline qreal getWidth() const { return width(); }
 
     /* This method is used to get the height of the scene.
      * @return: qreal
      */
-    inline qreal getHeight() { return height(); }
+    inline qreal getHeight() const { return height(); }
 
     /* This method returns the menu.
      * @return: Menu*
      */
-    inline Menu *getMenu() { return menu; }
+    inline Menu *getMenu() const { return menu; }
 
     /* This method returns the menu icon.
      * @return: MenuIcon*
      */
-    inline MenuIcon *getMenuIcon() { return menuIcon; }
+    inline MenuIcon *getMenuIcon() const { return menuIcon; }
 
     /* This method returns the items in the scene. (excluding the menu and the
      * menu icon)
      * @return: QList<MyItem *>
      */
-    QList<MyItem *> items();
+    QList<MyItem *> items() const;
+
+    Robot *getPlayer1() const { return player1; }
+
+    Robot *getPlayer2() const { return player2; }
 
     /* This methos adds an item to the scene and to the items list.
      * @param MyItem *item: The item to be added.
@@ -78,6 +85,8 @@ class MyScene : public QGraphicsScene {
     void itemDropped(MyItem *item);
 
     void simulationPressed();
+
+    void ensureOnePlayer(Robot *roobt, int player);
   signals:
     void gameTick();
 };
@@ -100,4 +109,8 @@ class MyView : public QGraphicsView {
      * @return: void
      */
     void mousePressEvent(QMouseEvent *e);
+
+    void keyPressEvent(QKeyEvent *e);
+
+    void keyReleaseEvent(QKeyEvent *e);
 };
