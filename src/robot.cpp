@@ -1,7 +1,5 @@
 #include "robot.h"
 
-#include <QDebug>
-
 Robot::Robot(int x, int y, int speed, int angle, int player, bool clockwise, int detectionAngle,
              int detectionRange, QGraphicsItem *parent)
     : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), player(player),
@@ -110,21 +108,17 @@ void Robot::gameTick() {
 
     if (player) {
         if (playerMoving & 0b1000) {
-            qDebug() << "1000";
             MyItem::setRotation(MyItem::rotation() - detectionAngle * (clockwise ? -1 : 1));
         }
         if (playerMoving & 0b0100) {
-            qDebug() << "0100";
             MyItem::setX(MyItem::x() + dx);
             MyItem::setY(MyItem::y() + dy);
         }
         if (playerMoving & 0b0010) {
-            qDebug() << "0010";
             MyItem::setX(MyItem::x() - dx);
             MyItem::setY(MyItem::y() - dy);
         }
         if (playerMoving & 0b0001) {
-            qDebug() << "0001";
             MyItem::setRotation(MyItem::rotation() + detectionAngle * (clockwise ? -1 : 1));
         }
 
@@ -243,6 +237,7 @@ void Robot::setDetectionRange() {
          "Maximum is effectively infinite"),
         0, 0, detectionRange);
 }
+
 void Robot::setDetectionAngle() {
     setParametersWithDialog(
         ("Set the detection angle of the robot: "),
@@ -253,6 +248,7 @@ void Robot::setDetectionAngle() {
          "Maximum is 360 (back to no turning)"),
         0, 360, detectionAngle);
 }
+
 void Robot::setTurningDirection() {
     setParametersWithDialog(("Set the turning direction of the robot: "),
                             ("Turning Direction indicates wheter the robot turns clockwise\n"

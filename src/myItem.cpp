@@ -1,4 +1,5 @@
 #include "myItem.h"
+#include "myScene.h"
 
 MyItem::MyItem(qreal x, qreal y, QGraphicsItem *parent)
     : QAbstractGraphicsShapeItem(parent), selectedFromHover(false) {
@@ -37,15 +38,37 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) {
     if (change == ItemPositionChange && scene()) {
         QPointF newPos = value.toPointF();
-        QRectF rect = scene()->sceneRect();
+        MyScene *myscene = static_cast<MyScene *>(scene());
+        QRectF sceneRect = myscene->sceneRect();
 
-        if (!rect.contains(QRectF(newPos, QSizeF(boundingRect().width(), boundingRect().height())))) {
-            newPos.setX(qBound((qreal)0, newPos.x(), rect.right() - boundingRect().width()));
+        QGraphicsRectItem *testItem =
+            new QGraphicsRectItem(newPos.x(), newPos.y(), boundingRect().width(), boundingRect().height());
+        myscene->QGraphicsScene::addItem(testItem);
 
-            newPos.setY(qBound((qreal)0, newPos.y(), rect.bottom() - boundingRect().height()));
+        QList<QGraphicsItem *> colItems = testItem->collidingItems();
+        colItems.removeAll(this);
 
-            return newPos;
+        bool collision = false;
+        for (QGraphicsItem *item : colItems) {
+            if (myscene->items().contains(static_cast<MyItem *>(item))) {
+                collision = true;
+            }
         }
+
+        myscene->removeItem(testItem);
+        delete testItem;
+
+        if (collision) {
+            newPos = pos();
+        }
+
+        if (!sceneRect.contains(QRectF(newPos, QSizeF(boundingRect().width(), boundingRect().height())))) {
+            newPos.setX(qBound((qreal)0, newPos.x(), sceneRect.right() - boundingRect().width()));
+
+            newPos.setY(qBound((qreal)0, newPos.y(), sceneRect.bottom() - boundingRect().height()));
+        }
+
+        return newPos;
     }
     return QGraphicsItem::itemChange(change, value);
 }

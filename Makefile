@@ -605,7 +605,15 @@ menu.o: src/menu.cpp src/menu.h \
 menuIcon.o: src/menuIcon.cpp src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o menuIcon.o src/menuIcon.cpp
 
-myItem.o: src/myItem.cpp src/myItem.h
+myItem.o: src/myItem.cpp src/myItem.h \
+		src/myScene.h \
+		src/menu.h \
+		src/guiMacros.h \
+		src/robot.h \
+		src/darkenImage.h \
+		src/robotUtils.h \
+		src/wall.h \
+		src/menuIcon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myItem.o src/myItem.cpp
 
 myScene.o: src/myScene.cpp src/myScene.h \

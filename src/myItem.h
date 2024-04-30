@@ -33,7 +33,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      * @param QGraphicsSceneHoverEvent *event: The event that triggered this
      * @return: void
      */
-    inline void hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+    inline void hoverEnterEvent(QGraphicsSceneHoverEvent *) override {
         if (!isSelected()) {
             setSelected(true);
             selectedFromHover = true;
@@ -45,7 +45,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      * @param QGraphicsSceneHoverEvent *event: The event that triggered this
      * @return: void
      */
-    inline void hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+    inline void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override {
         if (selectedFromHover) {
             setSelected(false);
             selectedFromHover = false;
@@ -58,7 +58,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      * @param QGraphicsSceneMouseEvent *event: The event that triggered this
      * @return: void
      */
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     /* This method is called when the user releases the mouse button
      * Changes the cursor and puts the item back the bottom layer (for painting
@@ -66,7 +66,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      * @parem QGraphicsSceneMouseEvent *event: The event that triggered this
      * @return: void
      */
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
     /* This method is called when the item is changes in any way
      * Here it is used to check if the item is being moved out of the scene.
@@ -75,7 +75,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
      * @param const QVariant &value: The value of the change
      * @return: QVariant
      */
-    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
   signals:
     void mouseReleased(MyItem *item);
