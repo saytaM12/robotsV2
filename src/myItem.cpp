@@ -41,6 +41,11 @@ QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVar
         MyScene *myscene = static_cast<MyScene *>(scene());
         QRectF sceneRect = myscene->sceneRect();
 
+        // Out of bounds check
+        newPos.setX(qBound((qreal)0, newPos.x(), sceneRect.right() - boundingRect().width()));
+        newPos.setY(qBound((qreal)0, newPos.y(), sceneRect.bottom() - boundingRect().height()));
+
+        // Collision check
         QGraphicsRectItem *testItem =
             new QGraphicsRectItem(newPos.x(), newPos.y(), boundingRect().width(), boundingRect().height());
         myscene->QGraphicsScene::addItem(testItem);
@@ -60,12 +65,6 @@ QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVar
 
         if (collision) {
             newPos = pos();
-        }
-
-        if (!sceneRect.contains(QRectF(newPos, QSizeF(boundingRect().width(), boundingRect().height())))) {
-            newPos.setX(qBound((qreal)0, newPos.x(), sceneRect.right() - boundingRect().width()));
-
-            newPos.setY(qBound((qreal)0, newPos.y(), sceneRect.bottom() - boundingRect().height()));
         }
 
         return newPos;
