@@ -13,30 +13,34 @@
 
 using json = nlohmann::json;
 
+/**
+ * @brief The Data class manages saving and loading data to and from a JSON file.
+ * 
+ * It inherits from QObject.
+ */
 class Data : public QObject {
 
     Q_OBJECT
 
   private:
-    MyScene *scene;
+    MyScene *scene; /**< Pointer to the scene where data is saved and loaded. */
 
   public slots:
-    /* When this slot is called all robots and walls in the scene are savad to a
-     * json file.
-     * @return: void
+    /**
+     * @brief Slot to save all robots and walls in the scene to a JSON file.
      */
     void saveData();
 
-    /* When this slot is called the scene is populated with robots and walls form
-     * a file.
-     * @return: void
+    /**
+     * @brief Slot to populate the scene with robots and walls from a JSON file.
      */
     void loadData();
 
   public:
-    /* Constructor for the Data object.
-     * @param MyScene *scene: The scene to and from which the data is saved and
-     * loaded.
+    /**
+     * @brief Constructor for the Data object.
+     * 
+     * @param scene The scene to and from which the data is saved and loaded.
      */
     Data(MyScene *scene);
 };

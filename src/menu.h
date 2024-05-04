@@ -38,34 +38,37 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
     QPointer<SampleRobot> sampleRobot;
 
   public:
-    /* This constructor creates a new menu
-     * @param QGraphicsRectItem *parent: The parent of this object.
+    /**
+     * @brief Constructor for creating a new menu.
+     * @param menuWidth The width of the menu.
+     * @param menuHeight The height of the menu.
+     * @param parent The parent of this object.
      */
     Menu(int menuWidth, int menuHeight, QGraphicsScene *parent = nullptr);
 
-    /* This method returns the sample robot
-     * @return: SampleRobot*
+    /**
+     * @brief Returns the sample robot.
+     * @return SampleRobot*
      */
     inline SampleRobot *getSampleRobot() const { return sampleRobot; }
 
-    /* This method returns the sample wall
-     * @return: SampleWall*
+    /**
+     * @brief Returns the sample wall.
+     * @return SampleWall*
      */
     inline SampleWall *getSampleWall() const { return sampleWall; }
 
-    /* This method is called to paint the menu
-     * @param QPainter *painter: The painter to be used
-     * @param const QStyleOptionGraphicsItem *option: The option to be used
-     * @param QWidget *widget: The widget that is painted on. Omit for global
-     * painting.
-     * @return: void
+    /**
+     * @brief This method is called to paint the menu.
+     * @param painter The painter to be used.
+     * @param option The option to be used.
+     * @param widget The widget that is painted on. Omit for global painting.
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   public slots:
-    /* When this slot is called the menu is toggled
-     * It toggles the visibility of the menu.
-     * @return: void
+    /**
+     * @brief Toggles the visibility of the menu.
      */
     void toggle();
 
@@ -78,9 +81,9 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
 class SampleRobot : public Robot, public QGraphicsLayoutItem {
 
   public:
-    /* Constructor for SampleRobot. creates a new SampleRobot.
-     * @param QPointF point: Top left of the robot.
-     * @param Robot *parent: The parent of this object.
+    /**
+     * @brief Constructor for SampleRobot. Creates a new SampleRobot.
+     * @param parent The parent of this object.
      */
     SampleRobot(Menu *parent) : Robot(0, 0, static_cast<QGraphicsRectItem *>(parent)) {
         MyItem::setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -112,9 +115,9 @@ class SampleRobot : public Robot, public QGraphicsLayoutItem {
 class SampleWall : public Wall, public QGraphicsLayoutItem {
 
   public:
-    /* Constructor for SampleWall. creates a new SampleWall.
-     * @param QPointF point: Top left of the wall.
-     * @param Wall *parent: The parent of this object.
+    /**
+     * @brief Constructor for SampleWall. Creates a new SampleWall.
+     * @param parent The parent of this object.
      */
     SampleWall(Menu *parent) : Wall(0, 0, 100, 100, static_cast<QGraphicsRectItem *>(parent)) {
         MyItem::setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -155,9 +158,10 @@ class MyPushButton : public QPushButton, public QGraphicsLayoutItem {
     Menu *menu;
 
   public:
-    /* Constructor for MyPushButton. creates a new MyPushButton.
-     * @param const QString &text: The text to be displayed on the button.
-     * @param QGraphicsItem *parent: The parent of this object.
+    /**
+     * @brief Constructor for MyPushButton. Creates a new MyPushButton.
+     * @param text The text to be displayed on the button.
+     * @param menu The parent menu of this button.
      */
     MyPushButton(const QString &text, Menu *menu) : QPushButton(text), menu(menu) {}
 

@@ -1,6 +1,7 @@
-# **Robots🤖 and walls🧱, what more could you want?**
+**Robots🤖 and walls🧱, what more could you want?**
 
-## **☰ Menu**
+**☰ Menu**
+
 By clicking on the menu icon, you can perform following actions:
 
 - **🤖 Add Robot to scene**: Drag and drop a robot into the scene.
@@ -17,8 +18,10 @@ By clicking on the menu icon, you can perform following actions:
 
 ---
 
-## **🛠 Setting Object Parameters**
-### **🤖 Robot**
+**🛠 Setting Object Parameters**
+
+**🤖 Robot**
+
 By right-clicking on specific robot, you are able to adjust it's parameters. The list of all options is following:
 - **🔄 Rotate**: Use this option to manually rotate the robot to a desired direction.
 .
@@ -38,12 +41,13 @@ By right-clicking on specific robot, you are able to adjust it's parameters. The
 
 - **🎨 Change icon**: Customize the appearance of the robot by selecting a different icon or image.
 
-### **🧱 Wall**
+**🧱 Wall**
+
 If you hover over the edge of the wall, you can drag the mouse pointer to either enlarge or shrink the wall size.
 
 ---
 
-## **🎮 Robot Control:**
+**🎮 Robot Control:**
 | Control     | Player 1 | Player 2  |
 |-------------|----------|-----------|
 | **Up**      | ↑        | W         |
@@ -53,5 +57,6 @@ If you hover over the edge of the wall, you can drag the mouse pointer to either
 
 ---
 
-## 🖱 **Multi-Object Selection**
+🖱 **Multi-Object Selection**
+
 Drag your mouse over multiple objects to select them, then relocate them together by dragging.

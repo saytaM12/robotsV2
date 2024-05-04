@@ -11,100 +11,113 @@
 #include "darkenImage.h"
 #include "myItem.h"
 
+/**
+ * @brief The Wall class represents a wall object in the scene.
+ * 
+ * It inherits from MyItem and QGraphicsRectItem.
+ */
 class Wall : public MyItem, public QGraphicsRectItem {
 
     Q_OBJECT
 
   private:
-    const qreal WALL_RESIZE_SIZE = 10;
-    const qreal MIN_WALL_SIZE = 2 * WALL_RESIZE_SIZE;
-    /* This vatiable simply stores whether the wall has just been created by
-     * dragging the sample wall. It is used to prevent the sample wall from being
-     * resized.
-     */
-    bool justCreated;
-    /* This variable stores the direction in which the wall would be resied on
-     * drag and drop event. It is stored in binaty and multiple directions can
-     * be combined. Directions are stored like this: 0b1000 (left), 0b0100
-     * (bottom), 0b0010 (top), 0b0001 (right).
-     */
-    unsigned char binaryResizeSelector;
+    const qreal WALL_RESIZE_SIZE = 10; /**< The size of wall resize area. */
+    const qreal MIN_WALL_SIZE = 2 * WALL_RESIZE_SIZE; /**< The minimum size of the wall. */
+    bool justCreated; /**< Flag to indicate if the wall has just been created. */
+    unsigned char binaryResizeSelector; /**< Variable to store the direction for wall resizing. */
 
   protected:
-    /* This method is used to check if the wall should be resied based on mouse
-     * position.
-     * @param QGraphicsSceneHoverEvent *event: The hover event.
-     * @return: void
+    /**
+     * @brief This method is used to check if the wall should be resized based on mouse position.
+     * 
+     * @param event The hover event.
      */
     virtual void myResizeEvent(QGraphicsSceneHoverEvent *event);
 
   public:
-    /* Constructor for the Wall object.
-     * @param QRectF rect: The rectangle in which the wall is to be placed.
-     * @param int size: The size of the wall. default is 100.
-     * @param MyItem *parent: The parent of the wall.
+    /**
+     * @brief Constructor for the Wall object.
+     * 
+     * @param x The x-coordinate of the wall.
+     * @param y The y-coordinate of the wall.
+     * @param width The width of the wall.
+     * @param height The height of the wall.
+     * @param parent The parent of the wall.
      */
     Wall(int x, int y, int width, int height, QGraphicsItem *parent = nullptr);
 
-    /* Constructor for the Wall object. Creates a new wall based off of another
-     * @param Wall *wall: The wall that this wall is based off of.
-     * @param MyItem *parent: The parent of the wall.
+    /**
+     * @brief Constructor for the Wall object. Creates a new wall based off of another wall.
+     * 
+     * @param wall The wall that this wall is based off of.
+     * @param parent The parent of the wall.
      */
     Wall(Wall *wall, QGraphicsItem *parent = nullptr)
         : Wall(wall->MyItem::x(), wall->MyItem::y(), wall->rect().width(), wall->rect().height(), parent) {
         justCreated = true;
     }
 
-    /* This method returns whether the item is a wall. Always returns true.
-     * @return: bool true
+    /**
+     * @brief Method to return whether the item is a wall.
+     * 
+     * @return bool Always returns true.
      */
     inline bool isWall() const { return true; }
 
-    /* Method to return the bounding rectangle of the wall.
-     * This method must be implemented, otherwise the program breaks. This is
-     * due to inheritance sheananigans.
-     * @return: QRectF
+    /**
+     * @brief Method to return the bounding rectangle of the wall.
+     * 
+     * @return QRectF The bounding rectangle of the wall.
      */
     QRectF boundingRect() const { return rect(); }
 
-    /* This method is called when the mouse enters the wall.
+    /**
+     * @brief This method is called when the mouse enters the wall.
+     * 
      * It calls the myResizeEvent method.
-     * @param QGraphicsSceneHoverEvent *event: The hover event.
-     * @return: void
+     * 
+     * @param event The hover event.
      */
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
-    /* This method is called when the mouse moves within the wall.
+    /**
+     * @brief This method is called when the mouse moves within the wall.
+     * 
      * It calls the myResizeEvent method.
-     * @param QGraphicsSceneHoverEvent *event: The hover event.
-     * @return: void
+     * 
+     * @param event The hover event.
      */
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
 
-    /* This method acts as a drag and drop event for the wall
-     * it checks if the wall should be resized and in that case it resizes instead
+    /**
+     * @brief This method acts as a drag and drop event for the wall.
+     * 
+     * It checks if the wall should be resized and in that case it resizes instead
      * of the drag and drop.
-     * @param QGraphicsSceneMouseEvent *event: The mouse event.
-     * @return: void
+     * 
+     * @param event The mouse event.
      */
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
-    /* This method prevents the sample wall from being resized.
-     * Unfortunately I haven't found a better way to do this.
-     * @param QGraphicsSceneMouseEvent *event: The mouse event.
-     * @return: void
+    /**
+     * @brief This method prevents the sample wall from being resized.
+     * 
+     * Unfortunately, I haven't found a better way to do this.
+     * 
+     * @param event The mouse event.
      */
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
         justCreated = false;
         MyItem::mouseReleaseEvent(event);
     }
 
-    /* This method is used to paint the wall.
-     * @param QPainter *painter: The painter object.
-     * @param QStyleOptionGraphicsItem *option: The style options.
-     * @param QWidget *widget: The widget on which the painting is done. Omit for
-     * global painting.
-     * @return: void
+    /**
+     * @brief This method is used to paint the wall.
+     * 
+     * @param painter The painter object.
+     * @param option The style options.
+     * @param widget The widget on which the painting is done. Omit for global painting.
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 };
+
