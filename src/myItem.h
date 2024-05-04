@@ -10,28 +10,29 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
     Q_OBJECT
 
   private:
-    bool selectedFromHover;
+    bool selectedFromHover; /**< Flag indicating whether the item was selected from hover. */
 
   public:
-    /* This constructor is used to create a new item
-     * @param qreal x: The x position of the item
-     * @param qreal y: The y position of the item
-     * @param QAbstractGraphicsShapeItem *parent: The parent of this object.
+    /**
+     * @brief Constructor for creating a new item.
+     * @param x The x position of the item.
+     * @param y The y position of the item.
+     * @param parent The parent of this object.
      */
     MyItem(qreal x, qreal y, QGraphicsItem *parent = nullptr);
 
-    /* This virtual method must be implemented by the subclasses to return if the
-     * item is a wall
+    /**
+     * @brief Pure virtual method to be implemented by subclasses to determine if the item is a wall.
+     * @return bool True if the item is a wall, otherwise false.
      */
     virtual inline bool isWall() const = 0;
 
-    /* This method is called when the mouse enters the item
+    /**
+     * @brief Called when the mouse enters the item.
      * If the item wasn't selected, it will become selected and the fact that it
      * was selected from mouse hover will be stored. This is so that the item
-     * cannot be unselected be hoverLeaveEvent if it was selevted by group
+     * cannot be unselected by hoverLeaveEvent if it was selected by group
      * selection.
-     * @param QGraphicsSceneHoverEvent *event: The event that triggered this
-     * @return: void
      */
     inline void hoverEnterEvent(QGraphicsSceneHoverEvent *) override {
         if (!isSelected()) {
@@ -40,10 +41,9 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
         }
     }
 
-    /* This method is called when the mouse leaves the item
+    /**
+     * @brief Called when the mouse leaves the item.
      * If the item was selected from hover, it will be unselected.
-     * @param QGraphicsSceneHoverEvent *event: The event that triggered this
-     * @return: void
      */
     inline void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override {
         if (selectedFromHover) {
@@ -52,31 +52,35 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
         }
     }
 
-    /* This method is called when the user presses the mouse button
-     * Changes the cursor, and puts the item on top of all of the other items (for
+    /**
+     * @brief Called when the user presses the mouse button.
+     * Changes the cursor, and puts the item on top of all other items (for
      * painting purposes).
-     * @param QGraphicsSceneMouseEvent *event: The event that triggered this
-     * @return: void
+     * @param event The event that triggered this.
      */
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
-    /* This method is called when the user releases the mouse button
+    /**
+     * @brief Called when the user releases the mouse button.
      * Changes the cursor and puts the item back the bottom layer (for painting
      * purposes). This method also emits the mouseReleased signal.
-     * @parem QGraphicsSceneMouseEvent *event: The event that triggered this
-     * @return: void
+     * @param event The event that triggered this.
      */
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
-    /* This method is called when the item is changes in any way
+    /**
+     * @brief Called when the item is changed in any way.
      * Here it is used to check if the item is being moved out of the scene.
      * If so, it will be stopped from going further.
-     * @param QGraphicsItem::GraphicsItemChange change: The type of change
-     * @param const QVariant &value: The value of the change
-     * @return: QVariant
+     * @param change The type of change.
+     * @param value The value of the change.
+     * @return QVariant
      */
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
   signals:
+    /**
+     * @brief Signal emitted when the mouse is released on the item.
+     */
     void mouseReleased();
 };

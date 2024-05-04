@@ -13,17 +13,19 @@ class MyScene : public QGraphicsScene {
     Q_OBJECT
 
   private:
-    bool simulating;
-    QPointer<Menu> menu;
-    QPointer<MenuIcon> menuIcon;
-    QPointer<QTimer> gameTickTimer;
-    QList<QPointer<MyItem>> itemList;
-    QPointer<Robot> player1;
-    QPointer<Robot> player2;
+    bool simulating;                  /**< Flag indicating whether simulation is active. */
+    QPointer<Menu> menu;              /**< Pointer to the menu object. */
+    QPointer<MenuIcon> menuIcon;      /**< Pointer to the menu icon object. */
+    QPointer<QTimer> gameTickTimer;   /**< Pointer to the timer used for game ticks. */
+    QList<QPointer<MyItem>> itemList; /**< List of items in the scene. */
+    QPointer<Robot> player1;          /**< Pointer to player 1 robot object. */
+    QPointer<Robot> player2;          /**< Pointer to player 2 robot object. */
 
   public:
-    /* This constructor is used to create a new MyScene object.
-     * @param QGraphicsScene *parent: The parent of this object.
+    /**
+     * @brief Constructor for MyScene object.
+     * @param size Size of the scene.
+     * @param parent Parent QGraphicsScene object.
      */
     MyScene(QSize size, QGraphicsScene *parent = nullptr);
 
@@ -33,86 +35,118 @@ class MyScene : public QGraphicsScene {
         QGraphicsScene::mouseMoveEvent(event);
     }
 
-    /* This method is used to get the width of the scene.
-     * @return: qreal
+    /**
+     * @brief Get the width of the scene.
+     * @return qreal Width of the scene.
      */
     inline qreal getWidth() const { return width(); }
 
-    /* This method is used to get the height of the scene.
-     * @return: qreal
+    /**
+     * @brief Get the height of the scene.
+     * @return qreal Height of the scene.
      */
     inline qreal getHeight() const { return height(); }
 
-    /* This method returns the menu.
-     * @return: Menu*
+    /**
+     * @brief Get the menu object.
+     * @return Menu* Pointer to the menu object.
      */
     inline Menu *getMenu() const { return menu; }
 
-    /* This method returns the menu icon.
-     * @return: MenuIcon*
+    /**
+     * @brief Get the menu icon object.
+     * @return MenuIcon* Pointer to the menu icon object.
      */
     inline MenuIcon *getMenuIcon() const { return menuIcon; }
 
-    /* This method returns the items in the scene. (excluding the menu and the
-     * menu icon)
-     * @return: QList<MyItem *>
+    /**
+     * @brief Get a list of items in the scene.
+     * @return QList<MyItem *> List of items in the scene.
      */
     QList<MyItem *> items() const;
 
+    /**
+     * @brief Get player 1 robot object.
+     * @return Robot* Pointer to player 1 robot object.
+     */
     Robot *getPlayer1() const { return player1; }
 
+    /**
+     * @brief Get player 2 robot object.
+     * @return Robot* Pointer to player 2 robot object.
+     */
     Robot *getPlayer2() const { return player2; }
 
-    /* This methos adds an item to the scene and to the items list.
-     * @param MyItem *item: The item to be added.
-     * @return: void
+    /**
+     * @brief Add an item to the scene and the items list.
+     * @param item Item to be added.
      */
     void addItem(MyItem *item);
 
-    /* This methos removes all items from the scene. (excluding the menu and the
-     * menu icon). It also clears the items list.
-     * @return: void
+    /**
+     * @brief Remove all items from the scene (excluding menu and menu icon).
+     *        Also clears the items list.
      */
     void clear();
 
   public slots:
-    /* This slot is called when an item is dropped on the scene.
-     * It is used to check whether to remove an item, because it was dropped on
-     * the menu.
-     * @param MyItem *item: The item that was dropped.
-     * @return: void
+    /**
+     * @brief Slot called when an item is dropped on the scene.
+     *        Used to check whether to remove an item because it was dropped on the menu.
+     * @param item Item that was dropped.
      */
     void itemDropped();
 
+    /**
+     * @brief Slot called when the simulation button is pressed.
+     */
     void simulationPressed();
 
-    void ensureOnePlayer(int player);
-
+    /**
+     * @brief Slot called on each game tick.
+     */
     bool detectObjects();
+
+    /**
+     * @brief Ensure there is only one player of a certain type.
+     * @param player Player type.
+     */
+    void ensureOnePlayer(int player);
   signals:
+    /**
+     * @brief Signal emitted on each game tick.
+     */
     void gameTick();
 };
 
 class MyView : public QGraphicsView {
 
   private:
-    MyScene *scene;
+    MyScene *scene; /**< Pointer to the scene displayed in the view. */
 
   public:
-    /* This constructor is used to create a new MyView object.
-     * @param MyScene *scene: The scene to be displayed.
+    /**
+     * @brief Constructor for MyView object.
+     * @param scene Pointer to the scene to be displayed.
      */
     MyView(MyScene *scene = nullptr);
 
-    /* This method is called when the mouse is pressed.
-     * It is used to create a new item when the sample robot or the sample wall is
-     * clicked.
-     * @param QMouseEvent *e: The mouse event.
-     * @return: void
+    /**
+     * @brief Method called when the mouse is pressed.
+     *        Used to create a new item when the sample robot or the sample wall is clicked.
+     * @param e Mouse event.
      */
     void mousePressEvent(QMouseEvent *e);
 
+    /**
+     * @brief Method called when a key is pressed.
+     * @param e Key event.
+     */
     void keyPressEvent(QKeyEvent *e);
 
+    /**
+     * @brief Method called when a key is released.
+     * @param e Key event.
+     */
     void keyReleaseEvent(QKeyEvent *e);
 };
