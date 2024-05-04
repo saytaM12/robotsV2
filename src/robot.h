@@ -50,10 +50,11 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param detectionRange The range of detection of the robot.
      * @param MyItem *parent The parent of the robot.
      */
-    Robot(int x, int y, int speed, int angle, int player, bool clockwise, int detectionAngle,
+    Robot(qreal x, qreal y, int speed, qreal angle, int player, bool clockwise, int detectionAngle,
           int detectionRange, QGraphicsItem *parent = nullptr);
 
-    Robot(int x, int y, QGraphicsItem *parent = nullptr) : Robot(x, y, 1, 0, false, false, 1, 100, parent) {}
+    Robot(qreal x, qreal y, QGraphicsItem *parent = nullptr)
+        : Robot(x, y, 1, 0, false, false, 1, 100, parent) {}
 
     /* The constructor used to create a new Robot based off of another robot.
      * @param Robot *robot The robot that this robot is based off of.
@@ -78,7 +79,9 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     /* This method returns the angle that the robot is facing.
      * @return: int
      */
-    inline int getAngle() const { return MyItem::rotation(); }
+    inline qreal getAngle() const {
+        return MyItem::rotation() < 0 ? abs(MyItem::rotation()) : (360 - MyItem::rotation());
+    }
 
     /* This method returns whether the robot is a player or not.
      * @return: bool
@@ -104,21 +107,23 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param int angle: The angle that the robot is facing.
      * @return: void
      */
-    inline void setAngle(int newAngle) { MyItem::setRotation(newAngle); }
+    inline void setAngle(qreal newAngle) { MyItem::setRotation(newAngle); }
 
     /* This method sets the player status of the robot.
      * @param bool player: Whether the robot is a player or not.
      */
     inline void setPlayer(int newPlayer) { player = newPlayer; }
 
-    void playerMove(Direction direction, bool set);
+    void playerSetMove(Direction direction, bool set);
 
     /* This method is called when the mouse is realased after clicking the robot
      * It brings up the context menu to change the robot's parameters
      * @param QGraphicsSceneMouseEvent *event: The event that occured.
      * @return: void
      */
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override {
+        contextMenu->exec(event->screenPos());
+    }
 
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
@@ -141,7 +146,8 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   signals:
-    void playerChanged(Robot *robot, int player);
+    void playerChanged(int player);
+    bool detectObjects();
 
   public slots:
     void gameTick();

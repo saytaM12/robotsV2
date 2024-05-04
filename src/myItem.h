@@ -78,5 +78,5 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
 
   signals:
-    void mouseReleased(MyItem *item);
+    void mouseReleased();
 };

@@ -82,11 +82,13 @@ class MyScene : public QGraphicsScene {
      * @param MyItem *item: The item that was dropped.
      * @return: void
      */
-    void itemDropped(MyItem *item);
+    void itemDropped();
 
     void simulationPressed();
 
-    void ensureOnePlayer(Robot *roobt, int player);
+    void ensureOnePlayer(int player);
+
+    bool detectObjects();
   signals:
     void gameTick();
 };

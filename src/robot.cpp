@@ -1,15 +1,19 @@
+/*
+ * Autors Milan Vrbas (xvrbas01), Matyáš Oujezdský (xoujz04)
+ * 2024
+ */
 #include "robot.h"
 
-Robot::Robot(int x, int y, int speed, int angle, int player, bool clockwise, int detectionAngle,
+Robot::Robot(qreal x, qreal y, int speed, qreal angle, int player, bool clockwise, int detectionAngle,
              int detectionRange, QGraphicsItem *parent)
     : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), player(player),
       clockwise(clockwise), detectionRange(detectionRange), detectionAngle(detectionAngle), playerMoving(0),
       contextMenu(new RobotContextMenu(QString("hello"))) {
 
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);
-
     MyItem::setTransformOriginPoint(rect().center());
-    MyItem::setRotation(angle);
+    MyItem::setRotation(-angle);
+
     rotationLine = new QGraphicsLineItem(rect().center().x(), rect().center().y(), rect().center().x(),
                                          rect().center().y() - 100, static_cast<MyItem *>(this));
     rotationLine->setPen(Qt::NoPen);
@@ -24,15 +28,6 @@ Robot::Robot(int x, int y, int speed, int angle, int player, bool clockwise, int
     QObject::connect(contextMenu, &RobotContextMenu::setDetectionAngle, this, &Robot::setDetectionAngle);
     QObject::connect(contextMenu, &RobotContextMenu::setTurningDirection, this, &Robot::setTurningDirection);
     QObject::connect(contextMenu, &RobotContextMenu::changeIcon, this, &Robot::changeIcon);
-}
-
-void Robot::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
-    // chose whther to do the menu async or not
-    /* contextMenu->exec(event->screenPos()); */
-    contextMenu->popup(event->screenPos());
-    return;
-
-    MyItem::contextMenuEvent(event);
 }
 
 void Robot::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
@@ -55,7 +50,6 @@ void Robot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
-
     Q_UNUSED(option);
 
     QImage image(texture);
@@ -67,7 +61,7 @@ void Robot::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->drawImage(rect(), image);
 }
 
-void Robot::playerMove(Direction direction, bool set) {
+void Robot::playerSetMove(Direction direction, bool set) {
     switch (direction) {
     case turnLeft:
         if (set) {
@@ -119,11 +113,17 @@ void Robot::gameTick() {
             MyItem::setY(MyItem::y() - dy);
         }
         if (playerMoving & 0b0001) {
-            MyItem::setRotation(MyItem::rotation() + detectionAngle * (clockwise ? -1 : 1));
+            MyItem::setRotation(MyItem::rotation() + detectionAngle * (clockwise ? 1 : -1));
         }
 
         return;
     }
+
+    if (emit detectObjects()) {
+        MyItem::setRotation(MyItem::rotation() + detectionAngle * (clockwise ? -1 : 1));
+        return;
+    }
+
     MyItem::setX(MyItem::x() - dx);
     MyItem::setY(MyItem::y() - dy);
 }
@@ -164,13 +164,13 @@ void Robot::changePlayer() {
         QObject::connect(buttonPlayer1, &QPushButton::clicked, [&dialog2, this]() {
             dialog2.accept();
             player = 1;
-            emit playerChanged(this, 1);
+            emit playerChanged(1);
         });
 
         QObject::connect(buttonPlayer2, &QPushButton::clicked, [&dialog2, this]() {
             dialog2.accept();
             player = 2;
-            emit playerChanged(this, 2);
+            emit playerChanged(2);
         });
 
         dialog2.exec();

@@ -31,7 +31,27 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsItem::mouseReleaseEvent(event);
 
     if (event->button() == Qt::LeftButton) {
-        emit mouseReleased(this);
+        emit mouseReleased();
+    }
+}
+
+// Enable checking for rectangles as well as ellipses
+template <class T> void collisionCheck(MyScene *scene, MyItem *item, T *testItem, QPointF *pos) {
+    scene->QGraphicsScene::addItem(testItem);
+    QList<QGraphicsItem *> colItems = testItem->collidingItems();
+    scene->removeItem(testItem);
+
+    colItems.removeAll(item);
+
+    bool collision = false;
+    for (QGraphicsItem *colItem : colItems) {
+        if (scene->items().contains(static_cast<MyItem *>(colItem))) {
+            collision = true;
+        }
+    }
+
+    if (collision) {
+        *pos = item->pos();
     }
 }
 
@@ -46,25 +66,16 @@ QVariant MyItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVar
         newPos.setY(qBound((qreal)0, newPos.y(), sceneRect.bottom() - boundingRect().height()));
 
         // Collision check
-        QGraphicsRectItem *testItem =
-            new QGraphicsRectItem(newPos.x(), newPos.y(), boundingRect().width(), boundingRect().height());
-        myscene->QGraphicsScene::addItem(testItem);
-
-        QList<QGraphicsItem *> colItems = testItem->collidingItems();
-        colItems.removeAll(this);
-
-        bool collision = false;
-        for (QGraphicsItem *item : colItems) {
-            if (myscene->items().contains(static_cast<MyItem *>(item))) {
-                collision = true;
-            }
-        }
-
-        myscene->removeItem(testItem);
-        delete testItem;
-
-        if (collision) {
-            newPos = pos();
+        if (isWall()) {
+            QGraphicsRectItem *testItem =
+                new QGraphicsRectItem(newPos.x(), newPos.y(), boundingRect().width(), boundingRect().height());
+            collisionCheck(myscene, this, testItem, &newPos);
+            delete testItem;
+        } else {
+            QGraphicsEllipseItem *testItem = new QGraphicsEllipseItem(
+                newPos.x(), newPos.y(), boundingRect().width(), boundingRect().height());
+            collisionCheck(myscene, this, testItem, &newPos);
+            delete testItem;
         }
 
         return newPos;

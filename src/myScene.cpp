@@ -1,5 +1,4 @@
 #include "myScene.h"
-#include "qnamespace.h"
 
 MyScene::MyScene(QSize size, QGraphicsScene *parent)
     : QGraphicsScene(parent), simulating(false), menu(new Menu(size.width() / 5.0, size.height(), this)),
@@ -36,7 +35,9 @@ void MyScene::clear() {
     itemList.clear();
 }
 
-void MyScene::itemDropped(MyItem *item) {
+void MyScene::itemDropped() {
+    MyItem *item = static_cast<MyItem *>(sender());
+
     getMenu()->getSampleRobot()->MyItem::setVisible(true);
     getMenu()->getSampleWall()->MyItem::setVisible(true);
 
@@ -59,7 +60,9 @@ void MyScene::simulationPressed() {
     }
 }
 
-void MyScene::ensureOnePlayer(Robot *robot, int player) {
+void MyScene::ensureOnePlayer(int player) {
+    Robot *robot = static_cast<Robot *>(sender());
+
     if (player == 1) {
         if (player1 == NULL) {
             player1 = robot;
@@ -85,6 +88,42 @@ void MyScene::ensureOnePlayer(Robot *robot, int player) {
     }
 }
 
+bool MyScene::detectObjects() {
+    Robot *robot = static_cast<Robot *>(sender());
+
+    QGraphicsPathItem *pathItem = new QGraphicsPathItem;
+    QPainterPath path;
+
+    path.addRoundedRect(-ROBOTSIZE / 2.0, -robot->getDetectionRange(), ROBOTSIZE, robot->getDetectionRange(),
+                        ROBOTSIZE / 2.0, ROBOTSIZE / 2.0);
+
+    QTransform t;
+    t.translate(robot->MyItem::x() + ROBOTSIZE / 2.0, robot->MyItem::y() + ROBOTSIZE / 2.0);
+    t.rotate(-robot->getAngle());
+    path = t.map(path);
+
+    pathItem->setPath(path);
+
+    if (!sceneRect().contains(pathItem->boundingRect())) {
+        return true;
+    }
+
+    QGraphicsScene::addItem(pathItem);
+    QList<QGraphicsItem *> colItems = pathItem->collidingItems();
+    removeItem(pathItem);
+    delete pathItem;
+
+    colItems.removeAll(static_cast<MyItem *>(robot));
+
+    for (QGraphicsItem *colItem : colItems) {
+        if (items().contains(static_cast<MyItem *>(colItem))) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 MyView::MyView(MyScene *scene) : QGraphicsView(scene), scene(scene) {
     setDragMode(QGraphicsView::RubberBandDrag);
     setMinimumSize(scene->getWidth(), scene->getHeight());
@@ -108,6 +147,7 @@ void MyView::mousePressEvent(QMouseEvent *e) {
         QPointer<Robot> robot = new Robot(sampleRobot);
         QObject::connect(scene, &MyScene::gameTick, robot, &Robot::gameTick);
         QObject::connect(robot, &Robot::playerChanged, scene, &MyScene::ensureOnePlayer);
+        QObject::connect(robot, &Robot::detectObjects, scene, &MyScene::detectObjects);
         robot->MyItem::setZValue(0);
         scene->addItem(robot);
     }
@@ -127,42 +167,42 @@ void setPlayerMovement(MyScene *scene, QKeyEvent *e, bool set) {
     switch (e->key()) {
     case Qt::Key_Left:
         if (scene->getPlayer1()) {
-            scene->getPlayer1()->playerMove(turnLeft, set);
+            scene->getPlayer1()->playerSetMove(turnLeft, set);
         }
         break;
     case Qt::Key_Down:
         if (scene->getPlayer1()) {
-            scene->getPlayer1()->playerMove(moveBack, set);
+            scene->getPlayer1()->playerSetMove(moveBack, set);
         }
         break;
     case Qt::Key_Up:
         if (scene->getPlayer1()) {
-            scene->getPlayer1()->playerMove(moveForward, set);
+            scene->getPlayer1()->playerSetMove(moveForward, set);
         }
         break;
     case Qt::Key_Right:
         if (scene->getPlayer1()) {
-            scene->getPlayer1()->playerMove(turnRight, set);
+            scene->getPlayer1()->playerSetMove(turnRight, set);
         }
         break;
     case Qt::Key_A:
         if (scene->getPlayer2()) {
-            scene->getPlayer2()->playerMove(turnLeft, set);
+            scene->getPlayer2()->playerSetMove(turnLeft, set);
         }
         break;
     case Qt::Key_S:
         if (scene->getPlayer2()) {
-            scene->getPlayer2()->playerMove(moveBack, set);
+            scene->getPlayer2()->playerSetMove(moveBack, set);
         }
         break;
     case Qt::Key_W:
         if (scene->getPlayer2()) {
-            scene->getPlayer2()->playerMove(moveForward, set);
+            scene->getPlayer2()->playerSetMove(moveForward, set);
         }
         break;
     case Qt::Key_D:
         if (scene->getPlayer2()) {
-            scene->getPlayer2()->playerMove(turnRight, set);
+            scene->getPlayer2()->playerSetMove(turnRight, set);
         }
         break;
     default:

@@ -111,7 +111,7 @@ int validateRobotData(
         *speed = 0;
     }
 
-    if (*angle < 0 || *angle >= 360) {
+    if (*angle < 0 || *angle > 360) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
                   << ": \"robot.angle\" cannot be outside interval <0, 360)\n"
                      "setting value to 0\n"
@@ -119,7 +119,7 @@ int validateRobotData(
         *angle = 0;
     }
 
-    if (*detectionAngle < 0 || *detectionAngle >= 360) {
+    if (*detectionAngle < 0 || *detectionAngle > 360) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
                   << ": \"robot.detectionAngle\" cannot be outside interval <0, 360)\n"
                      "setting value to 0\n"
@@ -133,6 +133,13 @@ int validateRobotData(
                      "setting value to 0\n"
                   << std::endl;
         *detectionRange = 0;
+    }
+
+    if (*player < 0 || *player > 2) {
+        std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+                  << ": \"robot.player\" can only be 0, 1 or 2\nsetting value to 0\n"
+                  << std::endl;
+        *player = 0;
     }
 
     return 0;
@@ -245,6 +252,8 @@ void Data::loadData() {
             new Robot(x, y, speed, angle, player, clockwise, detectionAngle, detectionRange);
         scene->addItem(robot);
         QObject::connect(scene, &MyScene::gameTick, robot, &Robot::gameTick);
+        QObject::connect(robot, &Robot::playerChanged, scene, &MyScene::ensureOnePlayer);
+        QObject::connect(robot, &Robot::detectObjects, scene, &MyScene::detectObjects);
     }
 
     for (auto &wallData : data["walls"].items()) {
