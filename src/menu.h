@@ -18,6 +18,8 @@
 #include <QPointer>
 #include <QPushButton>
 #include <QStyleOptionGraphicsItem>
+#include <QTextEdit>
+#include <QTextStream>
 
 #include "guiMacros.h"
 #include "qgraphicslayoutitem.h"
@@ -40,6 +42,7 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
     Q_OBJECT
 
   private:
+    QPointer<QPushButton> helpButton;
     QPointer<MyPushButton> saveButton;
     QPointer<MyPushButton> loadButton;
     QPointer<MyPushButton> simulationButton;
@@ -80,6 +83,11 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
      * @brief Toggles the visibility of the menu.
      */
     void toggle();
+
+    /**
+     * @brief Displays the help dialog.
+     */
+    void displayHelp();
 
   signals:
     /**

@@ -5,7 +5,7 @@
 #include "menu.h"
 
 Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
-    : QGraphicsRectItem(), saveButton(new MyPushButton("Save", this)),
+    : QGraphicsRectItem(), helpButton(new QPushButton("?")), saveButton(new MyPushButton("Save", this)),
       loadButton(new MyPushButton("Load", this)), simulationButton(new MyPushButton("Start Simulation", this)),
       sampleWall(new SampleWall(this)), sampleRobot(new SampleRobot(this)) {
 
@@ -16,12 +16,21 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
     QGraphicsRectItem::setVisible(false);
     QGraphicsRectItem::setAcceptHoverEvents(true);
 
+    helpButton->setMinimumSize(1, 1);
+    helpButton->setGeometry(menuWidth - 90, 40, 50, 50);
+    helpButton->setFont(QFont("Comic Sans", 30, 100, false));
+    scene->addWidget(helpButton);
+
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical, this);
-    layout->addItem(sampleWall);
     layout->setContentsMargins(0, menuHeight / 3.0, 0, 0);
-    layout->setItemSpacing(0, 100);
-    layout->setAlignment(sampleWall, Qt::AlignHCenter);
+    // layout->setContentsMargins(menuWidth / 2.0 - sampleWall->boundingRect().width() / 2.0, menuHeight / 3.0,
+    // 0, 0);
+
     layout->addItem(sampleRobot);
+    layout->setItemSpacing(0, 100);
+
+    layout->addItem(sampleWall);
+    layout->setAlignment(sampleWall, Qt::AlignHCenter);
     layout->setItemSpacing(1, 100);
 
     QGraphicsLinearLayout *buttonLayout = new QGraphicsLinearLayout(Qt::Horizontal);
@@ -31,10 +40,12 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
 
     layout->addItem(simulationButton);
 
+    helpButton->hide();
     saveButton->hide();
     loadButton->hide();
     simulationButton->hide();
 
+    QObject::connect(helpButton, &QPushButton::clicked, this, &Menu::displayHelp);
     QObject::connect(saveButton, &QPushButton::clicked, this, &Menu::savePressed);
     QObject::connect(loadButton, &QPushButton::clicked, this, &Menu::loadPressed);
     QObject::connect(simulationButton, &QPushButton::clicked, this, &Menu::simulationPressed);
@@ -52,6 +63,7 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
 
 void Menu::toggle() {
     if (QGraphicsRectItem::isVisible()) {
+        helpButton->hide();
         saveButton->hide();
         loadButton->hide();
         simulationButton->hide();
@@ -61,11 +73,35 @@ void Menu::toggle() {
         return;
     }
 
+    helpButton->show();
     saveButton->show();
     loadButton->show();
     simulationButton->show();
     QGraphicsRectItem::setVisible(true);
     QGraphicsRectItem::update();
+}
+
+void Menu::displayHelp() {
+    QDialog dialog;
+    QGridLayout layout(&dialog);
+
+    QFile f("README.md");
+    f.open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream stream(&f);
+
+    QTextEdit text;
+    text.setMarkdown(stream.readAll());
+    text.setReadOnly(true);
+    text.setMinimumSize(800, 600);
+    layout.addWidget(&text);
+
+    QPointer<QPushButton> button = new QPushButton();
+    button->setText("OK");
+    layout.addWidget(button);
+
+    QObject::connect(button, &QPushButton::clicked, [&dialog]() { dialog.accept(); });
+
+    dialog.exec();
 }
 
 void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) {
