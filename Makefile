@@ -228,7 +228,7 @@ doxygen:
 	doxygen Doxyfile
 
 pack:
-	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./exapmles/* ./doc/ ./doxyREADME.md
+	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./examples/* ./doc/ ./doxyREADME.md ./imgs/icons/* ./imgs/textures/*
 
 Makefile: robotsV2.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -338,7 +338,6 @@ Makefile: robotsV2.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mksp
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		robotsV2.pro
-	$(QMAKE) -o Makefile robotsV2.pro
 /usr/lib/qt/mkspecs/features/spec_pre.prf:
 /usr/lib/qt/mkspecs/common/unix.conf:
 /usr/lib/qt/mkspecs/common/linux.conf:
@@ -447,8 +446,6 @@ Makefile: robotsV2.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mksp
 /usr/lib/qt/mkspecs/features/yacc.prf:
 /usr/lib/qt/mkspecs/features/lex.prf:
 robotsV2.pro:
-qmake: FORCE
-	@$(QMAKE) -o Makefile robotsV2.pro
 
 qmake_all: FORCE
 
