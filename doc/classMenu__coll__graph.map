@@ -1,7 +1,0 @@
-<map id="Menu" name="Menu">
-<area shape="rect" id="Node000001" title="The Menu class is a QGraphicsWidget that is used to create a menu for the simulation." alt="" coords="116,79,170,105"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,129,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,40,132,77,128,81,89,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="152,5,289,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,44,158,81,154,77,194,40"/>
-</map>

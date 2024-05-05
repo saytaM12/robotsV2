@@ -222,6 +222,14 @@ TARGET        = robotsV2
 first: all
 ####### Build rules
 
+run: robotsV2
+	./robotsV2
+
+doxygen: doc
+
+doc:
+	doxygen Doxyfile
+
 robotsV2:  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
@@ -464,6 +472,7 @@ distdir: FORCE
 clean: compiler_clean 
 	-$(DEL_FILE) $(OBJECTS)
 	-$(DEL_FILE) *~ core *.core
+	rm -rf ./doc/
 
 
 distclean: clean 
