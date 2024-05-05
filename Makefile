@@ -224,10 +224,11 @@ robotsV2:  $(OBJECTS)
 run: robotsV2
 	./robotsV2
 
-doxygen: doc
-
-doc:
+doxygen:
 	doxygen Doxyfile
+
+pack:
+	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./exapmles/* ./doc/
 
 Makefile: robotsV2.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -468,7 +469,8 @@ distdir: FORCE
 clean: compiler_clean 
 	-$(DEL_FILE) $(OBJECTS)
 	-$(DEL_FILE) *~ core *.core
-	rm -rf ./doc/
+	-$(DEL_FILE) ./robotsV2
+	rm -rf ./doc/*
 
 
 distclean: clean 
