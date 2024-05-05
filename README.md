@@ -1,5 +1,9 @@
 # **Robots🤖 and walls🧱, what more could you want?**
 
+*Authors*: **Matyáš Oujezdský** (xoujez04), **Milan Vrbas** (xvrbas01)
+
+---
+
 ## **☰ Menu**
 By clicking on the menu icon, you can perform following actions:
 
