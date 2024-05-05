@@ -5,6 +5,7 @@
 #pragma once
 
 #include <QEvent>
+#include <QFile>
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
