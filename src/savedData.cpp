@@ -60,8 +60,7 @@ void Data::saveData() {
  * @param bool *clockwise: Pointer to variable in which to store the turning direction
  * @param int *detectionAngle: Pointer to variable in which to store the detection angle
  * @param int *detectionRange: Pointer to variable in which to store the detection range
- * @param qreal sceneWidth: Width of the scene.
- * @param qreal sceneHeight: Height of the scene.
+ * @param MyScene scene: Pointer to the scene in which the robot is to be placed.
  * @param QString fileName: File from which the data was read. (for printing
  * in error messages).
  * @return: void
@@ -71,7 +70,7 @@ int validateRobotData(
         nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
         robotData,
     qreal *x, qreal *y, int *speed, qreal *angle, int *player, bool *clockwise, int *detectionAngle,
-    int *detectionRange, qreal sceneWidth, qreal sceneHeight, QString fileName) {
+    int *detectionRange, MyScene *scene, QString fileName) {
     try {
         *x = robotData.value()["x"];
         *y = robotData.value()["y"];
@@ -97,8 +96,8 @@ int validateRobotData(
         *y = *y < 0 ? 0 : *y;
     }
 
-    int xLimit = sceneWidth - ROBOTSIZE - 4;
-    int yLimit = sceneHeight - ROBOTSIZE - 4;
+    int xLimit = scene->width() - ROBOTSIZE - 4;
+    int yLimit = scene->height() - ROBOTSIZE - 4;
     if (*x > xLimit || *y > yLimit) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
                   << ": \"robot.x/y\" cannot be more than screen size\n"
@@ -146,6 +145,24 @@ int validateRobotData(
         *player = 0;
     }
 
+    if (*player == 1) {
+        if (scene->getPlayer1() != NULL) {
+            std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+                      << ": \"robot.player\" can be set to 1 for only one robot\nsetting value to 0\n"
+                      << std::endl;
+            *player = 0;
+        }
+    }
+
+    if (*player == 2) {
+        if (scene->getPlayer2() != NULL) {
+            std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
+                      << ": \"robot.player\" can be set to 2 for only one robot\nsetting value to 0\n"
+                      << std::endl;
+            *player = 0;
+        }
+    }
+
     return 0;
 }
 
@@ -156,8 +173,7 @@ int validateRobotData(
  * @param qreal *y: Pointer to variable in which to store the y coordinate.
  * @param int *width: Pointer to variable in which to store the width
  * @param int *height: Pointer to variable in which to store the height
- * @param qreal sceneWidth: Width of the scene.
- * @param qreal sceneHeight: Height of the scene.
+ * @param MyScene scene: Scene in which the wall is to be placed.
  * @param QString fileName: File from which the data was read. (for printing
  * in error messages).
  * @return: void
@@ -166,7 +182,7 @@ int validateWallData(
     const nlohmann::json_abi_v3_11_3::detail::iteration_proxy_value<
         nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
         wallData,
-    qreal *x, qreal *y, int *width, int *height, qreal sceneWidth, qreal sceneHeight, QString fileName) {
+    qreal *x, qreal *y, int *width, int *height, MyScene *scene, QString fileName) {
     try {
         *x = wallData.value()["x"];
         *y = wallData.value()["y"];
@@ -198,8 +214,8 @@ int validateWallData(
         *height = *height <= 0 ? 10 : *height;
     }
 
-    int xLimit = sceneWidth - *width - 4;
-    int yLimit = sceneHeight - *height - 4;
+    int xLimit = scene->width() - *width - 4;
+    int yLimit = scene->height() - *height - 4;
     if (*x > xLimit || *y > yLimit) {
         std::cerr << "in file " << qPrintable(fileName)
                   << ": \"wall.x/y\" cannot be more than screen size\nsetting "
@@ -248,13 +264,19 @@ void Data::loadData() {
         int detectionRange;
 
         if (validateRobotData(robotData, &x, &y, &speed, &angle, &player, &clockwise, &detectionAngle,
-                              &detectionRange, scene->getWidth(), scene->getHeight(), fileName)) {
+                              &detectionRange, scene, fileName)) {
             continue;
         }
 
         QPointer<Robot> robot =
             new Robot(x, y, speed, angle, player, clockwise, detectionAngle, detectionRange);
         scene->addItem(robot);
+        if (player == 1) {
+            scene->setPlayer1(robot);
+        }
+        if (player == 2) {
+            scene->setPlayer2(robot);
+        }
         QObject::connect(scene, &MyScene::gameTick, robot, &Robot::gameTick);
         QObject::connect(robot, &Robot::playerChanged, scene, &MyScene::ensureOnePlayer);
         QObject::connect(robot, &Robot::detectObjects, scene, &MyScene::detectObjects);
@@ -267,8 +289,7 @@ void Data::loadData() {
         int width;
         int height;
 
-        if (validateWallData(wallData, &x, &y, &width, &height, scene->getWidth(), scene->getHeight(),
-                             fileName)) {
+        if (validateWallData(wallData, &x, &y, &width, &height, scene, fileName)) {
             continue;
         }
 

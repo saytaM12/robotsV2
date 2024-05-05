@@ -34,18 +34,6 @@ class MyScene : public QGraphicsScene {
     MyScene(QSize size, QGraphicsScene *parent = nullptr);
 
     /**
-     * @brief Get the width of the scene.
-     * @return qreal Width of the scene.
-     */
-    inline qreal getWidth() const { return width(); }
-
-    /**
-     * @brief Get the height of the scene.
-     * @return qreal Height of the scene.
-     */
-    inline qreal getHeight() const { return height(); }
-
-    /**
      * @brief Get a pointer to the menu object.
      * @return Menu* Pointer to the menu object.
      */
@@ -74,6 +62,18 @@ class MyScene : public QGraphicsScene {
      * @return Robot* Pointer to player 2 robot object.
      */
     Robot *getPlayer2() const { return player2; }
+
+    /**
+     * @brief Set scene pointer to player1 to robot
+     * @return Robot* Pointer to player 1 robot object.
+     */
+    void setPlayer1(Robot *robot) { player1 = robot; }
+
+    /**
+     * @brief Set scene pointer to player2 to robot
+     * @return Robot* Pointer to player 2 robot object.
+     */
+    void setPlayer2(Robot *robot) { player2 = robot; }
 
     /**
      * @brief Add an item to the scene and the items list.

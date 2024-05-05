@@ -1,17 +1,17 @@
 {
     "robots": [
         {
-            "angle": -269,
+            "angle": 270.0,
             "clockwise": false,
             "detectionAngle": 1,
             "detectionRange": 100,
             "player": 0,
             "speed": 1,
-            "x": 777.0,
-            "y": 418.0
+            "x": 772.0,
+            "y": 414.0
         },
         {
-            "angle": -90,
+            "angle": 89.6668887560786,
             "clockwise": false,
             "detectionAngle": 1,
             "detectionRange": 100,

@@ -132,8 +132,8 @@ bool MyScene::detectObjects() {
 
 MyView::MyView(MyScene *scene) : QGraphicsView(scene), scene(scene) {
     setDragMode(QGraphicsView::RubberBandDrag);
-    setMinimumSize(scene->getWidth(), scene->getHeight());
-    setMaximumSize(scene->getWidth(), scene->getHeight());
+    setMinimumSize(scene->width(), scene->height());
+    setMaximumSize(scene->width(), scene->height());
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }

@@ -102,7 +102,7 @@ void Robot::gameTick() {
 
     if (player) {
         if (playerMoving & 0b1000) {
-            MyItem::setRotation(MyItem::rotation() - detectionAngle * (clockwise ? -1 : 1));
+            MyItem::setRotation(MyItem::rotation() - detectionAngle);
         }
         if (playerMoving & 0b0100) {
             MyItem::setX(MyItem::x() + dx);
@@ -113,7 +113,7 @@ void Robot::gameTick() {
             MyItem::setY(MyItem::y() - dy);
         }
         if (playerMoving & 0b0001) {
-            MyItem::setRotation(MyItem::rotation() + detectionAngle * (clockwise ? 1 : -1));
+            MyItem::setRotation(MyItem::rotation() + detectionAngle);
         }
 
         return;
