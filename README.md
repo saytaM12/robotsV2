@@ -27,7 +27,7 @@ By right-clicking on specific robot, you are able to adjust it's parameters. The
 - **🔄 Rotate**: Use this option to manually rotate the robot to a desired direction.
 .
 - **🤖/🕹 Set robot player status**: Toggle between `Autonomous` and `Player controlled` modes.
-    - **🤖 Autonomous**: The robot will automaticaly move forward until it detects a wall, then it will turn.
+    - **🤖 Autonomous**: The robot will automatically move forward until it detects a wall, then it will turn.
     - **🕹 Player controlled**: You can choose between two players for manual control:
       - **🎮 Player 1**: Use arrow keys (Up, Down, Left, Right) for movement.
       - **🎮 Player 2**: Use W, S, A, D keys for movement.
@@ -71,8 +71,6 @@ Disclaimer:
         - Walls can be resized through other objects
         - When walls are resized outside of the scene, they behave unexpectedly
         - Items stay "frozen" when dragged on top of other items (plan was to stay closest to mouse as possible without colliding)
-    - Correct and responsive ordering sample items and buttons in the side menu
-        - file `guiMacros.h` should be removed and items should be placed in response to `QGraphicsLinearLayout`
 
 - Extra features planned above the scope of this assignment:
     - Robots being able to shoot and destroy other robots

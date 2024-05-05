@@ -194,7 +194,6 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		robotsV2.pro src/darkenImage.h \
-		src/guiMacros.h \
 		src/json.hpp \
 		src/menu.h \
 		src/menuIcon.h \
@@ -459,7 +458,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/darkenImage.h src/guiMacros.h src/json.hpp src/menu.h src/menuIcon.h src/myItem.h src/myScene.h src/robot.h src/robotUtils.h src/savedData.h src/wall.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/darkenImage.h src/json.hpp src/menu.h src/menuIcon.h src/myItem.h src/myScene.h src/robot.h src/robotUtils.h src/savedData.h src/wall.h $(DISTDIR)/
 	$(COPY_FILE) --parents src/darkenImage.cpp src/main.cpp src/menu.cpp src/menuIcon.cpp src/myItem.cpp src/myScene.cpp src/robot.cpp src/robotUtils.cpp src/savedData.cpp src/wall.cpp $(DISTDIR)/
 
 
@@ -498,7 +497,6 @@ compiler_moc_header_make_all: moc_menu.cpp moc_menuIcon.cpp moc_myItem.cpp moc_m
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_menu.cpp moc_menuIcon.cpp moc_myItem.cpp moc_myScene.cpp moc_robot.cpp moc_robotUtils.cpp moc_savedData.cpp moc_wall.cpp
 moc_menu.cpp: src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
@@ -520,7 +518,6 @@ moc_myItem.cpp: src/myItem.h \
 
 moc_myScene.cpp: src/myScene.h \
 		src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
@@ -548,7 +545,6 @@ moc_savedData.cpp: src/savedData.h \
 		src/json.hpp \
 		src/myScene.h \
 		src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
@@ -589,7 +585,6 @@ main.o: src/main.cpp src/savedData.h \
 		src/json.hpp \
 		src/myScene.h \
 		src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
@@ -599,7 +594,6 @@ main.o: src/main.cpp src/savedData.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
 
 menu.o: src/menu.cpp src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
@@ -613,7 +607,6 @@ menuIcon.o: src/menuIcon.cpp src/menuIcon.h
 myItem.o: src/myItem.cpp src/myItem.h \
 		src/myScene.h \
 		src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/robotUtils.h \
@@ -623,7 +616,6 @@ myItem.o: src/myItem.cpp src/myItem.h \
 
 myScene.o: src/myScene.cpp src/myScene.h \
 		src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \
@@ -645,7 +637,6 @@ savedData.o: src/savedData.cpp src/savedData.h \
 		src/json.hpp \
 		src/myScene.h \
 		src/menu.h \
-		src/guiMacros.h \
 		src/robot.h \
 		src/darkenImage.h \
 		src/myItem.h \

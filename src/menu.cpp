@@ -4,7 +4,6 @@
  *
  * This module contains the implementation of the Menu class.
  */
-#include "guiMacros.h"
 #include "menu.h"
 
 Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
@@ -25,23 +24,33 @@ Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
     scene->addWidget(helpButton);
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical, this);
-    layout->setContentsMargins(0, menuHeight / 3.0, 0, 0);
-    // layout->setContentsMargins(menuWidth / 2.0 - sampleWall->boundingRect().width() / 2.0, menuHeight / 3.0,
-    // 0, 0);
+    layout->setContentsMargins(0, menuHeight / 3.5, 0, 0);
 
-    layout->addItem(sampleRobot);
-    layout->setItemSpacing(0, 100);
+    QGraphicsLinearLayout *robotLayout = new QGraphicsLinearLayout();
+    robotLayout->addItem(sampleRobot);
+    robotLayout->setContentsMargins(menuWidth / 2.0 - ROBOTSIZE / 2.0, 0, 0, 0);
+    layout->addItem(robotLayout);
+    layout->setItemSpacing(0, 200);
 
-    layout->addItem(sampleWall);
-    layout->setAlignment(sampleWall, Qt::AlignHCenter);
-    layout->setItemSpacing(1, 100);
+    QGraphicsLinearLayout *wallLayout = new QGraphicsLinearLayout();
+    wallLayout->addItem(sampleWall);
+    wallLayout->setContentsMargins(menuWidth / 2.0 - sampleWall->boundingRect().width() / 2.0, 0, 0, 0);
+    layout->addItem(wallLayout);
+    layout->setItemSpacing(1, 145);
 
-    QGraphicsLinearLayout *buttonLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-    buttonLayout->addItem(saveButton);
-    buttonLayout->addItem(loadButton);
+    QGraphicsLinearLayout *buttonLayout = new QGraphicsLinearLayout(Qt::Vertical);
+
+    QGraphicsLinearLayout *dataButtonLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    dataButtonLayout->addItem(saveButton);
+    dataButtonLayout->setItemSpacing(0, 50);
+    dataButtonLayout->addItem(loadButton);
+    buttonLayout->addItem(dataButtonLayout);
+
+    buttonLayout->addItem(simulationButton);
+
+    buttonLayout->setContentsMargins(24, 0, 0, 0);
+
     layout->addItem(buttonLayout);
-
-    layout->addItem(simulationButton);
 
     helpButton->hide();
     saveButton->hide();
@@ -113,8 +122,18 @@ void Menu::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawRect(option->rect);
 
     QImage image("imgs/textures/launchPad.png");
-    painter->drawImage(TOP_SAMPLE_BACKGROUND_RECT(option->rect.width(), option->rect.height()), image);
-    painter->drawImage(BOT_SAMPLE_BACKGROUND_RECT(option->rect.width(), option->rect.height()), image);
+    QRectF rect;
+    rect.setWidth(QGraphicsRectItem::rect().width() / 1.1);
+    rect.setHeight(rect.width());
+    rect.moveTo((QGraphicsRectItem::rect().width() - rect.width()) / 2.0,
+                sampleRobot->MyItem::y() + sampleRobot->boundingRect().height() / 2.0 - rect.height() / 2.0);
+
+    painter->drawImage(rect, image);
+
+    rect.moveTo((QGraphicsRectItem::rect().width() - rect.width()) / 2.0,
+                sampleWall->MyItem::y() + sampleWall->boundingRect().height() / 2.0 - rect.height() / 2.0);
+
+    painter->drawImage(rect, image);
 
     painter->setBrush(Qt::NoBrush);
     painter->setPen(QPen(Qt::black, 6));

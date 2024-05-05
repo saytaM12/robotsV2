@@ -19,7 +19,6 @@ QT += gui
 
 # Input
 HEADERS += src/darkenImage.h \
-           src/guiMacros.h \
            src/json.hpp \
            src/menu.h \
            src/menuIcon.h \
