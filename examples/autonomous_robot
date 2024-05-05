@@ -1,0 +1,40 @@
+{
+    "robots": [
+        {
+            "angle": 0,
+            "clockwise": false,
+            "detectionAngle": 1,
+            "detectionRange": 100,
+            "player": 0,
+            "speed": 3,
+            "x": 687.0,
+            "y": 471.0
+        }
+    ],
+    "walls": [
+        {
+            "height": 425.0,
+            "width": 99.0,
+            "x": 1031.0,
+            "y": 118.0
+        },
+        {
+            "height": 62.0,
+            "width": 616.0,
+            "x": 416.0,
+            "y": 720.0
+        },
+        {
+            "height": 67.0,
+            "width": 617.0,
+            "x": 413.0,
+            "y": 116.0
+        },
+        {
+            "height": 433.0,
+            "width": 100.0,
+            "x": 312.0,
+            "y": 114.0
+        }
+    ]
+}

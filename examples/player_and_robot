@@ -1,0 +1,56 @@
+{
+    "robots": [
+        {
+            "angle": -269,
+            "clockwise": false,
+            "detectionAngle": 1,
+            "detectionRange": 100,
+            "player": 0,
+            "speed": 1,
+            "x": 777.0,
+            "y": 418.0
+        },
+        {
+            "angle": -90,
+            "clockwise": false,
+            "detectionAngle": 1,
+            "detectionRange": 100,
+            "player": 1,
+            "speed": 1,
+            "x": 624.0,
+            "y": 418.0
+        }
+    ],
+    "walls": [
+        {
+            "height": 482.0,
+            "width": 37.0,
+            "x": 721.0,
+            "y": 220.0
+        },
+        {
+            "height": 572.0,
+            "width": 48.0,
+            "x": 284.0,
+            "y": 162.0
+        },
+        {
+            "height": 580.0,
+            "width": 44.0,
+            "x": 1155.0,
+            "y": 158.0
+        },
+        {
+            "height": 41.0,
+            "width": 181.0,
+            "x": 652.0,
+            "y": 178.0
+        },
+        {
+            "height": 46.0,
+            "width": 179.0,
+            "x": 651.0,
+            "y": 703.0
+        }
+    ]
+}
