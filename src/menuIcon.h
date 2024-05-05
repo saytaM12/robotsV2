@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QGraphicsRectItem>
@@ -14,7 +18,7 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
     Q_OBJECT
 
   private:
-    bool menuUp;
+    bool menuUp; /**< Flag indicating whether the menu is visible. */
 
   public:
     /**
@@ -28,13 +32,11 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
      * It does nothing, but if it isn't implemented, the `mouseReleaseEvent`
      * method won't ever be called.
      */
-    inline void mousePressEvent(QGraphicsSceneMouseEvent *) {}
+    inline void mousePressEvent(QGraphicsSceneMouseEvent *) override {}
 
     /**
      * @brief This method is called when the mouse, which was pressed on the menu icon,
-     * is released.
-     * If the mouse was pressed on the icon and then released on the icon, a
-     * signal (menuToggled) will be emitted to toggle the menu.
+     * is released. It emits a signal (menuToggled) to toggle the menu.
      */
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override {
         emit menuToggled();
@@ -52,7 +54,7 @@ class MenuIcon : public QObject, public QGraphicsRectItem {
 
   signals:
     /**
-     * @brief Signal emitted when the menu icon is toggled.
+     * @brief Signal emitted to toggle the menu.
      */
     void menuToggled();
 };

@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QEvent>
@@ -47,13 +51,13 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
     Menu(int menuWidth, int menuHeight, QGraphicsScene *parent = nullptr);
 
     /**
-     * @brief Returns the sample robot.
+     * @brief Returns a pointer to the sample robot.
      * @return SampleRobot*
      */
     inline SampleRobot *getSampleRobot() const { return sampleRobot; }
 
     /**
-     * @brief Returns the sample wall.
+     * @brief Returns a pointer to the sample wall.
      * @return SampleWall*
      */
     inline SampleWall *getSampleWall() const { return sampleWall; }
@@ -90,8 +94,17 @@ class SampleRobot : public Robot, public QGraphicsLayoutItem {
         setOwnedByLayout(false);
     }
 
+    /**
+     * @brief This method is called when the context menu is requested.
+     * @param event The context menu event.
+     */
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *) override {}
 
+    /**
+     * @brief Method used to return the size hint of the SampleRobot.
+     * @param which The size hint type.
+     * @param constraint Maximum size limit.
+     */
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override {
         switch (which) {
         case Qt::MinimumSize:
@@ -105,6 +118,10 @@ class SampleRobot : public Robot, public QGraphicsLayoutItem {
         return constraint;
     }
 
+    /**
+     * @brief Method tu update the rect of SampleRobot.
+     * @param geom The new rect.
+     */
     void setGeometry(const QRectF &geom) override {
         MyItem::prepareGeometryChange();
         QGraphicsLayoutItem::setGeometry(geom);

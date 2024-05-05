@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #include "wall.h"
 
 Wall::Wall(int x, int y, int width, int height, QGraphicsItem *parent)

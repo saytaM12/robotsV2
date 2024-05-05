@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QAbstractGraphicsShapeItem>
@@ -10,7 +14,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
     Q_OBJECT
 
   private:
-    bool selectedFromHover; /**< Flag indicating whether the item was selected from hover. */
+    bool selectedFromHover; /**< Flag indicating whether the item was selected from a hover event. */
 
   public:
     /**
@@ -23,7 +27,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
 
     /**
      * @brief Pure virtual method to be implemented by subclasses to determine if the item is a wall.
-     * @return bool True if the item is a wall, otherwise false.
+     * @return bool True if the item is a wall, false if it is a robot.
      */
     virtual inline bool isWall() const = 0;
 
@@ -53,7 +57,7 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
     }
 
     /**
-     * @brief Called when the user presses the mouse button.
+     * @brief Called when the user presses a mouse button.
      * Changes the cursor, and puts the item on top of all other items (for
      * painting purposes).
      * @param event The event that triggered this.
@@ -70,7 +74,8 @@ class MyItem : public QObject, public QAbstractGraphicsShapeItem {
 
     /**
      * @brief Called when the item is changed in any way.
-     * Here it is used to check if the item is being moved out of the scene.
+     * Here it is used to check if the item is being moved out of the scene
+     * or colliding with another item.
      * If so, it will be stopped from going further.
      * @param change The type of change.
      * @param value The value of the change.

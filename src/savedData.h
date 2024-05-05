@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QFileDialog>
@@ -15,7 +19,7 @@ using json = nlohmann::json;
 
 /**
  * @brief The Data class manages saving and loading data to and from a JSON file.
- * 
+ *
  * It inherits from QObject.
  */
 class Data : public QObject {
@@ -24,6 +28,14 @@ class Data : public QObject {
 
   private:
     MyScene *scene; /**< Pointer to the scene where data is saved and loaded. */
+
+  public:
+    /**
+     * @brief Constructor for the Data object.
+     *
+     * @param scene The scene to and from which the data is saved and loaded.
+     */
+    Data(MyScene *scene);
 
   public slots:
     /**
@@ -35,12 +47,4 @@ class Data : public QObject {
      * @brief Slot to populate the scene with robots and walls from a JSON file.
      */
     void loadData();
-
-  public:
-    /**
-     * @brief Constructor for the Data object.
-     * 
-     * @param scene The scene to and from which the data is saved and loaded.
-     */
-    Data(MyScene *scene);
 };

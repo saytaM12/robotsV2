@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 /* GUI BUTTONS
  * BWS = button width (inverse) scaler
  * BHS = button height (inverse) scaler

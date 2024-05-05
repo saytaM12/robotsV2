@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QGraphicsLineItem>
@@ -11,9 +15,9 @@
 
 /**
  * @brief Macro to set parameters with a dialog.
- * 
+ *
  * This macro creates a QDialog with input fields for setting parameters.
- * 
+ *
  * @param inputLabelText The label text for the input field.
  * @param descriptionText The description text for the parameter.
  * @param limitMin The minimum limit for the parameter.
@@ -53,11 +57,14 @@
                                                                                                               \
     dialog.exec();
 
+/**
+ * @brief Direction of movement for player robots.
+ */
 typedef enum TRobotDirections { turnLeft, moveBack, moveForward, turnRight } Direction;
 
 /**
  * @brief The RobotContextMenu class represents a context menu for a robot.
- * 
+ *
  * It inherits from QMenu.
  */
 class RobotContextMenu : public QMenu {
@@ -67,7 +74,7 @@ class RobotContextMenu : public QMenu {
   public:
     /**
      * @brief Constructor for the RobotContextMenu class.
-     * 
+     *
      * @param name The name of the context menu.
      * @param parent The parent widget.
      */
@@ -75,37 +82,37 @@ class RobotContextMenu : public QMenu {
 
   signals:
     /**
-     * @brief Signal emitted when the player is changed.
+     * @brief Signal emitted when the player change button is clicked.
      */
     void changePlayer();
 
     /**
-     * @brief Signal emitted when the robot is rotated.
+     * @brief Signal emitted when the robot rotate button is clicked.
      */
     void rotate();
 
     /**
-     * @brief Signal emitted when the robot icon is changed.
+     * @brief Signal emitted when the robot icon change button is clicked.
      */
     void changeIcon();
 
     /**
-     * @brief Signal emitted when the robot speed is set.
+     * @brief Signal emitted when the set speed button is clicked.
      */
     void setSpeed();
 
     /**
-     * @brief Signal emitted when the detection range is set.
+     * @brief Signal emitted when the set detection range detection button is clicked.
      */
     void setDetectionRange();
 
     /**
-     * @brief Signal emitted when the detection angle is set.
+     * @brief Signal emitted when the set detection angle button is clicked.
      */
     void setDetectionAngle();
 
     /**
-     * @brief Signal emitted when the turning direction is set.
+     * @brief Signal emitted when the set set turning direction button is clicked.
      */
     void setTurningDirection();
 };

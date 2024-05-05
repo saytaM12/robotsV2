@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QGraphicsScene>
@@ -17,7 +21,7 @@ class MyScene : public QGraphicsScene {
     QPointer<Menu> menu;              /**< Pointer to the menu object. */
     QPointer<MenuIcon> menuIcon;      /**< Pointer to the menu icon object. */
     QPointer<QTimer> gameTickTimer;   /**< Pointer to the timer used for game ticks. */
-    QList<QPointer<MyItem>> itemList; /**< List of items in the scene. */
+    QList<QPointer<MyItem>> itemList; /**< List of pointers to items in the scene. */
     QPointer<Robot> player1;          /**< Pointer to player 1 robot object. */
     QPointer<Robot> player2;          /**< Pointer to player 2 robot object. */
 
@@ -28,12 +32,6 @@ class MyScene : public QGraphicsScene {
      * @param parent Parent QGraphicsScene object.
      */
     MyScene(QSize size, QGraphicsScene *parent = nullptr);
-
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-        if (items().size() > 0) {
-        }
-        QGraphicsScene::mouseMoveEvent(event);
-    }
 
     /**
      * @brief Get the width of the scene.
@@ -48,31 +46,31 @@ class MyScene : public QGraphicsScene {
     inline qreal getHeight() const { return height(); }
 
     /**
-     * @brief Get the menu object.
+     * @brief Get a pointer to the menu object.
      * @return Menu* Pointer to the menu object.
      */
     inline Menu *getMenu() const { return menu; }
 
     /**
-     * @brief Get the menu icon object.
+     * @brief Get a pointer to the menu icon object.
      * @return MenuIcon* Pointer to the menu icon object.
      */
     inline MenuIcon *getMenuIcon() const { return menuIcon; }
 
     /**
-     * @brief Get a list of items in the scene.
+     * @brief Get a list of pointers to the wall and robot objects in the scene.
      * @return QList<MyItem *> List of items in the scene.
      */
     QList<MyItem *> items() const;
 
     /**
-     * @brief Get player 1 robot object.
+     * @brief Get a pointer to the player 1 robot object.
      * @return Robot* Pointer to player 1 robot object.
      */
     Robot *getPlayer1() const { return player1; }
 
     /**
-     * @brief Get player 2 robot object.
+     * @brief Get a pointer to the player 2 robot object.
      * @return Robot* Pointer to player 2 robot object.
      */
     Robot *getPlayer2() const { return player2; }
@@ -84,7 +82,7 @@ class MyScene : public QGraphicsScene {
     void addItem(MyItem *item);
 
     /**
-     * @brief Remove all items from the scene (excluding menu and menu icon).
+     * @brief Remove all walls and robots from the scene
      *        Also clears the items list.
      */
     void clear();
@@ -93,7 +91,6 @@ class MyScene : public QGraphicsScene {
     /**
      * @brief Slot called when an item is dropped on the scene.
      *        Used to check whether to remove an item because it was dropped on the menu.
-     * @param item Item that was dropped.
      */
     void itemDropped();
 
@@ -103,7 +100,7 @@ class MyScene : public QGraphicsScene {
     void simulationPressed();
 
     /**
-     * @brief Slot called on each game tick.
+     * @brief Slot called for robots to check if they detect an obstacle in front.
      */
     bool detectObjects();
 
@@ -133,7 +130,7 @@ class MyView : public QGraphicsView {
 
     /**
      * @brief Method called when the mouse is pressed.
-     *        Used to create a new item when the sample robot or the sample wall is clicked.
+     *        Used to create a new item if the sample robot or the sample wall is clicked.
      * @param e Mouse event.
      */
     void mousePressEvent(QMouseEvent *e);

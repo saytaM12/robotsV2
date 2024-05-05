@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #include "menuIcon.h"
 
 MenuIcon::MenuIcon(QGraphicsScene *parent) : QGraphicsRectItem(), menuUp(false) {
@@ -16,7 +20,8 @@ void MenuIcon::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
     // math magic to make lineWidth even, whole and width / 10
     int lineWidth = ceil(rect().width() / 20.0) * 2;
-    painter->setPen(QPen(menuUp ? Qt::black : Qt::white, lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(
+        QPen(menuUp ? Qt::black : Qt::white, lineWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->setBrush(Qt::NoBrush);
 
     painter->drawLine(option->rect.left() + lineWidth * 1.5, option->rect.top() + rect().width() / 4,

@@ -1,6 +1,6 @@
 /*
  * Autors Milan Vrbas (xvrbas01), Matyáš Oujezdský (xoujz04)
- * 2024
+ * ICP 2024
  */
 #include "robot.h"
 

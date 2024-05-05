@@ -1,3 +1,7 @@
+/*
+ * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
+ * ICP 2024
+ */
 #pragma once
 
 #include <QDialog>
@@ -30,19 +34,19 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     Q_OBJECT
 
   private:
-    QString texture;                 /**< The texture of the robot. */
+    QString texture;                 /**< The name of the texture image file of the robot. */
     QGraphicsLineItem *rotationLine; /**< The rotation line of the robot. */
 
     int speed;          /**< The speed of the robot. */
-    int player;         /**< The player status of the robot. */
-    bool rotating;      /**< Whether the robot is rotating. */
+    int player;         /**< The player number of the robot. */
+    bool rotating;      /**< Whether the robot is currentely rotating. */
     bool clockwise;     /**< Whether the robot turns clockwise on detection. */
     int detectionRange; /**< The range of detection of the robot. */
-    int detectionAngle; /**< The angle the robot turn on detection. */
+    int detectionAngle; /**< The angle the robot turns on detection. */
 
     char playerMoving; /**< The direction in which the player is moving. */
 
-    QPointer<RobotContextMenu> contextMenu; /**< The context menu for the robot. */
+    QPointer<RobotContextMenu> contextMenu; /**< Pointer to the context menu for the robot. */
 
   public:
     /**
@@ -85,7 +89,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     /**
      * @brief Method that returns whether this item is a wall or not.
      *
-     * Always returns false.
+     * Since this is a robot it always returns false.
      *
      * @return bool false
      */
@@ -108,16 +112,16 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     }
 
     /**
-     * @brief This method returns whether the robot is a player or not.
+     * @brief This method returns the player number of the robot.
      *
-     * @return int Whether the robot is a player or not.
+     * @return int The player number
      */
     inline int getPlayer() const { return player; }
 
     /**
-     * @brief This method returns the turning direction of the robot.
+     * @brief This method returns if the robot is rotating clockwise on derection.
      *
-     * @return bool The turning direction of the robot.
+     * @return bool If robot rotates clockwise on detection
      */
     inline bool isClockwise() const { return clockwise; }
 
@@ -129,7 +133,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     inline int getDetectionRange() const { return detectionRange; }
 
     /**
-     * @brief This method returns the detection angle of the robot.
+     * @brief This method returns the angle in degrees the robot turns on detection.
      *
      * @return int The detection angle of the robot.
      */
@@ -137,15 +141,16 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
 
     /**
      * @brief This method sets the angle that the robot is facing.
+     * Zero is up and the angle increases clockwise.
      *
      * @param newAngle The new angle of the robot.
      */
     inline void setAngle(qreal newAngle) { MyItem::setRotation(newAngle); }
 
     /**
-     * @brief This method sets the player status of the robot.
+     * @brief This method sets the player number of the robot.
      *
-     * @param newPlayer Whether the robot is a player or not.
+     * @param newPlayer Player number of the robot.
      */
     inline void setPlayer(int newPlayer) { player = newPlayer; }
 
@@ -153,12 +158,12 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @brief This method handles player movement.
      *
      * @param direction The direction of movement.
-     * @param set Whether to set the movement or not.
+     * @param set Whether to set or unset the direction.
      */
     void playerSetMove(Direction direction, bool set);
 
     /**
-     * @brief This method is called when the mouse is released after clicking the robot.
+     * @brief This method is called when a context menu is requested.
      *
      * It brings up the context menu to change the robot's parameters.
      *
@@ -169,7 +174,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     }
 
     /**
-     * @brief This method handles mouse move event.
+     * @brief This method handles mouse drag events.
      *
      * @param event The mouse event.
      */
@@ -184,9 +189,6 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
 
     /**
      * @brief Method to return the bounding rectangle of the robot.
-     *
-     * This method must be implemented, otherwise the program breaks. This is due
-     * to inheritance sheananigans.
      *
      * @return QRectF The bounding rectangle of the robot.
      */
@@ -205,9 +207,8 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     bool detectObjects();
 
     /**
-     * @brief Signal emitted when the player is changed.
+     * @brief Signal emitted when the player number is changed.
      *
-     * @param robot The robot where the player is changed.
      * @param player The new player status.
      */
     void playerChanged(int player);
