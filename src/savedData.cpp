@@ -1,6 +1,10 @@
 /*
  * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
  * ICP 2024
+ *
+ * This module contains the implementation of the Data class.
+ * It is used to save and load the state of the application.
+ * The states are saved in JSON format.
  */
 #include "savedData.h"
 

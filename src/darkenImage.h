@@ -1,6 +1,8 @@
 /*
  * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
  * ICP 2024
+ *
+ * This module contains only the declaration of the darkenImage function.
  */
 #include <QImage>
 

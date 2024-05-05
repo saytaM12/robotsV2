@@ -1,7 +1,11 @@
 /*
  * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
  * ICP 2024
+ *
+ * This module contains some macros for correct placement of some GUI elements.
+ * I wanted to to this better, but if I won't have time before the deadline, this will stay here
  */
+
 /* GUI BUTTONS
  * BWS = button width (inverse) scaler
  * BHS = button height (inverse) scaler

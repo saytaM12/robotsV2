@@ -2,6 +2,9 @@
  *  Autor: nlohmann
  *  file taken from public github repository
  *      https://github.com/nlohmann/json
+ *
+ *
+ *  This module is used for work with json files
  */
 
 //     __ _____ _____ _____

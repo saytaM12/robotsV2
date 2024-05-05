@@ -1,6 +1,8 @@
 /*
  * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
  * ICP 2024
+ *
+ * This module sets up basic application window and starts the application.
  */
 #include <QApplication>
 #include <QGraphicsView>

@@ -1,6 +1,8 @@
 /*
  * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
  * ICP 2024
+ *
+ * This module contains some declaration used for the Robot class.
  */
 #pragma once
 

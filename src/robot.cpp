@@ -1,6 +1,8 @@
 /*
  * Autors Milan Vrbas (xvrbas01), Matyáš Oujezdský (xoujz04)
  * ICP 2024
+ *
+ * This module contains the implementation of the Robot class.
  */
 #include "robot.h"
 

@@ -1,6 +1,8 @@
 /*
  * Authors: Matyáš Oujezdský (xoujez04), Milan Vrbas (xvrbas01)
  * ICP 2024
+ *
+ * This module contains the implementation of the RobotContextMenu class.
  */
 #include "robotUtils.h"
 
