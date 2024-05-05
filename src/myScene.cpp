@@ -58,7 +58,9 @@ void MyScene::simulationPressed() {
 
     if (simulating) {
         gameTickTimer->start(1000 / 60);
-        menu->toggle();
+        // To toggle the menu and let the menuIcon know it's toggled
+        // This is done via calling mouseReleaseEvent of menuIcon
+        menuIcon->mouseReleaseEvent(new QGraphicsSceneMouseEvent());
     } else {
         gameTickTimer->stop();
     }
