@@ -204,6 +204,10 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
   signals:
+    /**
+     * @brief This signal is emitted to detect objects.
+     * @return bool True if objects are detected.
+     */
     bool detectObjects();
 
     /**

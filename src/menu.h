@@ -30,6 +30,11 @@ class SampleRobot;
 class SampleWall;
 class MyPushButton;
 
+/**
+ * @brief The Menu class is a QGraphicsWidget that is used to create a menu for the simulation.
+ *
+ * It inherits from QGraphicsWidget and QGraphicsRectItem.
+ */
 class Menu : public QGraphicsWidget, public QGraphicsRectItem {
 
     Q_OBJECT
@@ -77,11 +82,25 @@ class Menu : public QGraphicsWidget, public QGraphicsRectItem {
     void toggle();
 
   signals:
+    /**
+     * @brief Signal emitted when the save button is pressed.
+     */
     void savePressed();
+    /**
+     * @brief Signal emitted when the load button is pressed.
+     */
     void loadPressed();
+    /**
+     * @brief Signal emitted when the simulation button is pressed.
+     */
     void simulationPressed();
 };
 
+/**
+ * @brief A specific robot that is displayed in the menu
+ *
+ * It inherits from Robot and QGraphicsLayoutItem.
+ */
 class SampleRobot : public Robot, public QGraphicsLayoutItem {
 
   public:
@@ -96,7 +115,6 @@ class SampleRobot : public Robot, public QGraphicsLayoutItem {
 
     /**
      * @brief This method is called when the context menu is requested.
-     * @param event The context menu event.
      */
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *) override {}
 
@@ -129,6 +147,11 @@ class SampleRobot : public Robot, public QGraphicsLayoutItem {
     }
 };
 
+/**
+ * @brief A specific wall that is displayed in the menu
+ *
+ * It inherits from Wall and QGraphicsLayoutItem.
+ */
 class SampleWall : public Wall, public QGraphicsLayoutItem {
 
   public:
@@ -141,12 +164,37 @@ class SampleWall : public Wall, public QGraphicsLayoutItem {
         setOwnedByLayout(false);
     }
 
+    /**
+     * @brief Method used to handle mouse drag events.
+     * It removes the Walls ability to be moved.
+     *
+     * @param event The mouse event.
+     */
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override { MyItem::mouseMoveEvent(event); }
 
+    /**
+     * @brief Method used to handle mouse entering the Wall.
+     * It removes the Walls ability to be resized.
+     *
+     * @param event The mouse event.
+     */
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override { MyItem::hoverEnterEvent(event); }
 
+    /**
+     * @brief Method used to handle mouse moving inside the Wall.
+     * It removes the Walls ability to be resized.
+     *
+     * @param event The mouse event.
+     */
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override { MyItem::hoverMoveEvent(event); }
 
+    /**
+     * @brief Method used to get the size hint of the SampleWall.
+     *
+     * @param which The size hint type.
+     * @param constraint Maximum size limit.
+     * @return QSizeF The size hint of the SampleWall.
+     */
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override {
         switch (which) {
         case Qt::MinimumSize:
@@ -160,6 +208,10 @@ class SampleWall : public Wall, public QGraphicsLayoutItem {
         return constraint;
     }
 
+    /**
+     * @brief Method tu update the rect of SampleWall.
+     * @param geom The new rect.
+     */
     void setGeometry(const QRectF &geom) override {
         MyItem::prepareGeometryChange();
         QGraphicsLayoutItem::setGeometry(geom);
@@ -167,6 +219,11 @@ class SampleWall : public Wall, public QGraphicsLayoutItem {
     }
 };
 
+/**
+ * @brief A custom implementation of QPushButton that can be used in a QGraphicsLayout.
+ *
+ * It inherits from QPushButton and QGraphicsLayoutItem.
+ */
 class MyPushButton : public QPushButton, public QGraphicsLayoutItem {
 
     Q_OBJECT
@@ -182,8 +239,20 @@ class MyPushButton : public QPushButton, public QGraphicsLayoutItem {
      */
     MyPushButton(const QString &text, Menu *menu) : QPushButton(text), menu(menu) {}
 
+    /**
+     * @brief This method is called to get the size hint of the button.
+     * It calls the size hint of the QPushButton.
+     *
+     * @return QSize The size hint of the button.
+     */
     QSize sizeHint() const override { return QPushButton::sizeHint(); }
 
+    /**
+     * @brief This method is called to get the size hint of the button.
+     *
+     * @param which The size hint type.
+     * @param constraint Maximum size limit.
+     */
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const override {
         switch (which) {
         case Qt::MinimumSize:
@@ -198,6 +267,11 @@ class MyPushButton : public QPushButton, public QGraphicsLayoutItem {
         return constraint;
     }
 
+    /**
+     * @brief This method is called to set a new rect for the button.
+     *
+     * @param geom The new rect.
+     */
     void setGeometry(const QRectF &geom) override {
         QPushButton::setGeometry(geom.toRect());
         QGraphicsLayoutItem::setGeometry(geom);

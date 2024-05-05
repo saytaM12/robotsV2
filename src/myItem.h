@@ -9,6 +9,11 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QWidget>
 
+/**
+ * @brief The MyItem class represents an item in the scene.
+ *
+ * It inherits from QObject and QAbstractGraphicsShapeItem.
+ */
 class MyItem : public QObject, public QAbstractGraphicsShapeItem {
 
     Q_OBJECT

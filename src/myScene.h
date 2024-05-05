@@ -12,6 +12,11 @@
 #include "menuIcon.h"
 #include "qevent.h"
 
+/**
+ * @brief The MyScene class represents the scene in which the game is played.
+ *
+ * It inherits from QGraphicsScene.
+ */
 class MyScene : public QGraphicsScene {
 
     Q_OBJECT
@@ -65,13 +70,11 @@ class MyScene : public QGraphicsScene {
 
     /**
      * @brief Set scene pointer to player1 to robot
-     * @return Robot* Pointer to player 1 robot object.
      */
     void setPlayer1(Robot *robot) { player1 = robot; }
 
     /**
      * @brief Set scene pointer to player2 to robot
-     * @return Robot* Pointer to player 2 robot object.
      */
     void setPlayer2(Robot *robot) { player2 = robot; }
 
@@ -116,6 +119,11 @@ class MyScene : public QGraphicsScene {
     void gameTick();
 };
 
+/**
+ * @brief The MyView class represents the view in which the scene is displayed.
+ *
+ * It inherits from QGraphicsView.
+ */
 class MyView : public QGraphicsView {
 
   private:

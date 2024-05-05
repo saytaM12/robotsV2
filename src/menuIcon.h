@@ -13,6 +13,11 @@
 #include <QWidget>
 #include <cmath>
 
+/**
+ * @brief The MenuIcon class represents an icon for the menu.
+ *
+ * It inherits from QObject and QGraphicsRectItem.
+ */
 class MenuIcon : public QObject, public QGraphicsRectItem {
 
     Q_OBJECT
