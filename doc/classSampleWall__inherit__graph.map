@@ -1,0 +1,15 @@
+<map id="SampleWall" name="SampleWall">
+<area shape="rect" id="Node000001" title="A specific wall that is displayed in the menu." alt="" coords="194,226,284,252"/>
+<area shape="rect" id="Node000002" href="$classWall.html" title="The Wall class represents a wall object in the scene." alt="" coords="156,153,202,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,188,231,224,227,228,196,192"/>
+<area shape="rect" id="Node000003" href="$classMyItem.html" title="The MyItem class represents an item in the scene." alt="" coords="85,79,150,105"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,115,170,150,166,154,135,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,75,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="66,40,106,77,103,81,63,44"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="98,5,294,31"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="173,43,132,81,129,77,170,40"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="173,79,310,105"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="223,118,191,154,187,150,219,115"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="226,153,374,178"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="282,192,251,228,247,224,278,188"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="MyItem" name="MyItem">
+<area shape="rect" id="Node000001" title="The MyItem class represents an item in the scene." alt="" coords="85,79,150,105"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,75,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,40,106,77,103,81,63,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,5,294,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,43,132,81,129,77,170,40"/>
+</map>
