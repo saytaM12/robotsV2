@@ -24,8 +24,6 @@
 #include <QTextEdit>
 #include <QTextStream>
 
-#include "guiMacros.h"
-#include "qgraphicslayoutitem.h"
 #include "robot.h"
 #include "wall.h"
 

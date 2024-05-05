@@ -13,7 +13,6 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QWidget>
-#include <cmath>
 
 /**
  * @brief The MenuIcon class represents an icon for the menu.

@@ -14,7 +14,6 @@
 #include <QWidget>
 #include <QtGlobal>
 
-#include "darkenImage.h"
 #include "myItem.h"
 
 /**

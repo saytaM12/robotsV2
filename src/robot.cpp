@@ -4,6 +4,7 @@
  *
  * This module contains the implementation of the Robot class.
  */
+#include "darkenImage.h"
 #include "robot.h"
 
 Robot::Robot(qreal x, qreal y, int speed, qreal angle, int player, bool clockwise, int detectionAngle,

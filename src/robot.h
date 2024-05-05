@@ -22,7 +22,6 @@
 #include <QWidget>
 #include <QtMath>
 
-#include "darkenImage.h"
 #include "myItem.h"
 #include "robotUtils.h"
 

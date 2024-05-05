@@ -12,7 +12,6 @@
 
 #include "menu.h"
 #include "menuIcon.h"
-#include "qevent.h"
 
 /**
  * @brief The MyScene class represents the scene in which the game is played.

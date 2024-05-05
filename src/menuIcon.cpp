@@ -5,6 +5,7 @@
  * This module contains the implementation of the MenuIcon class.
  */
 #include "menuIcon.h"
+#include <cmath>
 
 MenuIcon::MenuIcon(QGraphicsScene *parent) : QGraphicsRectItem(), menuUp(false) {
     parent->addItem(this);

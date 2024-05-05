@@ -4,6 +4,7 @@
  *
  * This module contains the implementation of the Wall class.
  */
+#include "darkenImage.h"
 #include "wall.h"
 
 Wall::Wall(int x, int y, int width, int height, QGraphicsItem *parent)

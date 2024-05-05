@@ -4,6 +4,7 @@
  *
  * This module contains the implementation of the Menu class.
  */
+#include "guiMacros.h"
 #include "menu.h"
 
 Menu::Menu(int menuWidth, int menuHeight, QGraphicsScene *scene)
