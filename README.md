@@ -66,11 +66,10 @@ Disclaimer:
 - One file in this project was taken from a public GitHub repository and thus not written by the authors of this project
     - file: `json.hpp` the repository: `https://github.com/nlohmann/json`
 
-- Features not implemented, although planned:
-    - Fully fledged out collision detection with all edge cases
-        - Walls can be resized through other objects
-        - When walls are resized outside of the scene, they behave unexpectedly
-        - Items stay "frozen" when dragged on top of other items (plan was to stay closest to mouse as possible without colliding)
+- Bugs not fixed:
+    - Walls can be resized through other objects
+    - When walls are resized outside of the scene, they behave unexpectedly
+    - Items stay "frozen" when dragged on top of other items (plan was to stay closest to mouse as possible without colliding)
 
 - Extra features planned above the scope of this assignment:
     - Robots being able to shoot and destroy other robots
