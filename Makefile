@@ -228,7 +228,7 @@ doxygen:
 	doxygen Doxyfile
 
 pack:
-	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./exapmles/* ./doc/
+	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./exapmles/* ./doc/ ./doxyREADME.md
 
 Makefile: robotsV2.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -470,6 +470,7 @@ clean: compiler_clean
 	-$(DEL_FILE) $(OBJECTS)
 	-$(DEL_FILE) *~ core *.core
 	-$(DEL_FILE) ./robotsV2
+	-$(DEL_FILE) ./xoujez04-xvrbas01.zip
 	rm -rf ./doc/*
 
 
