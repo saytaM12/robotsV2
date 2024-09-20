@@ -8,9 +8,9 @@
 #include "robot.h"
 
 Robot::Robot(qreal x, qreal y, int speed, qreal angle, int player, bool clockwise, int detectionAngle,
-             int detectionRange, QGraphicsItem *parent)
-    : MyItem(x, y, parent), texture("imgs/textures/robot15.png"), speed(speed), player(player),
-      clockwise(clockwise), detectionRange(detectionRange), detectionAngle(detectionAngle), playerMoving(0),
+             int detectionRange, QString texture, QGraphicsItem *parent)
+    : MyItem(x, y, parent), texture(texture), speed(speed), player(player), clockwise(clockwise),
+      detectionRange(detectionRange), detectionAngle(detectionAngle), playerMoving(0),
       contextMenu(new RobotContextMenu(QString("hello"))) {
 
     setRect(0, 0, ROBOTSIZE, ROBOTSIZE);

@@ -1,14 +1,15 @@
 {
     "robots": [
         {
-            "angle": 52.73059491334885,
+            "angle": 193.67521623906788,
             "clockwise": false,
             "detectionAngle": 1,
-            "detectionRange": 150,
+            "detectionRange": 100,
             "player": 0,
             "speed": 1,
-            "x": 762.9730459212074,
-            "y": 371.2299582348758
+            "texture": "imgs/textures/robot15.png",
+            "x": 759.0,
+            "y": 359.1428571428571
         }
     ],
     "walls": [

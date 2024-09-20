@@ -64,7 +64,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param parent The parent item.
      */
     Robot(qreal x, qreal y, int speed, qreal angle, int player, bool clockwise, int detectionAngle,
-          int detectionRange, QGraphicsItem *parent = nullptr);
+          int detectionRange, QString texture, QGraphicsItem *parent = nullptr);
 
     /**
      * @brief Constructor for a default robot with default values.
@@ -74,7 +74,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @param parent The parent item.
      */
     Robot(qreal x, qreal y, QGraphicsItem *parent = nullptr)
-        : Robot(x, y, 1, 0, false, false, 1, 100, parent) {}
+        : Robot(x, y, 1, 0, false, false, 1, 100, QString("imgs/textures/robot15.png"), parent) {}
 
     /**
      * @brief Constructor for the Robot class based on another robot.
@@ -85,7 +85,7 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
     Robot(Robot *robot, QGraphicsItem *parent = nullptr)
         : Robot(robot->MyItem::x(), robot->MyItem::y(), robot->getSpeed(), robot->getAngle(),
                 robot->getPlayer(), robot->isClockwise(), robot->getDetectionAngle(),
-                robot->getDetectionRange(), parent) {}
+                robot->getDetectionRange(), robot->getTexture(), parent) {}
 
     /**
      * @brief Method that returns whether this item is a wall or not.
@@ -95,6 +95,8 @@ class Robot : public MyItem, public QGraphicsEllipseItem {
      * @return bool false
      */
     inline bool isWall() const override { return false; }
+
+    inline QString getTexture() const { return texture; }
 
     /**
      * @brief This method returns the speed of the robot.

@@ -7,6 +7,7 @@
             "detectionRange": 100,
             "player": 2,
             "speed": 1,
+            "texture": "imgs/textures/robot13.png",
             "x": 958.0,
             "y": 381.0
         },
@@ -17,6 +18,7 @@
             "detectionRange": 100,
             "player": 1,
             "speed": 1,
+            "texture": "imgs/textures/robot14.png",
             "x": 381.0,
             "y": 391.0
         }

@@ -46,6 +46,7 @@ void Data::saveData() {
             robotData["clockwise"] = robot->isClockwise();
             robotData["detectionAngle"] = robot->getDetectionAngle();
             robotData["detectionRange"] = robot->getDetectionRange();
+            robotData["texture"] = qPrintable(robot->getTexture());
             data["robots"].push_back(robotData);
         }
     }
@@ -74,7 +75,7 @@ int validateRobotData(
         nlohmann::json_abi_v3_11_3::detail::iter_impl<nlohmann::json_abi_v3_11_3::basic_json<>>>
         robotData,
     qreal *x, qreal *y, int *speed, qreal *angle, int *player, bool *clockwise, int *detectionAngle,
-    int *detectionRange, MyScene *scene, QString fileName) {
+    int *detectionRange, std::string *texture, MyScene *scene, QString fileName) {
     try {
         *x = robotData.value()["x"];
         *y = robotData.value()["y"];
@@ -84,6 +85,7 @@ int validateRobotData(
         *clockwise = robotData.value()["clockwise"];
         *detectionAngle = robotData.value()["detectionAngle"];
         *detectionRange = robotData.value()["detectionRange"];
+        *texture = robotData.value()["texture"];
     } catch (json::type_error &ex) {
         std::cerr << "in file " << qPrintable(fileName.remove(0, fileName.lastIndexOf('/') + 1))
                   << ": a robot is missing a value or a value was entered with "
@@ -266,14 +268,15 @@ void Data::loadData() {
         bool clockwise;
         int detectionAngle;
         int detectionRange;
+        std::string texture;
 
         if (validateRobotData(robotData, &x, &y, &speed, &angle, &player, &clockwise, &detectionAngle,
-                              &detectionRange, scene, fileName)) {
+                              &detectionRange, &texture, scene, fileName)) {
             continue;
         }
 
-        QPointer<Robot> robot =
-            new Robot(x, y, speed, angle, player, clockwise, detectionAngle, detectionRange);
+        QPointer<Robot> robot = new Robot(x, y, speed, angle, player, clockwise, detectionAngle,
+                                          detectionRange, QString::fromStdString(texture));
         scene->addItem(robot);
         if (player == 1) {
             scene->setPlayer1(robot);

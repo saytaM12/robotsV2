@@ -227,7 +227,7 @@ doxygen:
 	doxygen Doxyfile
 
 pack:
-	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./examples/* ./doc/ ./doxyREADME.md ./imgs/icons/* ./imgs/textures/*
+	zip xoujez04-xvrbas01.zip ./src/* ./Makefile ./README.md ./Doxyfile ./examples/* ./doc/ ./doxyREADME.md ./imgs/icons/* ./imgs/textures/* ./explanation.txt
 
 Makefile: robotsV2.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \

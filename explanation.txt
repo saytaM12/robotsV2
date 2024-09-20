@@ -1,0 +1,7 @@
+Omlouváme se za chybějíci PDF soubor s modelem projektu
+
+Na tomto projektu jsme se učili C++ a knihovnu Qt, takže jsme rovnou začali
+projekt se dále postupně vyvíjel podle toho co nás napadalo a co jsme se naučili.
+
+Proto žádný model projektu neexistuje a ani neexistoval.
+A máme za to, že dělat model zpětně podle kódu je zbytečné.
